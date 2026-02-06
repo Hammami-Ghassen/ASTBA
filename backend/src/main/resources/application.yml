@@ -1,0 +1,57 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: astba-backend
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/astba}
+  # Google OAuth2 — only active when env vars are set:
+  #   SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID
+  #   SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET
+  # Spring Boot auto-configures the Google provider with correct defaults.
+  autoconfigure:
+    exclude:
+      - ${ASTBA_EXCLUDE_OAUTH2:org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration}
+
+# JWT & Auth
+astba:
+  jwt:
+    secret: ${ASTBA_JWT_SECRET:astba-super-secret-key-change-in-production-2024}
+    access-ttl-min: ${ASTBA_JWT_ACCESS_TTL_MIN:15}
+    refresh-ttl-days: ${ASTBA_JWT_REFRESH_TTL_DAYS:7}
+  cookie:
+    secure: ${ASTBA_COOKIE_SECURE:false}
+    same-site: ${ASTBA_COOKIE_SAME_SITE:Lax}
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  public-register: ${ASTBA_PUBLIC_REGISTER:true}
+  seed:
+    admin-email: ${ASTBA_SEED_ADMIN_EMAIL:admin@astba.tn}
+    admin-password: ${ASTBA_SEED_ADMIN_PASSWORD:Admin123!}
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# Springdoc / Swagger
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+
+# Logging
+logging:
+  level:
+    tn.astba: DEBUG
+    org.springframework.data.mongodb: INFO
+    org.springframework.security: INFO

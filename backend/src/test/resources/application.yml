@@ -1,0 +1,11 @@
+# Test configuration — overrides for unit/integration tests
+astba:
+  jwt:
+    secret: test-jwt-secret-key-for-automated-testing-do-not-use-in-production
+    access-ttl-min: 15
+    refresh-ttl-days: 7
+  cookie:
+    secure: false
+    same-site: Lax
+  frontend-url: http://localhost:3000
+  public-register: true
