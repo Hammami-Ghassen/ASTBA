@@ -111,7 +111,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">
-            <h1>{t('loginTitle')}</h1>
+            {t('loginTitle')}
           </CardTitle>
           <CardDescription>{t('loginDescription')}</CardDescription>
         </CardHeader>
