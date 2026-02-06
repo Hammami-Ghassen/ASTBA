@@ -6,7 +6,8 @@ spring:
     name: astba-backend
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/astba}
+      uri: ${MONGODB_URI:mongodb+srv://astba:astba@cluster0.eppqqf7.mongodb.net/astba?appName=Cluster0}
+      database: astba
   # Google OAuth2 — only active when env vars are set:
   #   SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID
   #   SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET

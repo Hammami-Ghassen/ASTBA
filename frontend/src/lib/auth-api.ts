@@ -56,11 +56,13 @@ async function authFetch<T>(path: string, options?: RequestInit): Promise<T> {
 
 export const authApi = {
     /** POST /api/auth/login – Email/password login */
-    login(data: LoginInput) {
-        return authFetch<AuthUser>('/auth/login', {
+    async login(data: LoginInput): Promise<AuthUser> {
+        // Backend returns { user, message, accessTokenExpiresAt }
+        const res = await authFetch<{ user: AuthUser; message: string }>('/auth/login', {
             method: 'POST',
             body: JSON.stringify(data),
         });
+        return res.user;
     },
 
     /** POST /api/auth/register – Register new account */
@@ -106,7 +108,7 @@ export const adminApi = {
     /** GET /api/admin/users – List all users (ADMIN only) */
     listUsers(params?: AdminUserListParams) {
         const searchParams = new URLSearchParams();
-        if (params?.query) searchParams.set('query', params.query);
+        if (params?.query) searchParams.set('q', params.query);
         if (params?.page !== undefined) searchParams.set('page', String(params.page));
         if (params?.size !== undefined) searchParams.set('size', String(params.size));
         const qs = searchParams.toString();
@@ -115,19 +117,19 @@ export const adminApi = {
         );
     },
 
-    /** PUT /api/admin/users/:id/role – Change user role */
+    /** PATCH /api/admin/users/:id/roles – Change user roles */
     changeRole(userId: string, role: import('./types').UserRole) {
-        return authFetch<AuthUser>(`/admin/users/${userId}/role`, {
-            method: 'PUT',
-            body: JSON.stringify({ role }),
+        return authFetch<AuthUser>(`/admin/users/${userId}/roles`, {
+            method: 'PATCH',
+            body: JSON.stringify({ roles: [role] }),
         });
     },
 
-    /** PUT /api/admin/users/:id/status – Enable/disable user */
-    changeStatus(userId: string, enabled: boolean) {
+    /** PATCH /api/admin/users/:id/status – Enable/disable user */
+    changeStatus(userId: string, status: import('./types').UserStatus) {
         return authFetch<AuthUser>(`/admin/users/${userId}/status`, {
-            method: 'PUT',
-            body: JSON.stringify({ enabled }),
+            method: 'PATCH',
+            body: JSON.stringify({ status }),
         });
     },
 };

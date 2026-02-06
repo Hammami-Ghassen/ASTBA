@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import tn.astba.dto.AuthResponse;
 import tn.astba.dto.LoginRequest;
@@ -82,8 +81,7 @@ public class AuthController {
 
     @Operation(summary = "Profil de l'utilisateur connecté")
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> me(@AuthenticationPrincipal UserDetails principal) {
-        String userId = principal.getUsername(); // userId stored as username in JWT filter
+    public ResponseEntity<UserResponse> me(@AuthenticationPrincipal String userId) {
         UserResponse user = authService.getCurrentUser(userId);
         return ResponseEntity.ok(user);
     }

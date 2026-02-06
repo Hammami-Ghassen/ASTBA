@@ -63,16 +63,16 @@ export default function NewTrainingPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="name">{t('trainingName')} <span className="text-red-500" aria-hidden="true">*</span></Label>
+              <Label htmlFor="title">{t('trainingName')} <span className="text-red-500" aria-hidden="true">*</span></Label>
               <Input
-                id="name"
-                error={!!errors.name}
-                aria-describedby={errors.name ? 'name-error' : undefined}
-                aria-invalid={!!errors.name}
-                {...register('name')}
+                id="title"
+                error={!!errors.title}
+                aria-describedby={errors.title ? 'title-error' : undefined}
+                aria-invalid={!!errors.title}
+                {...register('title')}
               />
-              {errors.name && (
-                <p id="name-error" role="alert" className="text-sm text-red-600">{errors.name.message?.startsWith('validation.') ? tv('required') : errors.name.message}</p>
+              {errors.title && (
+                <p id="title-error" role="alert" className="text-sm text-red-600">{errors.title.message?.startsWith('validation.') ? tv('required') : errors.title.message}</p>
               )}
             </div>
 

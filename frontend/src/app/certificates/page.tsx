@@ -61,7 +61,7 @@ export default function CertificatesPage() {
             <SelectContent>
               {trainings?.map((tr) => (
                 <SelectItem key={tr.id} value={tr.id}>
-                  {tr.name}
+                  {tr.title}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -112,7 +112,7 @@ export default function CertificatesPage() {
   );
 }
 
-function CertificateRow({ enrollment, canGenerate }: { enrollment: { id: string; student?: { firstName: string; lastName: string }; training?: { name: string }; studentId: string; trainingId: string }; canGenerate: boolean }) {
+function CertificateRow({ enrollment, canGenerate }: { enrollment: { id: string; student?: { firstName: string; lastName: string }; training?: { title: string }; studentId: string; trainingId: string }; canGenerate: boolean }) {
   const t = useTranslations('certificates');
 
   return (
@@ -123,7 +123,7 @@ function CertificateRow({ enrollment, canGenerate }: { enrollment: { id: string;
           : enrollment.studentId}
       </TableCell>
       <TableCell className="text-gray-500">
-        {enrollment.training?.name || enrollment.trainingId}
+        {enrollment.training?.title || enrollment.trainingId}
       </TableCell>
       <TableCell>
         <Badge variant="info">{t('eligible')}</Badge>

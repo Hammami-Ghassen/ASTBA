@@ -84,7 +84,7 @@ export default function TrainingsPage() {
                     <BookOpen className="h-5 w-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
                   </div>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" asChild aria-label={`${tc('edit')} ${training.name}`}>
+                    <Button variant="ghost" size="icon" asChild aria-label={`${tc('edit')} ${training.title}`}>
                       <Link href={`/trainings/${training.id}`}>
                         <Eye className="h-4 w-4" />
                       </Link>
@@ -94,7 +94,7 @@ export default function TrainingsPage() {
                         variant="ghost"
                         size="icon"
                         onClick={() => setDeleteId(training.id)}
-                        aria-label={`${tc('delete')} ${training.name}`}
+                        aria-label={`${tc('delete')} ${training.title}`}
                       >
                         <Trash2 className="h-4 w-4 text-red-500" />
                       </Button>
@@ -106,7 +106,7 @@ export default function TrainingsPage() {
                     href={`/trainings/${training.id}`}
                     className="after:absolute after:inset-0 focus-visible:outline-none"
                   >
-                    {training.name}
+                    {training.title}
                   </Link>
                 </h2>
                 {training.description && (

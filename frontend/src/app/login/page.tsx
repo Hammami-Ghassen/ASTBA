@@ -22,7 +22,7 @@ export default function LoginPage() {
   const tv = useTranslations('validation');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, refreshUser } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -70,11 +70,12 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      // Direct API call to handle errors locally, then full reload for cookie
+      // Direct API call to handle errors locally
       const { authApi } = await import('@/lib/auth-api');
-      const user = await authApi.login({ email: data.email, password: data.password });
-      // Trigger auth context refresh
-      window.location.href = '/';
+      await authApi.login({ email: data.email, password: data.password });
+      // Refresh auth context so navbar updates, then navigate
+      await refreshUser();
+      router.replace('/');
     } catch (err) {
       if (err instanceof AuthApiError) {
         if (err.status === 401 || err.status === 403) {

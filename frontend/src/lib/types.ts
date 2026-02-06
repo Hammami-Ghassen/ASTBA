@@ -9,10 +9,10 @@ export interface Student {
     id: string;
     firstName: string;
     lastName: string;
-    email: string;
+    birthDate?: string;
     phone?: string;
-    dateOfBirth?: string;
-    address?: string;
+    email: string;
+    notes?: string;
     createdAt?: string;
     updatedAt?: string;
 }
@@ -22,8 +22,8 @@ export interface StudentCreateInput {
     lastName: string;
     email: string;
     phone?: string;
-    dateOfBirth?: string;
-    address?: string;
+    birthDate?: string;
+    notes?: string;
 }
 
 export type StudentUpdateInput = Partial<StudentCreateInput>;
@@ -37,22 +37,21 @@ export interface PaginatedResponse<T> {
 }
 
 export interface Session {
-    id: string;
-    number: number; // 1-6
+    sessionId: string;
+    sessionNumber: number;
     title?: string;
-    date?: string;
+    plannedAt?: string;
 }
 
 export interface Level {
-    id: string;
-    number: number; // 1-4
+    levelNumber: number;
     title?: string;
     sessions: Session[];
 }
 
 export interface Training {
     id: string;
-    name: string;
+    title: string;
     description?: string;
     levels: Level[];
     createdAt?: string;
@@ -60,7 +59,7 @@ export interface Training {
 }
 
 export interface TrainingCreateInput {
-    name: string;
+    title: string;
     description?: string;
 }
 
@@ -70,9 +69,10 @@ export interface Enrollment {
     id: string;
     studentId: string;
     trainingId: string;
+    enrolledAt?: string;
     student?: Student;
     training?: Training;
-    enrolledAt?: string;
+    createdAt?: string;
 }
 
 export interface EnrollmentCreateInput {
@@ -93,49 +93,43 @@ export interface AttendanceMarkInput {
 }
 
 export interface AttendanceEntry {
-    id: string;
-    studentId: string;
-    trainingId: string;
-    sessionId: string;
-    levelNumber: number;
-    sessionNumber: number;
     status: AttendanceStatus;
-    date: string;
+    markedAt?: string;
 }
 
-export interface SessionProgress {
-    sessionId: string;
-    sessionNumber: number;
-    attended: boolean;
-}
-
-export interface LevelProgress {
-    levelNumber: number;
-    validated: boolean;
-    sessionsCompleted: number;
+export interface ProgressSnapshot {
     totalSessions: number;
-    sessions: SessionProgress[];
+    attendedCount: number;
+    missedCount: number;
+    levelsValidated: number[];
+    completed: boolean;
+    completedAt?: string;
+    eligibleForCertificate: boolean;
+    certificateIssuedAt?: string;
+}
+
+export interface MissedSessionInfo {
+    sessionId: string;
+    levelNumber: number;
+    sessionNumber: number;
+    sessionTitle?: string;
+    status?: string;
 }
 
 export interface StudentProgress {
-    studentId: string;
     enrollmentId: string;
     trainingId: string;
-    trainingName: string;
-    levelsValidated: number;
-    totalLevels: number;
-    sessionsCompleted: number;
-    totalSessions: number;
-    completed: boolean;
-    levels: LevelProgress[];
+    trainingTitle: string;
+    progressSnapshot: ProgressSnapshot;
+    missedSessions: MissedSessionInfo[];
 }
 
 export interface CertificateMeta {
-    enrollmentId: string;
     eligible: boolean;
+    completedAt?: string;
     issuedAt?: string;
     studentName?: string;
-    trainingName?: string;
+    trainingTitle?: string;
 }
 
 // Dashboard stats
@@ -152,15 +146,17 @@ export interface DashboardStats {
 
 export type UserRole = 'ADMIN' | 'MANAGER' | 'TRAINER';
 
+export type UserStatus = 'ACTIVE' | 'DISABLED' | 'PENDING';
+
 export interface AuthUser {
     id: string;
     email: string;
     firstName: string;
     lastName: string;
     roles: UserRole[];
-    enabled: boolean;
+    status: UserStatus;
     provider?: 'LOCAL' | 'GOOGLE';
-    avatarUrl?: string;
+    lastLoginAt?: string;
     createdAt?: string;
 }
 

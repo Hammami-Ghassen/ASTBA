@@ -8,8 +8,8 @@ export const studentCreateSchema = z.object({
     lastName: z.string().min(1, 'validation.required').max(100),
     email: z.string().min(1, 'validation.required').email('validation.invalidEmail'),
     phone: z.string().optional(),
-    dateOfBirth: z.string().optional(),
-    address: z.string().optional(),
+    birthDate: z.string().optional(),
+    notes: z.string().max(500).optional(),
 });
 
 export const studentUpdateSchema = studentCreateSchema.partial();
@@ -21,7 +21,7 @@ export type StudentUpdateFormData = z.infer<typeof studentUpdateSchema>;
 // Training schemas
 // ──────────────────────────────────────────────
 export const trainingCreateSchema = z.object({
-    name: z.string().min(1, 'validation.required').max(200),
+    title: z.string().min(1, 'validation.required').max(200),
     description: z.string().optional(),
 });
 

@@ -131,20 +131,20 @@ export default function NewStudentPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="dateOfBirth">{t('dateOfBirth')}</Label>
+                <Label htmlFor="birthDate">{t('dateOfBirth')}</Label>
                 <Input
-                  id="dateOfBirth"
+                  id="birthDate"
                   type="date"
-                  {...register('dateOfBirth')}
+                  {...register('birthDate')}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address">{t('address')}</Label>
+              <Label htmlFor="notes">{t('notes')}</Label>
               <Input
-                id="address"
-                {...register('address')}
+                id="notes"
+                {...register('notes')}
               />
             </div>
 

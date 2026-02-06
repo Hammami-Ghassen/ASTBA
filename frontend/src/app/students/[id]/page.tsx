@@ -131,8 +131,8 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                 <DetailRow label={t('lastName')} value={student.lastName} />
                 <DetailRow label={t('email')} value={student.email} />
                 <DetailRow label={t('phone')} value={student.phone || '—'} />
-                <DetailRow label={t('dateOfBirth')} value={student.dateOfBirth ? formatDate(student.dateOfBirth) : '—'} />
-                <DetailRow label={t('address')} value={student.address || '—'} />
+                <DetailRow label={t('dateOfBirth')} value={student.birthDate ? formatDate(student.birthDate) : '—'} />
+                <DetailRow label={t('notes')} value={student.notes || '—'} />
               </CardContent>
             </Card>
 
@@ -145,16 +145,16 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                   progressData.map((p) => (
                     <div key={p.enrollmentId} className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium">{p.trainingName}</span>
+                        <span className="font-medium">{p.trainingTitle}</span>
                         <span className="text-gray-500">
-                          {p.sessionsCompleted}/{p.totalSessions}
+                          {p.progressSnapshot.attendedCount}/{p.progressSnapshot.totalSessions}
                         </span>
                       </div>
                       <Progress
-                        value={progressPercent(p.sessionsCompleted, p.totalSessions)}
-                        label={`${p.trainingName}: ${progressPercent(p.sessionsCompleted, p.totalSessions)}%`}
+                        value={progressPercent(p.progressSnapshot.attendedCount, p.progressSnapshot.totalSessions)}
+                        label={`${p.trainingTitle}: ${progressPercent(p.progressSnapshot.attendedCount, p.progressSnapshot.totalSessions)}%`}
                       />
-                      {p.completed && (
+                      {p.progressSnapshot.completed && (
                         <Badge variant="success">{tt('completed')}</Badge>
                       )}
                     </div>
@@ -190,10 +190,10 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                       return (
                         <TableRow key={enrollment.id}>
                           <TableCell className="font-medium">
-                            {enrollment.training?.name || enrollment.trainingId}
+                            {enrollment.training?.title || enrollment.trainingId}
                           </TableCell>
                           <TableCell>
-                            {progress?.completed ? (
+                            {progress?.progressSnapshot.completed ? (
                               <Badge variant="success">{tt('completed')}</Badge>
                             ) : (
                               <Badge variant="info">{tt('inProgress')}</Badge>
@@ -204,7 +204,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                           </TableCell>
                           <TableCell>
                             <div className="flex gap-1 justify-end">
-                              {progress?.completed && (
+                              {progress?.progressSnapshot.completed && (
                                 <Button variant="ghost" size="sm" asChild>
                                   <a
                                     href={certificatesApi.downloadUrl(enrollment.id)}
@@ -245,12 +245,12 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                 <Card key={p.enrollmentId}>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
-                      <span>{p.trainingName}</span>
-                      {p.completed ? (
+                      <span>{p.trainingTitle}</span>
+                      {p.progressSnapshot.completed ? (
                         <Badge variant="success">{tt('completed')}</Badge>
                       ) : (
                         <Badge variant="info">
-                          {p.levelsValidated}/{p.totalLevels} {tp('levelsValidated')}
+                          {p.progressSnapshot.levelsValidated.length}/4 {tp('levelsValidated')}
                         </Badge>
                       )}
                     </CardTitle>
@@ -259,39 +259,37 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                     <div className="space-y-1">
                       <div className="flex justify-between text-sm">
                         <span>{tp('overallProgress')}</span>
-                        <span>{progressPercent(p.sessionsCompleted, p.totalSessions)}%</span>
+                        <span>{progressPercent(p.progressSnapshot.attendedCount, p.progressSnapshot.totalSessions)}%</span>
                       </div>
                       <Progress
-                        value={progressPercent(p.sessionsCompleted, p.totalSessions)}
-                        label={`${progressPercent(p.sessionsCompleted, p.totalSessions)}%`}
+                        value={progressPercent(p.progressSnapshot.attendedCount, p.progressSnapshot.totalSessions)}
+                        label={`${progressPercent(p.progressSnapshot.attendedCount, p.progressSnapshot.totalSessions)}%`}
                       />
                     </div>
 
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                      {p.levels.map((level) => (
-                        <div
-                          key={level.levelNumber}
-                          className="rounded-lg border border-gray-200 p-3 dark:border-gray-700"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium">
-                              {tt('level')} {level.levelNumber}
-                            </span>
-                            {level.validated ? (
-                              <Badge variant="success" className="text-xs">{tt('levelValidated')}</Badge>
-                            ) : (
-                              <Badge variant="outline" className="text-xs">
-                                {level.totalSessions - level.sessionsCompleted} {tt('sessionsRemaining')}
-                              </Badge>
-                            )}
+                      {[1, 2, 3, 4].map((levelNum) => {
+                        const validated = p.progressSnapshot.levelsValidated.includes(levelNum);
+                        return (
+                          <div
+                            key={levelNum}
+                            className="rounded-lg border border-gray-200 p-3 dark:border-gray-700"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium">
+                                {tt('level')} {levelNum}
+                              </span>
+                              {validated ? (
+                                <Badge variant="success" className="text-xs">{tt('levelValidated')}</Badge>
+                              ) : (
+                                <Badge variant="outline" className="text-xs">
+                                  {tt('inProgress')}
+                                </Badge>
+                              )}
+                            </div>
                           </div>
-                          <Progress
-                            className="mt-2"
-                            value={progressPercent(level.sessionsCompleted, level.totalSessions)}
-                            label={`Niveau ${level.levelNumber}: ${level.sessionsCompleted}/${level.totalSessions}`}
-                          />
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
@@ -327,7 +325,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
               <SelectContent>
                 {allTrainings?.map((tr) => (
                   <SelectItem key={tr.id} value={tr.id}>
-                    {tr.name}
+                    {tr.title}
                   </SelectItem>
                 ))}
               </SelectContent>

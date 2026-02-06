@@ -70,18 +70,17 @@ export default function AttendancePage() {
     ? training.levels
     : selectedTraining
     ? Array.from({ length: 4 }, (_, i) => ({
-        id: `level-${i + 1}`,
-        number: i + 1,
+        levelNumber: i + 1,
         sessions: Array.from({ length: 6 }, (_, j) => ({
-          id: `session-${i + 1}-${j + 1}`,
-          number: j + 1,
+          sessionId: `session-${i + 1}-${j + 1}`,
+          sessionNumber: j + 1,
         })),
       }))
     : [];
 
-  const level: Level | undefined = levels.find((l) => l.id === selectedLevel);
+  const level: Level | undefined = levels.find((l) => String(l.levelNumber) === selectedLevel);
   const sessions: Session[] = level?.sessions ?? [];
-  const session: Session | undefined = sessions.find((s) => s.id === selectedSession);
+  const session: Session | undefined = sessions.find((s) => s.sessionId === selectedSession);
 
   // Fetch enrolled students for the selected training
   const { data: enrollments, isLoading: enrollmentsLoading } = useTrainingEnrollments(selectedTraining);
@@ -173,7 +172,7 @@ export default function AttendancePage() {
                   <SelectContent>
                     {trainings?.map((tr) => (
                       <SelectItem key={tr.id} value={tr.id}>
-                        {tr.name}
+                        {tr.title}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -200,8 +199,8 @@ export default function AttendancePage() {
                 </SelectTrigger>
                 <SelectContent>
                   {levels.map((l) => (
-                    <SelectItem key={l.id} value={l.id}>
-                      {tt('level')} {l.number}
+                    <SelectItem key={l.levelNumber} value={String(l.levelNumber)}>
+                      {tt('level')} {l.levelNumber}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -223,8 +222,8 @@ export default function AttendancePage() {
                 </SelectTrigger>
                 <SelectContent>
                   {sessions.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>
-                      {tt('session')} {s.number}
+                    <SelectItem key={s.sessionId} value={s.sessionId}>
+                      {tt('session')} {s.sessionNumber}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -278,7 +277,7 @@ export default function AttendancePage() {
               <>
                 <Table>
                   <TableCaption>
-                    {t('sessionCaption', { session: session?.number ?? '' })}
+                    {t('sessionCaption', { session: session?.sessionNumber ?? '' })}
                   </TableCaption>
                   <TableHeader>
                     <TableRow>

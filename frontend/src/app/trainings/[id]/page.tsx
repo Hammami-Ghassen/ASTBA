@@ -33,14 +33,13 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
   const levels = training.levels?.length
     ? training.levels
     : Array.from({ length: 4 }, (_, i) => ({
-        id: `level-${i + 1}`,
-        number: i + 1,
+        levelNumber: i + 1,
         title: `${t('level')} ${i + 1}`,
         sessions: Array.from({ length: 6 }, (_, j) => ({
-          id: `session-${i + 1}-${j + 1}`,
-          number: j + 1,
+          sessionId: `session-${i + 1}-${j + 1}`,
+          sessionNumber: j + 1,
           title: `${t('session')} ${j + 1}`,
-          date: undefined as string | undefined,
+          plannedAt: undefined as string | undefined,
         })),
       }));
 
@@ -54,7 +53,7 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-              {training.name}
+              {training.title}
             </h1>
             {training.description && (
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -111,11 +110,11 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
         <CardContent>
           <Accordion type="multiple" className="w-full">
             {levels.map((level) => (
-              <AccordionItem key={level.id} value={level.id}>
+              <AccordionItem key={level.levelNumber} value={String(level.levelNumber)}>
                 <AccordionTrigger>
                   <div className="flex items-center gap-3">
-                    <Badge variant="info">{t('level')} {level.number}</Badge>
-                    <span>{level.title || `${t('level')} ${level.number}`}</span>
+                    <Badge variant="info">{t('level')} {level.levelNumber}</Badge>
+                    <span>{level.title || `${t('level')} ${level.levelNumber}`}</span>
                     <span className="text-gray-400">– {level.sessions.length} {t('sessions')}</span>
                   </div>
                 </AccordionTrigger>
@@ -123,15 +122,15 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
                   <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {level.sessions.map((session) => (
                       <div
-                        key={session.id}
+                        key={session.sessionId}
                         className="rounded-lg border border-gray-200 p-3 dark:border-gray-700"
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium">
-                            {t('session')} {session.number}
+                            {t('session')} {session.sessionNumber}
                           </span>
-                          {session.date && (
-                            <span className="text-xs text-gray-400">{session.date}</span>
+                          {session.plannedAt && (
+                            <span className="text-xs text-gray-400">{session.plannedAt}</span>
                           )}
                         </div>
                       </div>

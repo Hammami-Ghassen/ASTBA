@@ -83,8 +83,8 @@ function AdminUsersContent() {
   });
 
   const statusChangeMutation = useMutation({
-    mutationFn: ({ userId, enabled }: { userId: string; enabled: boolean }) =>
-      adminApi.changeStatus(userId, enabled),
+    mutationFn: ({ userId, status }: { userId: string; status: import('@/lib/types').UserStatus }) =>
+      adminApi.changeStatus(userId, status),
     onSuccess: () => {
       addToast(t('statusChanged'), 'success');
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
@@ -181,8 +181,8 @@ function AdminUsersContent() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={u.enabled ? 'success' : 'danger'}>
-                        {u.enabled ? t('enabled') : t('disabled')}
+                      <Badge variant={u.status === 'ACTIVE' ? 'success' : 'danger'}>
+                        {u.status === 'ACTIVE' ? t('enabled') : t('disabled')}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -213,10 +213,10 @@ function AdminUsersContent() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => setStatusDialog({ user: u, enable: !u.enabled })}
-                          aria-label={`${u.enabled ? t('disableUser') : t('enableUser')} – ${u.firstName} ${u.lastName}`}
+                          onClick={() => setStatusDialog({ user: u, enable: u.status !== 'ACTIVE' })}
+                          aria-label={`${u.status === 'ACTIVE' ? t('disableUser') : t('enableUser')} – ${u.firstName} ${u.lastName}`}
                         >
-                          {u.enabled ? (
+                          {u.status === 'ACTIVE' ? (
                             <UserX className="h-4 w-4 text-red-500" aria-hidden="true" />
                           ) : (
                             <UserCheck className="h-4 w-4 text-green-500" aria-hidden="true" />
@@ -310,7 +310,7 @@ function AdminUsersContent() {
                 statusDialog &&
                 statusChangeMutation.mutate({
                   userId: statusDialog.user.id,
-                  enabled: statusDialog.enable,
+                  status: statusDialog.enable ? 'ACTIVE' : 'DISABLED',
                 })
               }
               disabled={statusChangeMutation.isPending}

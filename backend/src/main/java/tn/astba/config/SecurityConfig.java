@@ -50,8 +50,9 @@ public class SecurityConfig {
                     .authenticationEntryPoint(authenticationEntryPoint)
                     .accessDeniedHandler(accessDeniedHandler))
             .authorizeHttpRequests(auth -> auth
-                    // Public endpoints
-                    .requestMatchers("/api/auth/**").permitAll()
+                    // Public endpoints (login, register, refresh, logout – but NOT /me)
+                    .requestMatchers("/api/auth/login", "/api/auth/register",
+                                     "/api/auth/refresh", "/api/auth/logout").permitAll()
                     .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                     .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                     .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
