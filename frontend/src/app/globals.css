@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f9fafb;
+  --foreground: #111827;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Accessible color palette (contrast ≥ 4.5:1) */
+  --color-sky-50: #f0f9ff;
+  --color-sky-100: #e0f2fe;
+  --color-sky-500: #0ea5e9;
+  --color-sky-600: #0284c7;
+  --color-sky-700: #0369a1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #030712;
+    --foreground: #f3f4f6;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
+}
+
+/* Focus visible ring — consistent across all interactive elements */
+*:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print styles for certificates */
+@media print {
+
+  header,
+  footer,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+}
