@@ -13,25 +13,17 @@ import { GoogleOAuthButton } from '@/components/auth/google-oauth-button';
 import { useToast } from '@/components/ui/toast';
 import { authApi, AuthApiError } from '@/lib/auth-api';
 import { registerSchema, type RegisterFormData } from '@/lib/validators';
-import { useAuth } from '@/lib/auth-provider';
 
 export default function RegisterPage() {
   const t = useTranslations('auth');
   const tv = useTranslations('validation');
   const router = useRouter();
   const { addToast } = useToast();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      router.replace('/dashboard');
-    }
-  }, [authLoading, isAuthenticated, router]);
 
   const {
     register,
