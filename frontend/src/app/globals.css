@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f8f9fc;
   --foreground: #111827;
@@ -31,11 +33,9 @@
   --color-accent-hover: #e0750a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #101622;
-    --foreground: #f3f4f6;
-  }
+html.dark {
+  --background: #101622;
+  --foreground: #f3f4f6;
 }
 
 body {

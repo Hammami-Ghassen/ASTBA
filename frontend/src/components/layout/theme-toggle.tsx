@@ -54,6 +54,7 @@ export const themeScript = `
     var t = localStorage.getItem('astba-theme');
     if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     if (t === 'dark') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
   } catch(e){}
 })();
 `;
