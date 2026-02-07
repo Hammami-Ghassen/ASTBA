@@ -241,18 +241,7 @@ export default function NewTrainingPage() {
 
         <form
           onSubmit={(e) => {
-            // Only allow submission on the final step
-            if (currentStep < TOTAL_STEPS) {
-              e.preventDefault();
-              return;
-            }
-            handleSubmit(onSubmit)(e);
-          }}
-          onKeyDown={(e) => {
-            // Prevent Enter key from submitting the form while not on the last step
-            if (e.key === 'Enter' && currentStep < TOTAL_STEPS && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
-              e.preventDefault();
-            }
+            e.preventDefault();
           }}
           noValidate
         >
@@ -472,7 +461,8 @@ export default function NewTrainingPage() {
               </Button>
             ) : (
               <Button
-                type="submit"
+                type="button"
+                onClick={() => handleSubmit(onSubmit)()}
                 disabled={isSubmitting || createMutation.isPending}
                 className="min-w-[140px]"
               >
