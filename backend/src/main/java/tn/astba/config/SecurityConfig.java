@@ -54,7 +54,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/auth/login", "/api/auth/register",
                                      "/api/auth/refresh", "/api/auth/logout").permitAll()
                     .requestMatchers("/actuator/health", "/actuator/info").permitAll()
-                    .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                    .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/api-docs/**").permitAll()
                     .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                     // Serve uploaded files publicly (images)
                     .requestMatchers("/uploads/**").permitAll()
