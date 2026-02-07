@@ -107,8 +107,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Fetch current user on mount
+  // Fetch current user on mount (skip on public pages to avoid 401 noise)
   const fetchUser = useCallback(async () => {
+    if (isPublicPath(pathname)) {
+      setIsLoading(false);
+      return;
+    }
     try {
       const me = await authApi.me();
       setUser(me);
@@ -116,10 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       setUser(null);
       if (err instanceof AuthApiError && err.status === 401) {
-        // Not authenticated – only redirect if on a protected path
-        if (!isPublicPath(pathname)) {
-          router.replace('/login');
-        }
+        router.replace('/login');
       }
     } finally {
       setIsLoading(false);
