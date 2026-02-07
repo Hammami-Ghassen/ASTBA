@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <AutoBreadcrumb />
         {children}
       </main>
-      <footer className="relative mt-8 border-t border-gray-200/60 py-8 text-center text-sm text-gray-500 dark:border-gray-700/60 dark:text-gray-400 before:absolute before:top-0 before:left-0 before:right-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-[var(--color-primary)]/30 before:to-transparent">
+      <footer className="relative mt-8 border-t border-gray-200/60 py-8 text-center text-base text-gray-500 dark:border-gray-700/60 dark:text-gray-400 before:absolute before:top-0 before:left-0 before:right-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-[var(--color-primary)]/30 before:to-transparent">
         <div className="mx-auto max-w-7xl px-4">
           <p className="font-medium">© 2026 <span className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] bg-clip-text text-transparent font-semibold">ASTBA</span> – Association Sciences and Technology Ben Arous</p>
         </div>

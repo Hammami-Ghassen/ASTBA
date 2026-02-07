@@ -366,7 +366,7 @@ export default function GroupsPage() {
                                 className="h-9 w-9 rounded-full object-cover"
                               />
                             ) : (
-                              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-100 text-xs font-semibold text-sky-700 dark:bg-sky-900 dark:text-sky-300">
+                              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-100 text-sm font-semibold text-sky-700 dark:bg-sky-900 dark:text-sky-300">
                                 {getInitials(student.firstName, student.lastName)}
                               </div>
                             )}
@@ -374,7 +374,7 @@ export default function GroupsPage() {
                               <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                 {student.firstName} {student.lastName}
                               </p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
                                 {student.email}
                               </p>
                             </div>
@@ -465,7 +465,7 @@ export default function GroupsPage() {
                         className="h-8 w-8 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 text-xs font-semibold text-sky-700 dark:bg-sky-900 dark:text-sky-300">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 text-sm font-semibold text-sky-700 dark:bg-sky-900 dark:text-sky-300">
                         {getInitials(student.firstName, student.lastName)}
                       </div>
                     )}
@@ -473,7 +473,7 @@ export default function GroupsPage() {
                       <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         {student.firstName} {student.lastName}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{student.email}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{student.email}</p>
                     </div>
                   </div>
                   <Button

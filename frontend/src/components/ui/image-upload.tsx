@@ -145,7 +145,7 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
             {uploading ? t('imageUploading') : t('imageDragOrClick')}
           </p>
-          <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
+          <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
             {t('imageFormats')}
           </p>
         </div>

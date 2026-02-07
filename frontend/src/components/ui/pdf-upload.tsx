@@ -87,7 +87,7 @@ export function PdfUpload({ value, onChange, disabled }: PdfUploadProps) {
               href={resolveDocSrc(value)}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-[#135bec] hover:underline"
+              className="text-sm text-[#135bec] hover:underline"
             >
               {t('pdfView')}
             </a>
@@ -143,7 +143,7 @@ export function PdfUpload({ value, onChange, disabled }: PdfUploadProps) {
           <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {uploading ? t('pdfUploading') : t('pdfDragOrClick')}
           </p>
-          <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
+          <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
             {t('pdfFormat')}
           </p>
         </div>

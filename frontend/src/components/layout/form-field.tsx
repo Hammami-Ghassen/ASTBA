@@ -28,7 +28,7 @@ export function FormField({ label, name, error, required, children, description 
         {required && <span className="text-red-500" aria-hidden="true">*</span>}
       </Label>
       {description && (
-        <p id={descId} className="text-xs text-gray-500 dark:text-gray-400">
+        <p id={descId} className="text-sm text-gray-500 dark:text-gray-400">
           {description}
         </p>
       )}

@@ -113,7 +113,7 @@ export function Navbar() {
                     <Link
                       href={href}
                       className={cn(
-                        'relative flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2',
+                        'relative flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2',
                         isActive
                           ? 'bg-gradient-to-r from-blue-50 to-orange-50 text-[var(--color-primary)] dark:from-blue-950/60 dark:to-orange-950/40 dark:text-blue-300 shadow-sm'
                           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800/60 dark:hover:text-gray-100 hover:scale-[1.02] active:scale-[0.98]'
@@ -146,7 +146,7 @@ export function Navbar() {
                 ref={userButtonRef}
                 type="button"
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:text-gray-300 dark:hover:bg-gray-800"
+                className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-base font-medium text-gray-700 transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:text-gray-300 dark:hover:bg-gray-800"
                 aria-expanded={userMenuOpen}
                 aria-haspopup="true"
                 aria-label={ta('userMenu')}
@@ -166,13 +166,13 @@ export function Navbar() {
                 >
                   {/* User info */}
                   <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-700">
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <p className="text-base font-medium text-gray-900 dark:text-gray-100">
                       {user.firstName} {user.lastName}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                       {user.email}
                     </p>
-                    <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
                       {user.roles.join(', ')}
                     </p>
                   </div>
@@ -182,7 +182,7 @@ export function Navbar() {
                       href="/admin/users"
                       role="menuitem"
                       onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:outline-none dark:text-gray-300 dark:hover:bg-gray-700"
+                      className="flex items-center gap-2 px-4 py-2 text-base text-gray-700 hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:outline-none dark:text-gray-300 dark:hover:bg-gray-700"
                     >
                       <Shield className="h-4 w-4" aria-hidden="true" />
                       {t('admin')}
@@ -193,7 +193,7 @@ export function Navbar() {
                     type="button"
                     role="menuitem"
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 focus-visible:bg-red-50 focus-visible:outline-none dark:text-red-400 dark:hover:bg-red-950"
+                    className="flex w-full items-center gap-2 px-4 py-2 text-base text-red-600 hover:bg-red-50 focus-visible:bg-red-50 focus-visible:outline-none dark:text-red-400 dark:hover:bg-red-950"
                   >
                     <LogOut className="h-4 w-4" aria-hidden="true" />
                     {ta('logout')}
@@ -243,7 +243,7 @@ export function Navbar() {
                         href={href}
                         onClick={() => setMobileOpen(false)}
                         className={cn(
-                          'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500',
+                          'flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500',
                           isActive
                             ? 'bg-sky-50 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300'
                             : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
@@ -264,10 +264,10 @@ export function Navbar() {
                       {user ? getInitials(user.firstName, user.lastName) : '?'}
                     </span>
                     <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      <p className="text-base font-medium text-gray-900 dark:text-gray-100">
                         {user?.firstName} {user?.lastName}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
                     </div>
                   </div>
                 </li>
@@ -275,7 +275,7 @@ export function Navbar() {
                   <button
                     type="button"
                     onClick={() => { setMobileOpen(false); handleLogout(); }}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:text-red-400 dark:hover:bg-red-950"
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-red-600 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:text-red-400 dark:hover:bg-red-950"
                   >
                     <LogOut className="h-5 w-5" aria-hidden="true" />
                     {ta('logout')}
@@ -287,7 +287,7 @@ export function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sky-600 hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:text-sky-400"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-sky-600 hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:text-sky-400"
                 >
                   <User className="h-5 w-5" aria-hidden="true" />
                   {ta('login')}

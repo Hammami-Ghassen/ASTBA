@@ -179,7 +179,7 @@ export function PlanningCalendar() {
           ) : (
             <>
               {/* Day names header */}
-              <div className="grid grid-cols-7 text-center text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+              <div className="grid grid-cols-7 text-center text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
                 {dayNames.map((d, i) => (
                   <div key={i} className="py-2">{d}</div>
                 ))}
@@ -203,7 +203,7 @@ export function PlanningCalendar() {
                       `}
                       onClick={() => handleDayClick(date)}
                     >
-                      <div className={`text-xs font-medium mb-0.5 ${isToday ? 'text-sky-600 dark:text-sky-400 font-bold' : isCurrentMonth ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'}`}>
+                      <div className={`text-sm font-medium mb-0.5 ${isToday ? 'text-sky-600 dark:text-sky-400 font-bold' : isCurrentMonth ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'}`}>
                         {day}
                       </div>
                       <div className="space-y-0.5">
@@ -232,7 +232,7 @@ export function PlanningCalendar() {
               </div>
 
               {/* Legend */}
-              <div className="flex flex-wrap gap-3 mt-3 text-xs">
+              <div className="flex flex-wrap gap-3 mt-3 text-sm">
                 {Object.entries(STATUS_COLORS).map(([status, cls]) => (
                   <div key={status} className="flex items-center gap-1">
                     <Badge className={`${cls} text-[10px] px-1.5 py-0`}>{t(`status_${status}`)}</Badge>

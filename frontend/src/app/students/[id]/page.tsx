@@ -312,9 +312,9 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                                 {tt('level')} {levelNum}
                               </span>
                               {validated ? (
-                                <Badge variant="success" className="text-xs">{tt('levelValidated')}</Badge>
+                                <Badge variant="success" className="text-sm">{tt('levelValidated')}</Badge>
                               ) : (
-                                <Badge variant="outline" className="text-xs">
+                                <Badge variant="outline" className="text-sm">
                                   {tt('inProgress')}
                                 </Badge>
                               )}

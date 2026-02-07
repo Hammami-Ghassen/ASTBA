@@ -138,7 +138,7 @@ export default function LandingPage() {
               <a
                 key={link.href}
                 href={link.href}
-                className="relative text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-center after:scale-x-0 after:bg-[#f5820b] after:transition-transform hover:after:scale-x-100"
+                className="relative text-base text-gray-500 transition-colors hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-center after:scale-x-0 after:bg-[#f5820b] after:transition-transform hover:after:scale-x-100"
               >
                 {link.label}
               </a>
@@ -163,7 +163,7 @@ export default function LandingPage() {
               isAuthenticated ? (
                 <Link
                   href="/dashboard"
-                  className="hidden rounded-lg bg-gradient-to-r from-[#135bec] to-blue-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[#135bec]/25 transition-all hover:shadow-[#135bec]/50 hover:scale-[1.03] sm:inline-flex"
+                  className="hidden rounded-lg bg-gradient-to-r from-[#135bec] to-blue-500 px-5 py-2 text-base font-semibold text-white shadow-lg shadow-[#135bec]/25 transition-all hover:shadow-[#135bec]/50 hover:scale-[1.03] sm:inline-flex"
                 >
                   {t('goToDashboard')}
                 </Link>
@@ -171,13 +171,13 @@ export default function LandingPage() {
                 <>
                   <Link
                     href="/login"
-                    className="hidden rounded-lg px-4 py-2 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white sm:inline-flex"
+                    className="hidden rounded-lg px-4 py-2 text-base font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white sm:inline-flex"
                   >
                     {ta('login')}
                   </Link>
                   <Link
                     href="/register"
-                    className="hidden rounded-lg bg-gradient-to-r from-[#135bec] to-blue-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[#135bec]/25 transition-all hover:shadow-[#135bec]/50 hover:scale-[1.03] sm:inline-flex"
+                    className="hidden rounded-lg bg-gradient-to-r from-[#135bec] to-blue-500 px-5 py-2 text-base font-semibold text-white shadow-lg shadow-[#135bec]/25 transition-all hover:shadow-[#135bec]/50 hover:scale-[1.03] sm:inline-flex"
                   >
                     {t('getStarted')}
                   </Link>
@@ -202,15 +202,15 @@ export default function LandingPage() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[#92a4c9] dark:hover:bg-white/5 dark:hover:text-white"
+                  className="rounded-lg px-3 py-2.5 text-base text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[#92a4c9] dark:hover:bg-white/5 dark:hover:text-white"
                 >
                   {link.label}
                 </a>
               ))}
               {!isLoading && !isAuthenticated && (
                 <div className="mt-2 flex gap-2 border-t border-gray-200/60 dark:border-white/5 pt-3">
-                  <Link href="/login" className="flex-1 rounded-lg border border-gray-300 dark:border-[#324467] py-2 text-center text-sm text-gray-600 dark:text-[#92a4c9]">{ta('login')}</Link>
-                  <Link href="/register" className="flex-1 rounded-lg bg-[#135bec] py-2 text-center text-sm font-semibold text-white">{t('getStarted')}</Link>
+                  <Link href="/login" className="flex-1 rounded-lg border border-gray-300 dark:border-[#324467] py-2 text-center text-base text-gray-600 dark:text-[#92a4c9]">{ta('login')}</Link>
+                  <Link href="/register" className="flex-1 rounded-lg bg-[#135bec] py-2 text-center text-base font-semibold text-white">{t('getStarted')}</Link>
                 </div>
               )}
             </div>
@@ -272,14 +272,14 @@ export default function LandingPage() {
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link
                 href={isAuthenticated ? '/dashboard' : '/register'}
-                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#135bec] to-blue-500 px-8 py-4 text-sm font-bold text-white shadow-2xl shadow-[#135bec]/30 transition-all hover:shadow-[#135bec]/60 hover:scale-[1.04] active:scale-[0.98]"
+                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#135bec] to-blue-500 px-8 py-4 text-base font-bold text-white shadow-2xl shadow-[#135bec]/30 transition-all hover:shadow-[#135bec]/60 hover:scale-[1.04] active:scale-[0.98]"
               >
                 {t('heroCtaPrimary')}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" />
               </Link>
               <a
                 href="#features"
-                className="flex items-center gap-2 rounded-xl border border-[#f5820b]/40 bg-[#f5820b]/10 px-8 py-4 text-sm font-semibold text-[#f5820b] transition-all hover:bg-[#f5820b]/20 hover:border-[#f5820b]/60"
+                className="flex items-center gap-2 rounded-xl border border-[#f5820b]/40 bg-[#f5820b]/10 px-8 py-4 text-base font-semibold text-[#f5820b] transition-all hover:bg-[#f5820b]/20 hover:border-[#f5820b]/60"
               >
                 {t('heroCtaSecondary')}
               </a>
@@ -323,7 +323,7 @@ export default function LandingPage() {
                   <p className="text-3xl font-extrabold bg-gradient-to-r from-[#135bec] to-[#f5820b] bg-clip-text text-transparent sm:text-5xl transition-transform group-hover:scale-110">
                     <AnimatedCounter target={stat.value} suffix={stat.suffix} />{stat.suffix}
                   </p>
-                  <p className="mt-2 text-sm text-gray-500 dark:text-[#92a4c9]">{stat.label}</p>
+                  <p className="mt-2 text-base text-gray-500 dark:text-[#92a4c9]">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -368,7 +368,7 @@ export default function LandingPage() {
                       <Icon className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
-                    <p className="text-sm leading-relaxed text-gray-500 dark:text-[#92a4c9]">{description}</p>
+                    <p className="text-base leading-relaxed text-gray-500 dark:text-[#92a4c9]">{description}</p>
                   </div>
                 </div>
               ))}
@@ -413,7 +413,7 @@ export default function LandingPage() {
                   {/* Content */}
                   <div className="p-5">
                     <h3 className="mb-1.5 text-lg font-bold text-gray-900 dark:text-white">{t(key as 'specRobotics')}</h3>
-                    <p className="text-sm leading-relaxed text-gray-500 dark:text-[#92a4c9]">{t(`${key}Desc` as 'specRoboticsDesc')}</p>
+                    <p className="text-base leading-relaxed text-gray-500 dark:text-[#92a4c9]">{t(`${key}Desc` as 'specRoboticsDesc')}</p>
                   </div>
                 </div>
               ))}
@@ -454,7 +454,7 @@ export default function LandingPage() {
                       </span>
                     </div>
                     <h3 className="mb-2 font-bold text-gray-900 dark:text-white">{title}</h3>
-                    <p className="text-sm text-gray-500 dark:text-[#92a4c9]">{desc}</p>
+                    <p className="text-base text-gray-500 dark:text-[#92a4c9]">{desc}</p>
                   </div>
                 ))}
               </div>
@@ -558,7 +558,7 @@ export default function LandingPage() {
                       { label: t('highlightCertRate'), pct: 78, color: 'bg-gradient-to-r from-purple-500 to-pink-400' },
                     ].map(({ label, pct, color }) => (
                       <div key={label}>
-                        <div className="mb-1.5 flex justify-between text-sm">
+                        <div className="mb-1.5 flex justify-between text-base">
                           <span className="text-gray-500 dark:text-[#92a4c9]">{label}</span>
                           <span className="font-bold text-gray-900 dark:text-white">{pct}%</span>
                         </div>
@@ -577,7 +577,7 @@ export default function LandingPage() {
                     ].map(({ icon: Icon, label }) => (
                       <div key={label} className="group rounded-xl border border-gray-200 bg-gray-50 dark:border-[#324467] dark:bg-[#101622] p-4 text-center transition-all duration-300 hover:border-[#f5820b]/40 hover:shadow-lg hover:shadow-[#f5820b]/5 dark:hover:shadow-[#f5820b]/10">
                         <Icon className="mx-auto h-5 w-5 text-[#135bec] group-hover:text-[#f5820b] transition-colors" />
-                        <p className="mt-2 text-xs text-gray-500 dark:text-[#92a4c9]">{label}</p>
+                        <p className="mt-2 text-sm text-gray-500 dark:text-[#92a4c9]">{label}</p>
                       </div>
                     ))}
                   </div>
@@ -613,7 +613,7 @@ export default function LandingPage() {
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link
                 href={isAuthenticated ? '/dashboard' : '/register'}
-                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#135bec] via-blue-500 to-[#135bec] bg-[length:200%_100%] px-8 py-4 text-sm font-bold text-white shadow-2xl shadow-[#135bec]/30 transition-all duration-500 hover:bg-right hover:shadow-[#135bec]/60 hover:scale-[1.04] active:scale-[0.98]"
+                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#135bec] via-blue-500 to-[#135bec] bg-[length:200%_100%] px-8 py-4 text-base font-bold text-white shadow-2xl shadow-[#135bec]/30 transition-all duration-500 hover:bg-right hover:shadow-[#135bec]/60 hover:scale-[1.04] active:scale-[0.98]"
               >
                 {t('ctaButton')}
                 <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" />
@@ -632,13 +632,13 @@ export default function LandingPage() {
                 <Image src="/astba/logo.png" alt="ASTBA" width={32} height={32} className="rounded-lg" />
                 <span className="font-bold text-lg bg-gradient-to-r from-[#135bec] to-[#f5820b] bg-clip-text text-transparent">ASTBA</span>
               </div>
-              <p className="text-xs text-gray-400 dark:text-[#92a4c9]/70">{t('footerSince')}</p>
+              <p className="text-sm text-gray-400 dark:text-[#92a4c9]/70">{t('footerSince')}</p>
             </div>
             <div className="flex flex-col items-center gap-1 text-center">
-              <p className="text-sm text-gray-500 dark:text-[#92a4c9]">
+              <p className="text-base text-gray-500 dark:text-[#92a4c9]">
                 © 2026 ASTBA – Association Sciences and Technology Ben Arous
               </p>
-              <p className="text-xs text-gray-400 dark:text-[#92a4c9]/60">{t('footerAddress')}</p>
+              <p className="text-sm text-gray-400 dark:text-[#92a4c9]/60">{t('footerAddress')}</p>
             </div>
             <div className="flex items-center gap-4">
               {[
@@ -647,7 +647,7 @@ export default function LandingPage() {
                 { href: '#how-it-works', label: t('navHowItWorks') },
                 { href: '#partners', label: t('navPartners') },
               ].map((link) => (
-                <a key={link.href} href={link.href} className="text-sm text-gray-500 hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white transition-colors">{link.label}</a>
+                <a key={link.href} href={link.href} className="text-base text-gray-500 hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white transition-colors">{link.label}</a>
               ))}
             </div>
           </div>

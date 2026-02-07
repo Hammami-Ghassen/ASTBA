@@ -76,7 +76,7 @@ function StepIndicator({
                 {isDone ? <Check className="h-5 w-5" /> : icons[i]}
               </div>
               <span
-                className={`text-xs font-medium text-center transition-colors ${
+                className={`text-sm font-medium text-center transition-colors ${
                   isActive
                     ? 'text-[#135bec]'
                     : isDone
@@ -338,7 +338,7 @@ export default function NewTrainingPage() {
                             className="flex-1 bg-transparent border-0 shadow-none focus:ring-0 p-0 text-sm font-semibold"
                             {...register(`levels.${levelIndex}.title`)}
                           />
-                          <span className="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">
+                          <span className="text-sm text-gray-400 dark:text-gray-500 whitespace-nowrap">
                             {level?.sessions?.length || 0} {t('sessions').toLowerCase()}
                           </span>
                         </div>
@@ -351,7 +351,7 @@ export default function NewTrainingPage() {
                               className="flex items-center gap-2 px-4 py-2.5 group hover:bg-gray-50 dark:hover:bg-[#1a2740] transition-colors"
                             >
                               <GripVertical className="h-4 w-4 text-gray-300 dark:text-gray-600 shrink-0" />
-                              <span className="text-xs text-gray-400 dark:text-gray-500 font-mono w-6 shrink-0">
+                              <span className="text-sm text-gray-400 dark:text-gray-500 font-mono w-6 shrink-0">
                                 {sessionIndex + 1}.
                               </span>
                               <Input
@@ -380,7 +380,7 @@ export default function NewTrainingPage() {
                           <button
                             type="button"
                             onClick={() => addSession(levelIndex)}
-                            className="flex items-center gap-1.5 text-xs text-[#135bec] hover:text-blue-700 font-medium transition-colors"
+                            className="flex items-center gap-1.5 text-sm text-[#135bec] hover:text-blue-700 font-medium transition-colors"
                           >
                             <Plus className="h-3.5 w-3.5" />
                             {t('addSession')}
@@ -431,7 +431,7 @@ export default function NewTrainingPage() {
                   onChange={(url) => setValue('documentUrl', url)}
                 />
 
-                <p className="text-xs text-gray-400 dark:text-gray-500">
+                <p className="text-sm text-gray-400 dark:text-gray-500">
                   {t('pdfOptionalHint')}
                 </p>
               </CardContent>

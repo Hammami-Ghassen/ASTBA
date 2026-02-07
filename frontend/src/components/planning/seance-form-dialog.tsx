@@ -219,7 +219,7 @@ export function SeanceFormDialog({ open, onOpenChange, date, seance }: SeanceFor
             </Select>
             {/* Availability indicator */}
             {trainerId && seanceDate && startTime && endTime && (
-              <div className="flex items-center gap-1.5 text-xs mt-1">
+              <div className="flex items-center gap-1.5 text-sm mt-1">
                 {checkingAvailability ? (
                   <span className="text-gray-500">{t('checkingAvailability')}</span>
                 ) : availabilityOk === true ? (
@@ -240,7 +240,7 @@ export function SeanceFormDialog({ open, onOpenChange, date, seance }: SeanceFor
             <Label>{tc('date')}</Label>
             <Input type="date" value={seanceDate} onChange={(e) => setSeanceDate(e.target.value)} required min={new Date().toISOString().slice(0, 10)} />
             {seanceDate && seanceDate < new Date().toISOString().slice(0, 10) && (
-              <p className="text-xs text-red-600">{t('datePastError')}</p>
+              <p className="text-sm text-red-600">{t('datePastError')}</p>
             )}
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -254,7 +254,7 @@ export function SeanceFormDialog({ open, onOpenChange, date, seance }: SeanceFor
             </div>
           </div>
           {startTime && endTime && endTime <= startTime && (
-            <p className="text-xs text-red-600">{t('endTimeError')}</p>
+            <p className="text-sm text-red-600">{t('endTimeError')}</p>
           )}
 
           {/* Title (optional) */}

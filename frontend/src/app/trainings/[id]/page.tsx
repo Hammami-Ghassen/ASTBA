@@ -130,7 +130,7 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
                             {t('session')} {session.sessionNumber}
                           </span>
                           {session.plannedAt && (
-                            <span className="text-xs text-gray-400">{session.plannedAt}</span>
+                            <span className="text-sm text-gray-400">{session.plannedAt}</span>
                           )}
                         </div>
                       </div>

@@ -67,14 +67,14 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
             <svg className="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#92a4c9]">
+            <span className="text-sm font-semibold uppercase tracking-wider text-[#92a4c9]">
               {t('complianceBadge')}
             </span>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="relative z-20 text-xs text-[#92a4c9]">
+        <div className="relative z-20 text-sm text-[#92a4c9]">
           © 2026 ASTBA Inc. All rights reserved.
         </div>
       </div>
@@ -103,7 +103,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
             <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
               <Link
                 href="/"
-                className="group flex items-center gap-2 rounded-lg border border-[#324467] px-3 py-2 text-sm font-medium text-[#92a4c9] transition-all hover:border-[#135bec] hover:bg-[#135bec]/10 hover:text-white"
+                className="group flex items-center gap-2 rounded-lg border border-[#324467] px-3 py-2 text-base font-medium text-[#92a4c9] transition-all hover:border-[#135bec] hover:bg-[#135bec]/10 hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5 rtl:rotate-180 rtl:group-hover:translate-x-0.5" aria-hidden="true" />
                 {t('backToHome')}
@@ -113,7 +113,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
               {locales.map((l) => (
                 <label
                   key={l}
-                  className={`group relative flex h-9 cursor-pointer items-center justify-center rounded-lg border px-3 text-xs font-medium transition-colors
+                  className={`group relative flex h-9 cursor-pointer items-center justify-center rounded-lg border px-3 text-sm font-medium transition-colors
                     ${locale === l
                       ? 'border-[#135bec] bg-[#135bec]/10 text-white'
                       : 'border-[#324467] text-[#92a4c9] hover:bg-[#192233]'

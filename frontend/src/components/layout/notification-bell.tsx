@@ -81,7 +81,7 @@ export function NotificationBell() {
                 >
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{n.title}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{n.message}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{n.message}</p>
                     <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">
                       {n.createdAt ? new Date(n.createdAt).toLocaleString('fr-FR', {
                         day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',

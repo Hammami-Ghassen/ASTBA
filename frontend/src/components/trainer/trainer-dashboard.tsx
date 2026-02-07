@@ -200,7 +200,7 @@ export function TrainerDashboard() {
                         </div>
 
                         {/* Info row */}
-                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
                           <span className="flex items-center gap-1">
                             <Calendar className="h-3.5 w-3.5" /> {seance.date}
                           </span>
@@ -361,9 +361,9 @@ export function TrainerDashboard() {
                 min={new Date().toISOString().slice(0, 10)}
               />
               {reportSuggestedDate && reportSuggestedDate < new Date().toISOString().slice(0, 10) && (
-                <p className="text-xs text-red-600">{t('suggestedDatePastError')}</p>
+                <p className="text-sm text-red-600">{t('suggestedDatePastError')}</p>
               )}
-              <p className="text-xs text-gray-500">{t('suggestedDateHint')}</p>
+              <p className="text-sm text-gray-500">{t('suggestedDateHint')}</p>
             </div>
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => setReportOpen(false)}>

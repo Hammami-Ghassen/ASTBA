@@ -157,7 +157,7 @@ function AdminUsersContent() {
                   <TableRow key={u.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 text-xs font-semibold text-sky-700 dark:bg-sky-900 dark:text-sky-300">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 text-sm font-semibold text-sky-700 dark:bg-sky-900 dark:text-sky-300">
                           {getInitials(u.firstName, u.lastName)}
                         </span>
                         <span className="font-medium">
@@ -195,7 +195,7 @@ function AdminUsersContent() {
                           }
                         >
                           <SelectTrigger
-                            className="h-8 w-[120px] text-xs"
+                            className="h-8 w-[120px] text-sm"
                             aria-label={`${t('changeRole')} – ${u.firstName} ${u.lastName}`}
                           >
                             <SelectValue />

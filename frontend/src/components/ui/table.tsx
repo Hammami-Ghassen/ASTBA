@@ -41,7 +41,7 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
   return (
     <th
       className={cn(
-        'h-12 px-4 text-start align-middle font-semibold text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 [&:has([role=checkbox])]:pe-0',
+        'h-12 px-4 text-start align-middle font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 [&:has([role=checkbox])]:pe-0',
         className
       )}
       {...props}

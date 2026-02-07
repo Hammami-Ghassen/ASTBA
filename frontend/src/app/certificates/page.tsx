@@ -49,7 +49,7 @@ export default function CertificatesPage() {
 
       {/* Filter by training */}
       <div className="max-w-sm space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="text-base font-medium text-gray-700 dark:text-gray-300">
           {t('training')}
         </label>
         {trainingsLoading ? (
@@ -168,7 +168,7 @@ function CertificateRow({ enrollment, canGenerate }: { enrollment: { id: string;
           ) : (
             <Badge variant="outline">{t('inProgress')}</Badge>
           )}
-          <span className="text-xs text-gray-500">{attended}/{total}</span>
+          <span className="text-sm text-gray-500">{attended}/{total}</span>
         </div>
       </TableCell>
       <TableCell>
