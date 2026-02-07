@@ -240,7 +240,12 @@ export default function NewTrainingPage() {
           icons={stepIcons}
         />
 
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+          noValidate
+        >
           {/* ═══════════════ Step 1: Title + Description ═══════════════ */}
           {currentStep === 1 && (
             <Card>
@@ -457,7 +462,8 @@ export default function NewTrainingPage() {
               </Button>
             ) : (
               <Button
-                type="submit"
+                type="button"
+                onClick={() => handleSubmit(onSubmit)()}
                 disabled={isSubmitting || createMutation.isPending}
                 className="min-w-[140px]"
               >

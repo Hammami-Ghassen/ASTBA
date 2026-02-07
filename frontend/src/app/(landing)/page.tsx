@@ -29,7 +29,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#101622] text-white overflow-x-hidden">
       {/* ─── NAVIGATION ─── */}
-      <nav className="fixed top-0 z-50 w-full border-b border-white/5 bg-[#101622]/80 backdrop-blur-xl">
+      <nav className="nav-cursor fixed top-0 z-50 w-full border-b border-white/5 bg-[#101622]/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#135bec] to-blue-400 shadow-lg shadow-[#135bec]/25 transition-shadow group-hover:shadow-[#135bec]/40">

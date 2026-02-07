@@ -3,7 +3,8 @@
 import { useTranslations } from 'next-intl';
 import { useLocale } from '@/lib/providers';
 import { locales, type Locale } from '@/i18n-config';
-import { Shield } from 'lucide-react';
+import { Shield, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 const localeLabels: Record<Locale, string> = {
   'fr': 'Français',
@@ -87,8 +88,17 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
         {/* Scrollable content area */}
         <div className="flex h-full flex-col overflow-y-auto no-scrollbar">
           <div className="mx-auto w-full max-w-[640px] px-6 py-8 lg:px-12 lg:py-12">
-            {/* Language selector */}
-            <div aria-label="Language selection" className="mb-8 flex flex-wrap items-center justify-end gap-3" role="group">
+            {/* Back to landing + Language selector */}
+            <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+              <Link
+                href="/"
+                className="group flex items-center gap-2 rounded-lg border border-[#324467] px-3 py-2 text-sm font-medium text-[#92a4c9] transition-all hover:border-[#135bec] hover:bg-[#135bec]/10 hover:text-white"
+              >
+                <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5 rtl:rotate-180 rtl:group-hover:translate-x-0.5" aria-hidden="true" />
+                {t('backToHome')}
+              </Link>
+
+              <div aria-label="Language selection" className="flex flex-wrap items-center gap-3" role="group">
               {locales.map((l) => (
                 <label
                   key={l}
@@ -110,6 +120,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
                   />
                 </label>
               ))}
+              </div>
             </div>
 
             {children}

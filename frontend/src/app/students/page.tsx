@@ -228,9 +228,9 @@ export default function StudentsPage() {
 
       {/* Delete confirmation dialog */}
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
-        <DialogContent aria-labelledby="delete-dialog-title">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle id="delete-dialog-title">{tc('confirm')}</DialogTitle>
+            <DialogTitle>{tc('confirm')}</DialogTitle>
             <DialogDescription>{t('deleteConfirm')}</DialogDescription>
           </DialogHeader>
           <DialogFooter>

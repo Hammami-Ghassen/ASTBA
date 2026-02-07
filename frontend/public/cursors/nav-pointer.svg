@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none">
+  <!-- Nav pointer: Bold filled ring for hover -->
+  <!-- Outer ring -->
+  <circle cx="22" cy="22" r="18" stroke="#60a5fa" stroke-width="2.5" fill="none" opacity="0.3"/>
+  <!-- Inner filled circle -->
+  <circle cx="22" cy="22" r="10" fill="#135bec" stroke="#ffffff" stroke-width="2.5"/>
+  <!-- Sparkle dot top-right -->
+  <circle cx="34" cy="10" r="2.5" fill="#60a5fa"/>
+  <circle cx="34" cy="10" r="1" fill="#ffffff"/>
+</svg>

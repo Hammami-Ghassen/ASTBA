@@ -249,6 +249,7 @@
     "phoneAlreadyUsed": "Ce numéro est déjà utilisé"
   },
   "auth": {
+    "backToHome": "Retour",
     "login": "Se connecter",
     "loginTitle": "Connexion",
     "loginDescription": "Connectez-vous à votre compte ASTBA",
