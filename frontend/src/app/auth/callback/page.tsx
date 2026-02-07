@@ -26,10 +26,16 @@ export default function AuthCallbackPage() {
       return;
     }
 
-    // After OAuth redirect, backend sets HttpOnly cookie.
-    // Verify by calling /api/auth/me
+    // After OAuth redirect, backend provides a one-time code.
+    // Exchange it for cookies via the Next.js proxy, then verify with /me.
     async function verifyAuth() {
+      const code = searchParams.get('code');
       try {
+        if (code) {
+          // Exchange the one-time code for HttpOnly cookies (through proxy)
+          await authApi.exchangeOAuth2Code(code);
+        }
+        // Now verify that cookies are set correctly
         await authApi.me();
         setStatus('success');
         // Redirect to dashboard after short delay

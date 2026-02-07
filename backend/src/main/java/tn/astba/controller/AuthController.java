@@ -15,6 +15,7 @@ import tn.astba.dto.LoginRequest;
 import tn.astba.dto.RegisterRequest;
 import tn.astba.dto.UserResponse;
 import tn.astba.security.CookieHelper;
+import tn.astba.security.OAuth2CodeStore;
 import tn.astba.service.AuthService;
 import tn.astba.service.AuthService.LoginResult;
 
@@ -26,6 +27,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final CookieHelper cookieHelper;
+    private final OAuth2CodeStore oAuth2CodeStore;
 
     @Operation(summary = "Inscription d'un nouvel utilisateur")
     @PostMapping("/register")
@@ -84,5 +86,22 @@ public class AuthController {
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal String userId) {
         UserResponse user = authService.getCurrentUser(userId);
         return ResponseEntity.ok(user);
+    }
+
+    @Operation(summary = "Échanger un code OAuth2 unique contre des cookies JWT",
+               description = "Après un login Google, le backend redirige avec un code temporaire. "
+                           + "Le frontend échange ce code via le proxy Next.js pour que les cookies "
+                           + "soient posés sur le domaine du frontend.")
+    @PostMapping("/oauth2-exchange")
+    public ResponseEntity<?> oauth2Exchange(@RequestParam String code,
+                                            HttpServletResponse response) {
+        OAuth2CodeStore.TokenPair tokens = oAuth2CodeStore.exchange(code);
+        if (tokens == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(java.util.Map.of("error", "Code invalide ou expiré"));
+        }
+        cookieHelper.setAccessTokenCookie(response, tokens.accessToken());
+        cookieHelper.setRefreshTokenCookie(response, tokens.refreshToken());
+        return ResponseEntity.ok(java.util.Map.of("message", "Cookies définis"));
     }
 }

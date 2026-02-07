@@ -52,7 +52,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     // Public endpoints (login, register, refresh, logout – but NOT /me)
                     .requestMatchers("/api/auth/login", "/api/auth/register",
-                                     "/api/auth/refresh", "/api/auth/logout").permitAll()
+                                     "/api/auth/refresh", "/api/auth/logout",
+                                     "/api/auth/oauth2-exchange").permitAll()
                     .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                     .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/api-docs/**").permitAll()
                     .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()

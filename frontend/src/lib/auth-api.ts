@@ -96,6 +96,13 @@ export const authApi = {
             BASE_URL.replace(/\/api\/?$/, '');
         return `${backendBase}/oauth2/authorization/google`;
     },
+
+    /** POST /api/auth/oauth2-exchange – Exchange one-time OAuth2 code for cookies */
+    async exchangeOAuth2Code(code: string): Promise<void> {
+        await authFetch<{ message: string }>(`/auth/oauth2-exchange?code=${encodeURIComponent(code)}`, {
+            method: 'POST',
+        });
+    },
 };
 
 // ──────────────── Admin Endpoints ────────────────

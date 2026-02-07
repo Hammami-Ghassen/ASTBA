@@ -25,7 +25,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final AuthService authService;
     private final JwtService jwtService;
-    private final CookieHelper cookieHelper;
+    private final OAuth2CodeStore oAuth2CodeStore;
     private final RefreshTokenService refreshTokenService;
 
     @Value("${astba.frontend-url:http://localhost:3000}")
@@ -50,12 +50,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String refreshToken = jwtService.generateRefreshToken(user.getId());
         refreshTokenService.storeRefreshToken(user.getId(), refreshToken);
 
-        cookieHelper.setAccessTokenCookie(response, accessToken);
-        cookieHelper.setRefreshTokenCookie(response, refreshToken);
+        // Generate a one-time code instead of setting cookies directly.
+        // The frontend will exchange this code via the Next.js API proxy,
+        // so cookies are set on the frontend domain (same origin).
+        String code = oAuth2CodeStore.generateCode(accessToken, refreshToken);
 
         log.info("Connexion OAuth2 réussie: email={}", email);
 
-        String targetUrl = frontendUrl + "/auth/callback?provider=google";
+        String targetUrl = frontendUrl + "/auth/callback?provider=google&code=" + code;
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }
