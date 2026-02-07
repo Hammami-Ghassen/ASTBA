@@ -51,25 +51,57 @@ body {
 }
 
 @keyframes pageIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Stagger-in for lists ── */
-.stagger-in > * {
+.stagger-in>* {
   opacity: 0;
   animation: fadeSlideUp 0.5s ease-out forwards;
 }
-.stagger-in > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-in > *:nth-child(2) { animation-delay: 80ms; }
-.stagger-in > *:nth-child(3) { animation-delay: 160ms; }
-.stagger-in > *:nth-child(4) { animation-delay: 240ms; }
-.stagger-in > *:nth-child(5) { animation-delay: 320ms; }
-.stagger-in > *:nth-child(6) { animation-delay: 400ms; }
+
+.stagger-in>*:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.stagger-in>*:nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.stagger-in>*:nth-child(3) {
+  animation-delay: 160ms;
+}
+
+.stagger-in>*:nth-child(4) {
+  animation-delay: 240ms;
+}
+
+.stagger-in>*:nth-child(5) {
+  animation-delay: 320ms;
+}
+
+.stagger-in>*:nth-child(6) {
+  animation-delay: 400ms;
+}
 
 @keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Scroll-triggered reveal ── */
@@ -78,6 +110,7 @@ body {
   transform: translateY(30px);
   transition: opacity 0.7s ease-out, transform 0.7s ease-out;
 }
+
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
@@ -100,52 +133,114 @@ body {
 
 /* ── Hero carousel ── */
 @keyframes carouselFade {
-  0%, 20% { opacity: 1; }
-  25%, 95% { opacity: 0; }
-  100% { opacity: 1; }
+
+  0%,
+  20% {
+    opacity: 1;
+  }
+
+  25%,
+  95% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 .carousel-slide {
   animation: carouselFade 25s infinite;
 }
-.carousel-slide:nth-child(1) { animation-delay: 0s; }
-.carousel-slide:nth-child(2) { animation-delay: 5s; }
-.carousel-slide:nth-child(3) { animation-delay: 10s; }
-.carousel-slide:nth-child(4) { animation-delay: 15s; }
-.carousel-slide:nth-child(5) { animation-delay: 20s; }
+
+.carousel-slide:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.carousel-slide:nth-child(2) {
+  animation-delay: 5s;
+}
+
+.carousel-slide:nth-child(3) {
+  animation-delay: 10s;
+}
+
+.carousel-slide:nth-child(4) {
+  animation-delay: 15s;
+}
+
+.carousel-slide:nth-child(5) {
+  animation-delay: 20s;
+}
 
 /* ── Partner logo slider ── */
 @keyframes scrollLogos {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
+
 .logo-slider {
   animation: scrollLogos 30s linear infinite;
 }
+
 .logo-slider:hover {
   animation-play-state: paused;
 }
 
 /* ── Floating animation ── */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
 }
-.animate-float { animation: float 6s ease-in-out infinite; }
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
 
 /* ── Glow pulse ── */
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
 }
-.animate-glow-pulse { animation: glowPulse 3s ease-in-out infinite; }
+
+.animate-glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite;
+}
 
 /* ── Gradient text shimmer ── */
 @keyframes shimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
+
 .text-shimmer {
   background-size: 200% 200%;
   animation: shimmer 4s ease-in-out infinite;
@@ -153,9 +248,17 @@ body {
 
 /* ── Counter animation ── */
 @keyframes countUp {
-  from { opacity: 0; transform: scale(0.5); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
+
 .animate-count-up {
   animation: countUp 0.6s ease-out both;
 }
@@ -225,13 +328,16 @@ textarea,
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #324467;
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #4a6590;
 }
@@ -247,11 +353,29 @@ textarea,
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal { opacity: 1; transform: none; }
-  .logo-slider { animation: none; }
-  .carousel-slide { animation: none; opacity: 1; }
-  .stagger-in > * { opacity: 1; animation: none; }
-  .page-transition { animation: none; }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .logo-slider {
+    animation: none;
+  }
+
+  .carousel-slide {
+    animation: none;
+    opacity: 1;
+  }
+
+  .stagger-in>* {
+    opacity: 1;
+    animation: none;
+  }
+
+  .page-transition {
+    animation: none;
+  }
 }
 
 /* Dark mode smooth transition */
@@ -269,22 +393,41 @@ html.dark body {
 html.dark ::-webkit-scrollbar-thumb {
   background: #4a6590;
 }
+
 html.dark ::-webkit-scrollbar-thumb:hover {
   background: #5a7aae;
 }
 
 /* Stagger-in for more children */
-.stagger-in > *:nth-child(7) { animation-delay: 480ms; }
-.stagger-in > *:nth-child(8) { animation-delay: 560ms; }
-.stagger-in > *:nth-child(9) { animation-delay: 640ms; }
-.stagger-in > *:nth-child(10) { animation-delay: 720ms; }
-.stagger-in > *:nth-child(11) { animation-delay: 800ms; }
-.stagger-in > *:nth-child(12) { animation-delay: 880ms; }
+.stagger-in>*:nth-child(7) {
+  animation-delay: 480ms;
+}
+
+.stagger-in>*:nth-child(8) {
+  animation-delay: 560ms;
+}
+
+.stagger-in>*:nth-child(9) {
+  animation-delay: 640ms;
+}
+
+.stagger-in>*:nth-child(10) {
+  animation-delay: 720ms;
+}
+
+.stagger-in>*:nth-child(11) {
+  animation-delay: 800ms;
+}
+
+.stagger-in>*:nth-child(12) {
+  animation-delay: 880ms;
+}
 
 /* Hover glow effect for interactive cards */
 .hover-glow {
   position: relative;
 }
+
 .hover-glow::after {
   content: '';
   position: absolute;
@@ -296,6 +439,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   transition: opacity 0.3s ease;
   filter: blur(8px);
 }
+
 .hover-glow:hover::after {
   opacity: 0.15;
 }
