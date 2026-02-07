@@ -49,7 +49,7 @@ export default function StudentsPage() {
   const { data, isLoading, error, refetch } = useStudents({
     query: searchQuery || undefined,
     page,
-    size: 10,
+    size: 15,
   });
 
   const deleteMutation = useDeleteStudent();

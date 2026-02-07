@@ -8,19 +8,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import tn.astba.domain.*;
 import tn.astba.repository.EnrollmentRepository;
+import tn.astba.repository.GroupRepository;
 import tn.astba.repository.StudentRepository;
 import tn.astba.repository.TrainingRepository;
 import tn.astba.repository.UserRepository;
 import tn.astba.service.ProgressCalculator;
 import tn.astba.service.TrainingService;
 
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 /**
  * Seed data for demo purposes.
  * Only runs if collections are empty.
+ * Seeds 50 students, 10 trainings, 5 groups (10 students each) with varied progression.
  */
 @Slf4j
 @Component
@@ -30,6 +34,7 @@ public class DataSeeder implements CommandLineRunner {
     private final StudentRepository studentRepository;
     private final TrainingRepository trainingRepository;
     private final EnrollmentRepository enrollmentRepository;
+    private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -38,6 +43,38 @@ public class DataSeeder implements CommandLineRunner {
 
     @Value("${astba.seed.admin-password:Admin123!}")
     private String seedAdminPassword;
+
+    // ── Name pools ──
+    private static final String[] FIRST_NAMES_M = {
+        "Ahmed", "Mohamed", "Youssef", "Sami", "Omar", "Ali", "Hamza", "Amine",
+        "Karim", "Bilel", "Fares", "Nabil", "Rami", "Khalil", "Zied", "Hatem",
+        "Aymen", "Mehdi", "Hichem", "Nizar", "Wassim", "Sofien", "Anas", "Ghaith", "Seif"
+    };
+    private static final String[] FIRST_NAMES_F = {
+        "Fatma", "Amira", "Nour", "Ines", "Sara", "Mariem", "Yasmine", "Rania",
+        "Chaima", "Hiba", "Donia", "Meriem", "Eya", "Farah", "Asma", "Salma",
+        "Rahma", "Ghada", "Aya", "Lina", "Wissal", "Malek", "Rim", "Syrine", "Manel"
+    };
+    private static final String[] LAST_NAMES = {
+        "Ben Ali", "Trabelsi", "Hammami", "Bouazizi", "Chahed", "Jebali", "Gharbi",
+        "Maaloul", "Bouzid", "Mansouri", "Khelifi", "Haddad", "Rezgui", "Mejri",
+        "Nasri", "Dridi", "Saidi", "Belhadj", "Tlili", "Makhlouf", "Ayari",
+        "Bennour", "Souissi", "Khemiri", "Ghanmi"
+    };
+
+    // ── Training definitions ──
+    private static final String[][] TRAINING_DEFS = {
+        {"Robotique Débutant",       "Initiation à la robotique : électronique, Arduino et construction de robots simples."},
+        {"Web Dev Junior",           "Développement web : HTML, CSS, JavaScript et introduction à React."},
+        {"Python pour les Jeunes",   "Programmation Python ludique : jeux, quiz et mini-projets."},
+        {"Électronique Créative",    "Circuits, capteurs et projets IoT pour débutants."},
+        {"Design 3D & Impression",   "Modélisation 3D avec TinkerCAD et Fusion 360, impression 3D."},
+        {"Intelligence Artificielle","Bases de l'IA : machine learning, vision par ordinateur, chatbots."},
+        {"Développement Mobile",     "Création d'applications mobiles avec Flutter."},
+        {"Cybersécurité Junior",     "Sécurité informatique, cryptographie et hacking éthique pour débutants."},
+        {"Jeux Vidéo avec Unity",    "Création de jeux 2D/3D avec le moteur Unity et C#."},
+        {"Drones & Aéromodélisme",   "Pilotage, programmation et construction de drones."},
+    };
 
     @Override
     public void run(String... args) {
@@ -48,77 +85,125 @@ public class DataSeeder implements CommandLineRunner {
             return;
         }
 
-        log.info("=== Initialisation des données de démonstration ===");
+        log.info("=== Initialisation des données de démonstration (50 étudiants, 10 formations, 5 groupes) ===");
 
-        // ====== TRAININGS ======
-        Training robotique = Training.builder()
-                .title("Robotique Débutant")
-                .description("Formation d'initiation à la robotique pour débutants. " +
-                             "Couvre les bases de l'électronique, la programmation Arduino et la construction de robots simples.")
-                .levels(TrainingService.generateDefaultLevels())
-                .build();
+        // ====== 10 TRAININGS ======
+        List<Training> trainings = new ArrayList<>();
+        for (String[] def : TRAINING_DEFS) {
+            Training t = Training.builder()
+                    .title(def[0])
+                    .description(def[1])
+                    .levels(TrainingService.generateDefaultLevels())
+                    .build();
+            trainings.add(trainingRepository.save(t));
+        }
+        log.info("{} formations créées", trainings.size());
 
-        Training webDev = Training.builder()
-                .title("Web Dev Junior")
-                .description("Formation au développement web : HTML, CSS, JavaScript et introduction à React. " +
-                             "Projet final : création d'un site web interactif.")
-                .levels(TrainingService.generateDefaultLevels())
-                .build();
-
-        robotique = trainingRepository.save(robotique);
-        webDev = trainingRepository.save(webDev);
-        log.info("2 formations créées: '{}', '{}'", robotique.getTitle(), webDev.getTitle());
-
-        // ====== STUDENTS ======
+        // ====== 50 STUDENTS ======
+        Random rng = new Random(42); // deterministic seed
         List<Student> students = new ArrayList<>();
-        students.add(createStudent("Ahmed", "Ben Ali", LocalDate.of(2010, 3, 15), "ahmed.benali@email.com", "55 123 456"));
-        students.add(createStudent("Fatma", "Trabelsi", LocalDate.of(2009, 7, 22), "fatma.trabelsi@email.com", "55 234 567"));
-        students.add(createStudent("Mohamed", "Hammami", LocalDate.of(2011, 1, 8), "mohamed.hammami@email.com", "55 345 678"));
-        students.add(createStudent("Amira", "Bouazizi", LocalDate.of(2010, 11, 30), "amira.bouazizi@email.com", "55 456 789"));
-        students.add(createStudent("Youssef", "Chahed", LocalDate.of(2009, 5, 12), "youssef.chahed@email.com", "55 567 890"));
-        students.add(createStudent("Nour", "Jebali", LocalDate.of(2011, 9, 3), "nour.jebali@email.com", "55 678 901"));
-        students.add(createStudent("Sami", "Gharbi", LocalDate.of(2010, 6, 18), null, "55 789 012"));
-        students.add(createStudent("Ines", "Maaloul", LocalDate.of(2009, 12, 25), "ines.maaloul@email.com", null));
+        for (int i = 0; i < 50; i++) {
+            boolean female = i % 2 == 1;
+            String firstName = female
+                    ? FIRST_NAMES_F[i / 2 % FIRST_NAMES_F.length]
+                    : FIRST_NAMES_M[i / 2 % FIRST_NAMES_M.length];
+            String lastName = LAST_NAMES[i % LAST_NAMES.length];
 
+            int year = 2009 + rng.nextInt(4);     // 2009-2012
+            int month = 1 + rng.nextInt(12);
+            int day = 1 + rng.nextInt(28);
+            LocalDate birthDate = LocalDate.of(year, month, day);
+
+            String phone = String.format("%08d", 50000000 + i * 111111);
+            String email = (firstName + "." + lastName)
+                    .toLowerCase()
+                    .replace(" ", "")
+                    .replace("é", "e")
+                    .replace("è", "e")
+                    .replace("ê", "e")
+                    + (i + 1) + "@email.com";
+
+            students.add(Student.builder()
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .birthDate(birthDate)
+                    .email(email)
+                    .phone(phone)
+                    .build());
+        }
         students = studentRepository.saveAll(students);
         log.info("{} étudiants créés", students.size());
 
-        // ====== ENROLLMENTS ======
-        // Ahmed, Fatma, Mohamed enrolled in Robotique
-        Enrollment enrollAhmed = createEnrollment(students.get(0).getId(), robotique.getId());
-        Enrollment enrollFatma = createEnrollment(students.get(1).getId(), robotique.getId());
-        Enrollment enrollMohamed = createEnrollment(students.get(2).getId(), robotique.getId());
+        // ====== TRAINER user id (for groups) ======
+        String trainerId = userRepository.findByEmail("trainer@astba.tn")
+                .map(User::getId)
+                .orElse(null);
 
-        // Amira, Youssef enrolled in Web Dev
-        Enrollment enrollAmira = createEnrollment(students.get(3).getId(), webDev.getId());
-        Enrollment enrollYoussef = createEnrollment(students.get(4).getId(), webDev.getId());
+        // ====== 5 GROUPS (10 students each) — first 5 trainings ======
+        DayOfWeek[] days = { DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.SATURDAY };
+        LocalTime[] starts = { LocalTime.of(9, 0), LocalTime.of(10, 0), LocalTime.of(14, 0), LocalTime.of(15, 0), LocalTime.of(9, 30) };
 
-        // ====== ATTENDANCE: Make Ahmed ALMOST complete (all 24 sessions PRESENT) for demo ======
-        markAllPresent(enrollAhmed, robotique);
-        enrollAhmed.setProgressSnapshot(ProgressCalculator.compute(enrollAhmed, robotique));
-        enrollmentRepository.save(enrollAhmed);
-        log.info("Ahmed: toutes les séances marquées PRESENT → certificat disponible !");
+        List<Group> groups = new ArrayList<>();
+        for (int g = 0; g < 5; g++) {
+            Training training = trainings.get(g);
+            List<String> groupStudentIds = new ArrayList<>();
+            for (int s = g * 10; s < (g + 1) * 10; s++) {
+                groupStudentIds.add(students.get(s).getId());
+            }
+            Group group = Group.builder()
+                    .name("Groupe " + (char) ('A' + g))
+                    .trainingId(training.getId())
+                    .dayOfWeek(days[g])
+                    .startTime(starts[g])
+                    .endTime(starts[g].plusHours(1).plusMinutes(30))
+                    .studentIds(groupStudentIds)
+                    .trainerId(trainerId)
+                    .build();
+            groups.add(groupRepository.save(group));
+            log.info("Groupe {} créé: {} étudiants pour '{}'", group.getName(), groupStudentIds.size(), training.getTitle());
+        }
 
-        // Fatma: 18/24 sessions present (levels 1-3 complete, level 4 partial)
-        markLevelsPresent(enrollFatma, robotique, 3);
-        enrollFatma.setProgressSnapshot(ProgressCalculator.compute(enrollFatma, robotique));
-        enrollmentRepository.save(enrollFatma);
-        log.info("Fatma: 18/24 séances marquées (niveaux 1-3 validés)");
+        // ====== ENROLLMENTS with varied attendance ======
+        // Progression pattern per group of 10 students:
+        //   2 students → 24/24 PRESENT (eligible for certificate)
+        //   2 students → 18/24 (levels 1-3)
+        //   2 students → 12/24 (levels 1-2)
+        //   2 students → 6/24  (level 1 only)
+        //   2 students → 0/24  (no attendance)
+        int[] levelsPattern = {4, 4, 3, 3, 2, 2, 1, 1, 0, 0};
 
-        // Mohamed: 6/24 sessions present (level 1 only)
-        markLevelsPresent(enrollMohamed, robotique, 1);
-        enrollMohamed.setProgressSnapshot(ProgressCalculator.compute(enrollMohamed, robotique));
-        enrollmentRepository.save(enrollMohamed);
-        log.info("Mohamed: 6/24 séances marquées (niveau 1 validé)");
+        int enrollmentCount = 0;
+        for (int g = 0; g < 5; g++) {
+            Training training = trainings.get(g);
+            Group group = groups.get(g);
+            for (int s = 0; s < 10; s++) {
+                Student student = students.get(g * 10 + s);
+                Enrollment enrollment = Enrollment.builder()
+                        .studentId(student.getId())
+                        .trainingId(training.getId())
+                        .groupId(group.getId())
+                        .enrolledAt(Instant.now())
+                        .attendance(new HashMap<>())
+                        .build();
+                enrollment = enrollmentRepository.save(enrollment);
 
-        // Amira: 12/24 present in Web Dev
-        markLevelsPresent(enrollAmira, webDev, 2);
-        enrollAmira.setProgressSnapshot(ProgressCalculator.compute(enrollAmira, webDev));
-        enrollmentRepository.save(enrollAmira);
-        log.info("Amira: 12/24 séances marquées en Web Dev (niveaux 1-2 validés)");
+                int levelsToMark = levelsPattern[s];
+                if (levelsToMark == 4) {
+                    markAllPresent(enrollment, training);
+                } else if (levelsToMark > 0) {
+                    markLevelsPresent(enrollment, training, levelsToMark);
+                }
+
+                enrollment.setProgressSnapshot(ProgressCalculator.compute(enrollment, training));
+                enrollmentRepository.save(enrollment);
+                enrollmentCount++;
+            }
+        }
+        log.info("{} inscriptions créées avec présences variées", enrollmentCount);
 
         log.info("=== Données de démonstration chargées avec succès ===");
-        log.info("  → Ahmed Ben Ali est éligible pour un certificat (Robotique)");
+        log.info("  → 50 étudiants, 10 formations, 5 groupes");
+        log.info("  → Par groupe: 2 certifiables, 2×niv1-3, 2×niv1-2, 2×niv1, 2×aucun");
         log.info("  → Swagger UI: http://localhost:8080/swagger-ui.html");
     }
 
@@ -170,26 +255,6 @@ public class DataSeeder implements CommandLineRunner {
                     .build());
             log.info("Utilisateur manager de démo créé: manager@astba.tn");
         }
-    }
-
-    private Student createStudent(String firstName, String lastName, LocalDate birthDate, String email, String phone) {
-        return Student.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .birthDate(birthDate)
-                .email(email)
-                .phone(phone)
-                .build();
-    }
-
-    private Enrollment createEnrollment(String studentId, String trainingId) {
-        Enrollment enrollment = Enrollment.builder()
-                .studentId(studentId)
-                .trainingId(trainingId)
-                .enrolledAt(Instant.now())
-                .attendance(new HashMap<>())
-                .build();
-        return enrollmentRepository.save(enrollment);
     }
 
     private void markAllPresent(Enrollment enrollment, Training training) {
