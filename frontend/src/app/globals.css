@@ -22,7 +22,7 @@
   --color-sky-500: #0ea5e9;
   --color-sky-600: #0284c7;
   --color-sky-700: #0369a1;
-  
+
   /* New brand palette */
   --color-brand: #135bec;
   --color-brand-hover: #2563eb;
@@ -43,9 +43,18 @@ body {
 }
 
 /* ── Custom Cursors ── */
-a, button, [role="button"], label[for], select, summary,
-input[type="submit"], input[type="button"], input[type="reset"],
-input[type="checkbox"], input[type="radio"], .cursor-pointer {
+a,
+button,
+[role="button"],
+label[for],
+select,
+summary,
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+.cursor-pointer {
   cursor: url('/cursors/main-pointer.svg') 20 4, pointer;
 }
 
@@ -53,6 +62,7 @@ input[type="checkbox"], input[type="radio"], .cursor-pointer {
 .nav-cursor {
   cursor: url('/cursors/nav-cursor.svg') 22 22, crosshair;
 }
+
 .nav-cursor a,
 .nav-cursor button,
 .nav-cursor [role="button"],
@@ -63,9 +73,15 @@ input[type="checkbox"], input[type="radio"], .cursor-pointer {
 }
 
 /* Text inputs keep the main arrow feel */
-input[type="text"], input[type="email"], input[type="password"],
-input[type="search"], input[type="tel"], input[type="url"],
-input[type="number"], textarea, [contenteditable] {
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="number"],
+textarea,
+[contenteditable] {
   cursor: url('/cursors/main-cursor.svg') 10 5, text;
 }
 
@@ -80,6 +96,7 @@ input[type="number"], textarea, [contenteditable] {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
