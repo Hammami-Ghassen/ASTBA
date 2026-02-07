@@ -166,9 +166,6 @@ public class CertificateService {
                 }
 
                 // === Header: Organization Name ===
-                cs.setNonStrokingColor(0.15f, 0.35f, 0.65f); // deep blue
-                drawCenteredText(cs, "ASTBA", fontBold, 26, centerX, y, pageWidth);
-                y -= 22;
                 cs.setNonStrokingColor(0.3f, 0.3f, 0.3f);
                 drawCenteredText(cs, "Association Sciences and Technology Ben Arous", fontRegular, 11, centerX, y, pageWidth);
                 y -= 16;
