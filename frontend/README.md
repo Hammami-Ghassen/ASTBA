@@ -1,18 +1,37 @@
-# ASTBA – Frontend (Training & Attendance Tracking)
+# ASTBA — Frontend (Training & Attendance Tracking)
 
-**Association Sciences and Technology Ben Arous, Tunisie**
-
-Application de suivi des formations, présences et certifications.
+> Frontend Next.js pour l'**Association Sciences and Technology Ben Arous** (Tunisie).
+> Suivi des formations, groupes, présences, progression et certificats PDF.
 
 ---
 
-## 🚀 Quick Start
+## Table des matières
 
-### Prerequisites
+- [Démarrage rapide](#démarrage-rapide)
+- [Variables d'environnement](#variables-denvironnement)
+- [Structure du projet](#structure-du-projet)
+- [Pages & routes](#pages--routes)
+- [Architecture](#architecture)
+- [Internationalisation (i18n)](#internationalisation-i18n)
+- [API Contract](#api-contract)
+- [Authentification & RBAC](#authentification--rbac)
+- [Hypothèses métier](#hypothèses-métier)
+- [Accessibilité (WCAG 2.2 AA)](#accessibilité-wcag-22-aa)
+- [Scripts](#scripts)
+- [Script de démo](#script-de-démo)
+- [Stack technique](#stack-technique)
 
-- **Node.js** ≥ 20.x
-- **npm** ≥ 10.x
-- Backend API running (Spring Boot) on `http://localhost:8080/api`
+---
+
+## Démarrage rapide
+
+### Prérequis
+
+| Outil       | Version                                 |
+| ----------- | --------------------------------------- |
+| **Node.js** | ≥ 20.x                                  |
+| **npm**     | ≥ 10.x                                  |
+| **Backend** | Spring Boot sur `http://localhost:8080` |
 
 ### Installation
 
@@ -21,30 +40,21 @@ cd frontend
 npm install
 ```
 
-### Environment
-
-Copy `.env.example` to `.env.local`:
+### Environnement
 
 ```bash
 cp .env.example .env.local
 ```
 
-| Variable                     | Default                     | Description                      |
-| ---------------------------- | --------------------------- | -------------------------------- |
-| `NEXT_PUBLIC_API_BASE_URL`   | `http://localhost:8080/api` | Spring Boot backend URL          |
-| `NEXT_PUBLIC_DEFAULT_LOCALE` | `ar-TN`                     | Default locale (`ar-TN` or `fr`) |
-
-> **Auth** : L'authentification utilise des cookies HttpOnly définis par le backend. Aucune variable supplémentaire n'est requise côté frontend. Google OAuth2 est configuré côté backend Spring Boot.
-
-### Run Development Server
+### Lancer
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Ouvrir [http://localhost:3000](http://localhost:3000)
 
-### Build for Production
+### Build production
 
 ```bash
 npm run build
@@ -53,236 +63,343 @@ npm start
 
 ---
 
-## 📁 Project Structure
+## Variables d'environnement
+
+| Variable                     | Défaut                  | Description                                     |
+| ---------------------------- | ----------------------- | ----------------------------------------------- |
+| `NEXT_PUBLIC_API_BASE_URL`   | `/api`                  | Chemin API — `/api` pour le proxy Next.js local |
+| `NEXT_PUBLIC_BACKEND_URL`    | `http://localhost:8080` | URL réelle du backend (proxy + OAuth + images)  |
+| `NEXT_PUBLIC_DEFAULT_LOCALE` | `ar-TN`                 | Locale par défaut (`ar-TN` ou `fr`)             |
+
+### Proxy API
+
+Les appels `/api/*` sont **proxyfiés** par Next.js vers le backend (configuré dans
+`next.config.ts` via `rewrites`). Cela permet aux cookies HttpOnly du backend
+de vivre sur le **même domaine** que le frontend, évitant les problèmes
+cross-origin.
+
+```
+Browser → localhost:3000/api/auth/login → (proxy) → localhost:8080/api/auth/login
+```
+
+> **Pourquoi ?** Les cookies `access_token` / `refresh_token` sont HttpOnly.
+> Si le frontend et le backend sont sur des domaines différents, le middleware
+> Next.js ne pourrait pas voir les cookies pour protéger les routes.
+
+---
+
+## Structure du projet
 
 ```
 frontend/
 ├── src/
-│   ├── app/                      # Next.js App Router pages
-│   │   ├── page.tsx              # Dashboard (/)
-│   │   ├── layout.tsx            # Root layout (i18n, RTL, skip link, nav)
-│   │   ├── globals.css           # Global styles + a11y overrides
-│   │   ├── login/page.tsx        # Login (/login)
-│   │   ├── register/page.tsx     # Register (/register)
-│   │   ├── access-denied/page.tsx # Access denied (/access-denied)
-│   │   ├── auth/callback/page.tsx # OAuth callback (/auth/callback)
-│   │   ├── admin/users/page.tsx  # Admin user management (/admin/users)
+│   ├── app/                           # Next.js App Router
+│   │   ├── (landing)/page.tsx         # Accueil public (/)
+│   │   ├── layout.tsx                 # Root layout (i18n, RTL, skip-link, nav)
+│   │   ├── globals.css                # Styles globaux + surcharges a11y
+│   │   ├── login/page.tsx             # Connexion (/login)
+│   │   ├── register/page.tsx          # Inscription (/register)
+│   │   ├── access-denied/page.tsx     # Accès refusé (/access-denied)
+│   │   ├── auth/callback/page.tsx     # Callback OAuth2 (/auth/callback)
+│   │   ├── dashboard/page.tsx         # Tableau de bord (/dashboard)
 │   │   ├── students/
-│   │   │   ├── page.tsx          # Student list (/students)
-│   │   │   ├── new/page.tsx      # Create student (/students/new) – ADMIN/MANAGER
-│   │   │   └── [id]/page.tsx     # Student detail (/students/:id)
+│   │   │   ├── page.tsx               # Liste étudiants (/students)
+│   │   │   ├── new/page.tsx           # Créer un étudiant (/students/new)
+│   │   │   └── [id]/page.tsx          # Détail étudiant (/students/:id)
 │   │   ├── trainings/
-│   │   │   ├── page.tsx          # Training list (/trainings)
-│   │   │   ├── new/page.tsx      # Create training (/trainings/new) – ADMIN/MANAGER
-│   │   │   └── [id]/page.tsx     # Training detail (/trainings/:id)
-│   │   ├── attendance/
-│   │   │   └── page.tsx          # Attendance marking (/attendance)
-│   │   └── certificates/
-│   │       └── page.tsx          # Certificates (/certificates)
+│   │   │   ├── page.tsx               # Liste formations (/trainings)
+│   │   │   ├── new/page.tsx           # Créer formation (/trainings/new)
+│   │   │   └── [id]/page.tsx          # Détail formation (/trainings/:id)
+│   │   ├── groups/page.tsx            # Gestion des groupes (/groups)
+│   │   ├── attendance/page.tsx        # Marquage présences (/attendance)
+│   │   ├── certificates/page.tsx      # Certificats (/certificates)
+│   │   └── admin/users/page.tsx       # Gestion utilisateurs (/admin/users)
+│   │
 │   ├── components/
-│   │   ├── auth/                 # Auth components
-│   │   │   ├── google-oauth-button.tsx  # Google OAuth redirect
-│   │   │   └── require-auth.tsx         # Client-side route guard
-│   │   ├── ui/                   # Accessible UI primitives (Radix-based)
-│   │   │   ├── accordion.tsx, badge.tsx, button.tsx, card.tsx
-│   │   │   ├── dialog.tsx, input.tsx, label.tsx, progress.tsx
-│   │   │   ├── select.tsx, skeleton.tsx, table.tsx, tabs.tsx
-│   │   │   ├── textarea.tsx, toast.tsx
-│   │   └── layout/               # Layout components
-│   │       ├── breadcrumb.tsx, form-field.tsx
-│   │       ├── language-switcher.tsx, navbar.tsx, states.tsx
+│   │   ├── auth/
+│   │   │   ├── auth-layout.tsx        # Layout pages d'authentification
+│   │   │   ├── google-oauth-button.tsx # Bouton Google OAuth
+│   │   │   └── require-auth.tsx       # Guard client-side (rôle)
+│   │   ├── ui/                        # Primitives UI accessibles (Radix)
+│   │   │   ├── accordion.tsx          # Radix Accordion
+│   │   │   ├── badge.tsx              # Badge (variantes)
+│   │   │   ├── button.tsx             # Button (CVA variants)
+│   │   │   ├── card.tsx               # Card container
+│   │   │   ├── dialog.tsx             # Dialog modal (Radix)
+│   │   │   ├── image-upload.tsx       # Upload d'image avec drag & drop
+│   │   │   ├── input.tsx              # Input + error states
+│   │   │   ├── label.tsx              # Label (Radix)
+│   │   │   ├── progress.tsx           # Progress bar (Radix)
+│   │   │   ├── select.tsx             # Select dropdown (Radix)
+│   │   │   ├── skeleton.tsx           # Loading skeleton
+│   │   │   ├── table.tsx              # Table accessible (caption + th scope)
+│   │   │   ├── tabs.tsx               # Tabs (Radix)
+│   │   │   ├── textarea.tsx           # Textarea
+│   │   │   └── toast.tsx              # Toast notifications (Radix)
+│   │   └── layout/
+│   │       ├── app-shell.tsx          # Shell principal (navbar conditionnelle)
+│   │       ├── breadcrumb.tsx         # Fil d'Ariane
+│   │       ├── form-field.tsx         # Champ formulaire avec label + erreur
+│   │       ├── language-switcher.tsx  # Sélecteur FR / عربي
+│   │       ├── navbar.tsx             # Barre de navigation responsive
+│   │       └── states.tsx             # États loading / empty / error
+│   │
 │   ├── lib/
-│   │   ├── api-client.ts         # Typed REST API client (fetch + credentials)
-│   │   ├── auth-api.ts           # Auth API client (login, register, OAuth)
-│   │   ├── auth-provider.tsx     # AuthProvider context + RBAC helpers
-│   │   ├── hooks.ts              # React Query hooks
-│   │   ├── providers.tsx         # QueryClient + i18n + Auth providers
-│   │   ├── types.ts              # TypeScript domain + auth types
-│   │   ├── utils.ts              # Utility functions
-│   │   └── validators.ts         # Zod schemas for forms (incl. auth)
-│   ├── middleware.ts             # Route protection (cookie-based)
-│   └── i18n.ts                   # next-intl config
+│   │   ├── api-client.ts             # Client REST typé (students, trainings, groups…)
+│   │   ├── auth-api.ts               # Client auth (login, register, OAuth, admin)
+│   │   ├── auth-provider.tsx          # AuthContext + RBAC helpers
+│   │   ├── hooks.ts                   # React Query hooks (queries + mutations)
+│   │   ├── providers.tsx              # QueryClient + NextIntl + Auth providers
+│   │   ├── types.ts                   # Types TypeScript (domaine + auth)
+│   │   ├── utils.ts                   # Utilitaires (cn, formatDate…)
+│   │   └── validators.ts             # Schémas Zod (formulaires auth)
+│   │
+│   ├── middleware.ts                  # Protection de routes (présence cookie)
+│   ├── i18n.ts                        # Configuration next-intl
+│   └── i18n-config.ts                 # Locales supportées
+│
 ├── messages/
-│   ├── fr.json                   # French translations
-│   └── ar-TN.json                # Arabic (Tunisia) translations
+│   ├── fr.json                        # Traductions français
+│   └── ar-TN.json                     # Traductions arabe tunisien
+│
 ├── tests/
-│   └── e2e-a11y.spec.ts          # Playwright + axe-core tests
-├── playwright.config.ts
-├── .env.example
-└── next.config.ts
+│   └── e2e-a11y.spec.ts              # Playwright + axe-core (WCAG 2.2 AA)
+│
+├── .env.example                       # Template des variables d'environnement
+├── .env.local                         # Variables locales (non commité)
+├── next.config.ts                     # Config Next.js (proxy API + images)
+├── tsconfig.json
+├── postcss.config.mjs
+├── eslint.config.mjs
+└── playwright.config.ts
 ```
 
 ---
 
-## 🌐 Internationalization (i18n)
+## Pages & routes
 
-- **Default locale**: `ar-TN` (Arabic, Tunisia – RTL)
-- **Supported locales**: `ar-TN`, `fr`
-- Translation files in `/messages/`
-- Language switcher in the navbar (FR / عربي)
-- `dir="rtl"` applied dynamically on `<html>` for Arabic
-- All components use logical properties (`start`/`end` not `left`/`right`)
-
-### Adding a new language
-
-1. Create `/messages/xx.json` (copy structure from `fr.json`)
-2. Add the locale to `src/i18n.ts` → `locales` array
-3. If RTL, add to `rtlLocales`
+| Route            | Page                           | Auth requise | Rôle minimum  |
+| ---------------- | ------------------------------ | :----------: | ------------- |
+| `/`              | Landing page publique          |     Non      | —             |
+| `/login`         | Connexion                      |     Non      | —             |
+| `/register`      | Inscription                    |     Non      | —             |
+| `/auth/callback` | Callback OAuth2                |     Non      | —             |
+| `/access-denied` | Accès refusé                   |     Non      | —             |
+| `/dashboard`     | Tableau de bord                |     Oui      | Tout rôle     |
+| `/students`      | Liste des étudiants            |     Oui      | Tout rôle     |
+| `/students/new`  | Créer un étudiant              |     Oui      | ADMIN/MANAGER |
+| `/students/:id`  | Détail étudiant + inscriptions |     Oui      | Tout rôle     |
+| `/trainings`     | Liste des formations           |     Oui      | Tout rôle     |
+| `/trainings/new` | Créer une formation            |     Oui      | ADMIN/MANAGER |
+| `/trainings/:id` | Détail formation               |     Oui      | Tout rôle     |
+| `/groups`        | Gestion des groupes            |     Oui      | ADMIN/MANAGER |
+| `/attendance`    | Marquage des présences         |     Oui      | Tout rôle     |
+| `/certificates`  | Certificats                    |     Oui      | Tout rôle     |
+| `/admin/users`   | Gestion utilisateurs           |     Oui      | ADMIN         |
 
 ---
 
-## 🎯 API Contract
+## Architecture
 
-The frontend consumes a Spring Boot REST API. See `src/lib/api-client.ts` for the typed client.
+### Protection des routes (2 couches)
 
-| Method         | Path                                 | Description               |
-| -------------- | ------------------------------------ | ------------------------- |
-| GET            | `/students?query=&page=&size=`       | List students (paginated) |
-| POST           | `/students`                          | Create student            |
-| GET/PUT/DELETE | `/students/{id}`                     | Student CRUD              |
-| GET            | `/students/{id}/enrollments`         | Student enrollments       |
-| GET            | `/students/{id}/progress`            | Student progress          |
-| GET            | `/trainings`                         | List trainings            |
-| POST           | `/trainings`                         | Create training           |
-| GET/PUT/DELETE | `/trainings/{id}`                    | Training CRUD             |
-| POST           | `/enrollments`                       | Create enrollment         |
-| POST           | `/attendance/mark`                   | Mark attendance           |
-| GET            | `/enrollments/{id}/certificate`      | Download PDF              |
-| GET            | `/enrollments/{id}/certificate/meta` | Certificate metadata      |
+1. **Middleware** (`src/middleware.ts`) — Serveur Next.js. Vérifie la présence
+   d'un cookie d'authentification (`access_token`, `JSESSIONID`, etc.).
+   Si absent sur une route protégée → redirection vers `/login?redirect=...`.
 
-### Auth API
+2. **AuthProvider** (`src/lib/auth-provider.tsx`) — Client-side. Au montage,
+   appelle `GET /api/auth/me` pour valider le cookie et charger le profil
+   utilisateur. Expose `isAuthenticated`, `user`, `login()`, `logout()`,
+   `refreshUser()`.
 
-| Method | Path                           | Description                      |
-| ------ | ------------------------------ | -------------------------------- |
-| POST   | `/auth/login`                  | Login (email + password)         |
-| POST   | `/auth/register`               | Register                         |
-| GET    | `/auth/me`                     | Current user                     |
-| POST   | `/auth/logout`                 | Logout                           |
-| POST   | `/auth/refresh`                | Refresh token                    |
-| GET    | `/oauth2/authorization/google` | Google OAuth2 redirect (backend) |
-| GET    | `/admin/users`                 | List users (ADMIN only)          |
-| PUT    | `/admin/users/{id}/role`       | Change user role (ADMIN only)    |
-| PUT    | `/admin/users/{id}/status`     | Enable/disable user (ADMIN only) |
+### Data Fetching
 
-### Authentification & RBAC
+- **TanStack Query** (React Query) pour le cache, l'invalidation et les mutations.
+- Tous les hooks sont dans `src/lib/hooks.ts`.
+- Le client API (`src/lib/api-client.ts`) utilise `fetch` avec `credentials: 'include'`.
 
-**Stratégie** : Cookies HttpOnly (définis par le backend Spring Boot). Le frontend utilise `credentials: 'include'` sur toutes les requêtes.
+### Formulaires
 
-**Rôles** :
+- **React Hook Form** + **Zod** pour la validation.
+- Composant `FormField` réutilisable avec label, erreur, `aria-describedby`.
 
-| Rôle      | Droits                                                                  |
-| --------- | ----------------------------------------------------------------------- |
-| `ADMIN`   | Tout (gestion utilisateurs, formations, élèves, présences, certificats) |
-| `MANAGER` | Formations, élèves, présences, certificats (pas d'admin panel)          |
-| `TRAINER` | Consultation + marquage des présences uniquement                        |
+---
 
-**Protection des routes** :
+## Internationalisation (i18n)
 
-- **Middleware** (couche 1) : Vérifie la présence d'un cookie d'auth, redirige vers `/login` sinon
-- **RequireAuth** (couche 2) : Composant client vérifiant l'utilisateur via `/api/auth/me` + vérification de rôle
+| Propriété          | Valeur                                      |
+| ------------------ | ------------------------------------------- |
+| Librairie          | `next-intl`                                 |
+| Locale par défaut  | `ar-TN` (arabe tunisien — RTL)              |
+| Locales supportées | `ar-TN`, `fr`                               |
+| Fichiers           | `/messages/fr.json`, `/messages/ar-TN.json` |
 
-**Google OAuth2** :
+- `dir="rtl"` appliqué dynamiquement sur `<html>` pour l'arabe.
+- Tous les composants utilisent des propriétés logiques CSS (`start`/`end`).
+- Sélecteur de langue dans la navbar (FR / عربي).
 
-1. L'utilisateur clique sur « Se connecter avec Google »
-2. Redirection vers `${backendBase}/oauth2/authorization/google`
-3. Le backend gère le flux OAuth2 et définit le cookie
+### Ajouter une langue
+
+1. Créer `/messages/xx.json` (copier la structure de `fr.json`)
+2. Ajouter la locale dans `src/i18n-config.ts`
+3. Si RTL, ajouter à `rtlLocales`
+
+---
+
+## API Contract
+
+Le frontend consomme l'API REST du backend Spring Boot.
+Voir `src/lib/api-client.ts` et `src/lib/auth-api.ts` pour les clients typés.
+
+### Étudiants
+
+| Méthode        | Endpoint                           | Description               |
+| -------------- | ---------------------------------- | ------------------------- |
+| GET            | `/api/students?query=&page=&size=` | Liste (paginé, recherche) |
+| POST           | `/api/students`                    | Créer                     |
+| GET/PUT/DELETE | `/api/students/{id}`               | CRUD                      |
+| GET            | `/api/students/{id}/enrollments`   | Inscriptions              |
+| GET            | `/api/students/{id}/progress`      | Progression               |
+
+### Formations
+
+| Méthode        | Endpoint              | Description |
+| -------------- | --------------------- | ----------- |
+| GET            | `/api/trainings`      | Liste       |
+| POST           | `/api/trainings`      | Créer       |
+| GET/PUT/DELETE | `/api/trainings/{id}` | CRUD        |
+
+### Groupes
+
+| Méthode        | Endpoint                          | Description                  |
+| -------------- | --------------------------------- | ---------------------------- |
+| GET            | `/api/groups?trainingId=`         | Liste (filtre par formation) |
+| POST           | `/api/groups`                     | Créer                        |
+| GET/PUT/DELETE | `/api/groups/{id}`                | CRUD                         |
+| POST           | `/api/groups/{id}/students/{sid}` | Ajouter étudiant             |
+| DELETE         | `/api/groups/{id}/students/{sid}` | Retirer étudiant             |
+
+### Inscriptions & Présences
+
+| Méthode | Endpoint               | Description               |
+| ------- | ---------------------- | ------------------------- |
+| POST    | `/api/enrollments`     | Inscrire                  |
+| POST    | `/api/attendance/mark` | Marquer présences (batch) |
+
+### Certificats
+
+| Méthode | Endpoint                                 | Description     |
+| ------- | ---------------------------------------- | --------------- |
+| GET     | `/api/enrollments/{id}/certificate`      | Télécharger PDF |
+| GET     | `/api/enrollments/{id}/certificate/meta` | Métadonnées     |
+
+### Authentification
+
+| Méthode | Endpoint                       | Description              |
+| ------- | ------------------------------ | ------------------------ |
+| POST    | `/api/auth/login`              | Connexion                |
+| POST    | `/api/auth/register`           | Inscription              |
+| GET     | `/api/auth/me`                 | Utilisateur courant      |
+| POST    | `/api/auth/logout`             | Déconnexion              |
+| POST    | `/api/auth/refresh`            | Rafraîchir le token      |
+| GET     | `/oauth2/authorization/google` | Redirection Google OAuth |
+
+### Administration (ADMIN)
+
+| Méthode | Endpoint                          | Description             |
+| ------- | --------------------------------- | ----------------------- |
+| GET     | `/api/admin/users?q=&page=&size=` | Lister les utilisateurs |
+| PATCH   | `/api/admin/users/{id}/roles`     | Changer le rôle         |
+| PATCH   | `/api/admin/users/{id}/status`    | Activer/désactiver      |
+
+---
+
+## Authentification & RBAC
+
+### Stratégie
+
+Cookies HttpOnly définis par le backend Spring Boot. Le frontend utilise
+`credentials: 'include'` sur toutes les requêtes fetch, et le middleware
+Next.js proxy les appels vers le backend.
+
+### Rôles
+
+| Rôle      | Droits                                                                           |
+| --------- | -------------------------------------------------------------------------------- |
+| `ADMIN`   | Tout : gestion utilisateurs, formations, élèves, groupes, présences, certificats |
+| `MANAGER` | Formations, élèves, groupes, présences, certificats (pas de panel admin)         |
+| `TRAINER` | Consultation + marquage des présences uniquement                                 |
+
+### Google OAuth2
+
+1. L'utilisateur clique « Se connecter avec Google »
+2. Redirection vers `{NEXT_PUBLIC_BACKEND_URL}/oauth2/authorization/google`
+3. Le backend gère le flux OAuth2 et définit les cookies
 4. Callback sur `/auth/callback` → vérification via `/api/auth/me`
 
-### Hypothèses Métier
+---
 
-- **Formation** : 4 niveaux × 6 séances = 24 séances
-- **Niveau validé** si l'élève est PRÉSENT aux 6 séances
-- **Formation terminée** si 4 niveaux validés
-- **Certificat éligible** quand formation terminée
-- **Statuts de présence** : `PRESENT` / `ABSENT`
+## Hypothèses métier
+
+| Règle               | Détail                             |
+| ------------------- | ---------------------------------- |
+| Structure formation | 4 niveaux × 6 séances = 24 séances |
+| Niveau validé       | PRÉSENT aux 6 séances du niveau    |
+| Formation terminée  | 4 niveaux validés                  |
+| Certificat éligible | Quand la formation est terminée    |
+| Statuts de présence | `PRESENT` / `ABSENT` / `EXCUSED`   |
 
 ---
 
-## ♿ Accessibilité (WCAG 2.2 AA)
+## Accessibilité (WCAG 2.2 AA)
 
 ### Fonctionnalités implémentées
 
-| Fonctionnalité                           | Statut |
-| ---------------------------------------- | ------ |
-| Skip link ("Aller au contenu")           | ✅     |
-| H1 unique par page + hiérarchie H2/H3    | ✅     |
-| HTML sémantique (header/nav/main/footer) | ✅     |
-| Labels + aria-describedby pour erreurs   | ✅     |
-| aria-invalid sur champs en erreur        | ✅     |
-| Focus sur premier champ invalide         | ✅     |
-| Résumé d'erreurs (aria-live)             | ✅     |
-| Tables : caption + th scope              | ✅     |
-| Navigation clavier (Tab logique)         | ✅     |
-| Focus visible                            | ✅     |
-| RTL (dir="rtl") dynamique                | ✅     |
-| Propriétés logiques CSS                  | ✅     |
-| Contraste ≥ 4.5:1                        | ✅     |
-| prefers-reduced-motion                   | ✅     |
-| Dialog : focus trap + aria-modal + Esc   | ✅     |
-| Toast : aria-live polite/assertive       | ✅     |
-| Progress bar : aria-valuenow             | ✅     |
-| Radio group présences                    | ✅     |
-| Styles d'impression certificats          | ✅     |
+| Fonctionnalité                             | Statut |
+| ------------------------------------------ | :----: |
+| Skip link (« Aller au contenu »)           |   ✅   |
+| H1 unique par page + hiérarchie H2/H3      |   ✅   |
+| HTML sémantique (header/nav/main/footer)   |   ✅   |
+| Labels + `aria-describedby` pour erreurs   |   ✅   |
+| `aria-invalid` sur champs en erreur        |   ✅   |
+| Focus sur premier champ invalide           |   ✅   |
+| Résumé d'erreurs (`aria-live`)             |   ✅   |
+| Tables : `caption` + `th scope`            |   ✅   |
+| Navigation clavier (Tab logique)           |   ✅   |
+| Focus visible                              |   ✅   |
+| RTL (`dir="rtl"`) dynamique                |   ✅   |
+| Propriétés logiques CSS                    |   ✅   |
+| Contraste ≥ 4.5:1                          |   ✅   |
+| `prefers-reduced-motion`                   |   ✅   |
+| Dialog : focus trap + `aria-modal` + Échap |   ✅   |
+| Toast : `aria-live` polite/assertive       |   ✅   |
+| Progress bar : `aria-valuenow`             |   ✅   |
+| Radio group présences                      |   ✅   |
+| Styles d'impression certificats            |   ✅   |
 
 ### Tests automatisés
 
 ```bash
 npm run test:a11y       # Playwright + axe-core (WCAG 2.2 AA)
-npm run test:e2e        # All E2E tests
-npm run test:e2e:ui     # Playwright avec UI
+npm run test:e2e        # Tous les tests E2E
+npm run test:e2e:ui     # Playwright avec interface visuelle
 ```
 
-### Tests manuels
+### Tests manuels recommandés
 
-#### NVDA (Windows)
-
-1. Télécharger [NVDA](https://www.nvaccess.org/)
-2. Ouvrir l'app dans Firefox/Chrome
-3. Naviguer avec Tab, lire avec les flèches
-4. Vérifier : titres (touche H), formulaires, tableaux, régions live
-
-#### Windows Narrator
-
-1. `Win + Ctrl + Enter` pour démarrer
-2. Naviguer dans l'application
-3. Vérifier que tous les éléments interactifs sont annoncés
-
-#### VoiceOver (macOS / iOS)
-
-1. `Cmd + F5` pour activer VoiceOver
-2. Naviguer avec `Ctrl + Option + Flèche`
-3. Vérifier : rotor pour titres, formulaires, landmarks
-
-#### TalkBack (Android)
-
-1. Paramètres → Accessibilité → TalkBack
-2. Naviguer dans l'app mobile
-3. Vérifier les cibles tactiles ≥ 24×24px
-
-#### Lighthouse
-
-1. Chrome DevTools → onglet Lighthouse
-2. Sélectionner "Accessibility"
-3. Lancer l'audit — cible : **≥ 95**
-
-#### Axe DevTools
-
-1. Installer l'extension [axe DevTools](https://www.deque.com/axe/browser-extensions/)
-2. Ouvrir chaque page → lancer le scan
-
-#### WAVE
-
-1. [wave.webaim.org](https://wave.webaim.org/)
-2. Entrer l'URL dev → analyser
-
-#### Color Contrast Analyzer
-
-1. Télécharger [CCA](https://www.tpgi.com/color-contrast-checker/)
-2. Vérifier texte/fond : ≥ 4.5:1 (normal), ≥ 3:1 (gros)
+| Outil                    | Objectif                            |
+| ------------------------ | ----------------------------------- |
+| NVDA / Windows Narrator  | Lecteur d'écran Windows             |
+| VoiceOver                | Lecteur d'écran macOS/iOS           |
+| TalkBack                 | Lecteur d'écran Android             |
+| Lighthouse Accessibility | Audit Chrome DevTools (cible ≥ 95)  |
+| Axe DevTools             | Extension navigateur                |
+| WAVE                     | wave.webaim.org                     |
+| CCA                      | Vérificateur de contraste (≥ 4.5:1) |
 
 ---
 
-## 🧪 Scripts
+## Scripts
 
 | Commande              | Description                    |
 | --------------------- | ------------------------------ |
@@ -296,59 +413,54 @@ npm run test:e2e:ui     # Playwright avec UI
 
 ---
 
-## 🎬 Script de démo
+## Script de démo
 
 ### Flux complet E2E
 
 1. **S'inscrire / Se connecter**
-   - Naviguer vers `/register` → Remplir prénom, nom, email, mot de passe
+   - `/register` → Remplir prénom, nom, email, mot de passe
    - Ou cliquer « Se connecter avec Google »
-   - Se connecter via `/login` avec email + mot de passe
+   - `/login` → email + mot de passe
 
 2. **Créer un élève** (ADMIN / MANAGER)
-   - Naviguer vers `/students/new`
-   - Remplir : Prénom, Nom, Email
-   - Soumettre → Redirigé vers le détail
+   - `/students/new` → Prénom, Nom, Email → Soumettre
 
 3. **Créer une formation**
-   - Naviguer vers `/trainings/new`
-   - Remplir : Nom, Description
-   - Soumettre → 4 niveaux × 6 séances créés
+   - `/trainings/new` → Nom, Description → 4 niveaux × 6 séances auto-générés
 
-4. **Inscrire l'élève à la formation**
-   - Page détail élève → "Ajouter une formation"
-   - Sélectionner la formation → Enregistrer
+4. **Gérer les groupes**
+   - `/groups` → Créer un groupe → Assigner des étudiants
 
-5. **Marquer les présences**
-   - `/attendance` → Sélectionner Formation → Niveau → Séance
-   - Basculer chaque élève : PRÉSENT / ABSENT
-   - Enregistrer
+5. **Inscrire l'élève à la formation**
+   - Détail élève → « Ajouter une formation » → Sélectionner formation et groupe
 
-6. **Voir la progression**
-   - Détail élève → Onglet Progression
-   - Badges de niveaux, barres de progression
+6. **Marquer les présences**
+   - `/attendance` → Formation → Niveau → Séance → PRÉSENT / ABSENT
 
-7. **Générer le certificat**
-   - `/certificates` → Sélectionner la formation
-   - Télécharger pour les élèves éligibles
+7. **Voir la progression**
+   - Détail élève → Onglet Progression → Badges niveaux, barres de progression
+
+8. **Générer le certificat**
+   - `/certificates` → Formation → Télécharger pour les élèves éligibles
 
 ---
 
-## 🏗 Stack technique
+## Stack technique
 
-| Catégorie      | Technologie                                           |
-| -------------- | ----------------------------------------------------- |
-| Framework      | Next.js 16 (App Router)                               |
-| Langage        | TypeScript 5                                          |
-| CSS            | Tailwind CSS 4                                        |
-| UI             | Radix UI (Dialog, Tabs, Accordion, Select, Progress…) |
-| State/Fetching | TanStack Query (React Query)                          |
-| Formulaires    | React Hook Form + Zod                                 |
-| i18n           | next-intl                                             |
-| Icônes         | Lucide React                                          |
-| Tests E2E      | Playwright                                            |
-| Tests A11y     | @axe-core/playwright                                  |
+| Catégorie        | Technologie                                           |
+| ---------------- | ----------------------------------------------------- |
+| Framework        | Next.js 16 (App Router, Turbopack)                    |
+| Langage          | TypeScript 5                                          |
+| CSS              | Tailwind CSS 4                                        |
+| UI               | Radix UI (Dialog, Tabs, Accordion, Select, Progress…) |
+| State / Fetching | TanStack Query (React Query) 5                        |
+| Formulaires      | React Hook Form 7 + Zod 4                             |
+| i18n             | next-intl 4                                           |
+| Icônes           | Lucide React                                          |
+| Tests E2E        | Playwright                                            |
+| Tests A11y       | @axe-core/playwright                                  |
+| Design           | Dark theme (#101622 bg, #135bec brand), Geist font    |
 
 ---
 
-© 2026 ASTBA – Association Sciences and Technology Ben Arous, Tunisie
+© 2026 ASTBA — Association Sciences and Technology Ben Arous, Tunisie

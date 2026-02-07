@@ -90,8 +90,10 @@ export const authApi = {
 
     /** Google OAuth2 redirect URL (handled by backend) */
     googleAuthUrl() {
-        // Strip /api suffix for OAuth2 authorization endpoint
-        const backendBase = BASE_URL.replace(/\/api\/?$/, '');
+        // OAuth must hit the backend directly (browser redirect, not fetch)
+        const backendBase =
+            process.env.NEXT_PUBLIC_BACKEND_URL ||
+            BASE_URL.replace(/\/api\/?$/, '');
         return `${backendBase}/oauth2/authorization/google`;
     },
 };

@@ -6,8 +6,9 @@ import { Upload, X, Loader2 } from 'lucide-react';
 import { uploadsApi } from '@/lib/api-client';
 import { useToast } from '@/components/ui/toast';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api';
-const BACKEND_ORIGIN = API_BASE.replace(/\/api$/, '');
+const BACKEND_ORIGIN =
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  (process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api').replace(/\/api$/, '');
 
 interface ImageUploadProps {
   value?: string;
