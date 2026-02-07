@@ -239,7 +239,23 @@ export default function NewTrainingPage() {
           icons={stepIcons}
         />
 
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form
+          onSubmit={(e) => {
+            // Only allow submission on the final step
+            if (currentStep < TOTAL_STEPS) {
+              e.preventDefault();
+              return;
+            }
+            handleSubmit(onSubmit)(e);
+          }}
+          onKeyDown={(e) => {
+            // Prevent Enter key from submitting the form while not on the last step
+            if (e.key === 'Enter' && currentStep < TOTAL_STEPS && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
+              e.preventDefault();
+            }
+          }}
+          noValidate
+        >
           {/* ═══════════════ Step 1: Title + Description ═══════════════ */}
           {currentStep === 1 && (
             <Card>

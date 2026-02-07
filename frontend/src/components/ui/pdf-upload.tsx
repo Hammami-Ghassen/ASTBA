@@ -116,11 +116,17 @@ export function PdfUpload({ value, onChange, disabled }: PdfUploadProps) {
               ? 'border-[#135bec] bg-blue-50 dark:bg-blue-950/30'
               : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
           } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-          onClick={() => !disabled && !uploading && inputRef.current?.click()}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!disabled && !uploading) inputRef.current?.click();
+          }}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
             if ((e.key === 'Enter' || e.key === ' ') && !disabled && !uploading) {
+              e.preventDefault();
+              e.stopPropagation();
               inputRef.current?.click();
             }
           }}
@@ -146,9 +152,10 @@ export function PdfUpload({ value, onChange, disabled }: PdfUploadProps) {
         ref={inputRef}
         type="file"
         accept="application/pdf"
-        className="hidden"
+        className="absolute w-0 h-0 overflow-hidden opacity-0"
         onChange={handleInputChange}
         disabled={disabled || uploading}
+        tabIndex={-1}
         aria-label={t('pdfDocument')}
       />
     </div>
