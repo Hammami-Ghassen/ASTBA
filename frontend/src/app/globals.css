@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f9fafb;
+  --background: #f6f6f8;
   --foreground: #111827;
+  --color-primary: #135bec;
+  --color-bg-dark: #101622;
+  --color-surface-dark: #192233;
+  --color-border-dark: #324467;
+  --color-text-secondary: #92a4c9;
 }
 
 @theme inline {
@@ -11,17 +16,21 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Accessible color palette (contrast ≥ 4.5:1) */
+  /* Accessible color palette (contrast >= 4.5:1) */
   --color-sky-50: #f0f9ff;
   --color-sky-100: #e0f2fe;
   --color-sky-500: #0ea5e9;
   --color-sky-600: #0284c7;
   --color-sky-700: #0369a1;
+  
+  /* New brand palette */
+  --color-brand: #135bec;
+  --color-brand-hover: #2563eb;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #030712;
+    --background: #101622;
     --foreground: #f3f4f6;
   }
 }
@@ -32,10 +41,20 @@ body {
   font-family: var(--font-sans, Arial, Helvetica, sans-serif);
 }
 
-/* Focus visible ring — consistent across all interactive elements */
+/* Focus visible ring — high contrast accessible */
 *:focus-visible {
-  outline: 2px solid #0ea5e9;
-  outline-offset: 2px;
+  outline: 2px solid white !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px #135bec !important;
+}
+
+/* Hide scrollbar for cleaner look */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Reduce motion for users who prefer it */

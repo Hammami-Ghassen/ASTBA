@@ -1,15 +1,9 @@
 import { getRequestConfig } from 'next-intl/server';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
+import { defaultLocale, type Locale } from './i18n-config';
 
-export const locales = ['fr', 'ar-TN'] as const;
-export type Locale = (typeof locales)[number];
-export const defaultLocale: Locale = 'ar-TN';
-
-export const rtlLocales: Locale[] = ['ar-TN'];
-
-export function isRtl(locale: Locale): boolean {
-    return rtlLocales.includes(locale);
-}
+// Re-export shared config so server files can still import from '@/i18n'
+export { locales, type Locale, defaultLocale, rtlLocales, isRtl } from './i18n-config';
 
 export default getRequestConfig(async () => {
     const cookieStore = await cookies();

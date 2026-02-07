@@ -192,10 +192,22 @@
     "backToHome": "Retour à l'accueil",
     "backToLogin": "Retour à la connexion",
     "accountPendingValidation": "Votre compte peut nécessiter une validation par un administrateur.",
+    "accountPendingNote": "Note : Les comptes responsable nécessitent une validation manuelle par un administrateur. Cela peut prendre jusqu'à 24 heures.",
     "errorSummary": "Veuillez corriger les erreurs suivantes :",
+    "errorCount": "Veuillez corriger les {count} erreurs suivantes",
     "userMenu": "Menu utilisateur",
     "profile": "Profil",
-    "welcomeBack": "Bienvenue, {name}"
+    "welcomeBack": "Bienvenue, {name}",
+    "brandTagline": "Gestion Sécurisée pour Équipes Modernes",
+    "brandSubtitle": "Rejoignez la plateforme complète conçue pour l'accessibilité, la sécurité et la performance.",
+    "complianceBadge": "Conforme WCAG 2.2 AA",
+    "roleTrainerDesc": "Accès à la création de cours et au suivi des élèves.",
+    "roleManagerDesc": "Accès administratif avec outils de reporting.",
+    "showPassword": "Afficher",
+    "hidePassword": "Masquer",
+    "secureLogin": "Connexion Sécurisée",
+    "secureLoginSubtitle": "Connectez-vous pour accéder à votre tableau de bord.",
+    "welcomeBackBrand": "Bon retour parmi nous"
   },
   "admin": {
     "title": "Administration",

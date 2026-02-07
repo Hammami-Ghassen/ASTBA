@@ -6,12 +6,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { LogIn, Eye, EyeOff } from 'lucide-react';
+import { Mail, AlertCircle } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { AuthLayout } from '@/components/auth/auth-layout';
 import { GoogleOAuthButton } from '@/components/auth/google-oauth-button';
 import { useAuth } from '@/lib/auth-provider';
 import { AuthApiError } from '@/lib/auth-api';
@@ -28,12 +25,9 @@ export default function LoginPage() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
-  const firstErrorRef = useRef<HTMLInputElement>(null);
 
-  // Check for OAuth error from query params
   const oauthError = searchParams.get('error');
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
       router.replace('/');
@@ -50,7 +44,6 @@ export default function LoginPage() {
     mode: 'onBlur',
   });
 
-  // Focus first error field after validation
   useEffect(() => {
     const firstErrorField = Object.keys(errors)[0] as keyof LoginFormData | undefined;
     if (firstErrorField) {
@@ -58,7 +51,6 @@ export default function LoginPage() {
     }
   }, [errors, setFocus]);
 
-  // Focus error summary when server error appears
   useEffect(() => {
     if (serverError) {
       errorRef.current?.focus();
@@ -70,10 +62,8 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      // Direct API call to handle errors locally
       const { authApi } = await import('@/lib/auth-api');
       await authApi.login({ email: data.email, password: data.password });
-      // Refresh auth context so navbar updates, then navigate
       await refreshUser();
       router.replace('/');
     } catch (err) {
@@ -105,133 +95,148 @@ export default function LoginPage() {
     password: getFieldError('password'),
   };
 
-  const hasErrors = Object.values(fieldErrors).some(Boolean) || !!serverError;
-
   return (
-    <div className="flex min-h-[60vh] items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">
-            {t('loginTitle')}
-          </CardTitle>
-          <CardDescription>{t('loginDescription')}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Error summary (a11y: aria-live region) */}
-          {(serverError || oauthError) && (
-            <div
-              ref={errorRef}
-              role="alert"
-              aria-live="assertive"
-              tabIndex={-1}
-              className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
-            >
-              <p className="font-medium">{t('errorSummary')}</p>
-              <ul className="mt-1 list-inside list-disc">
+    <AuthLayout>
+      {/* Header */}
+      <div className="mb-8 flex flex-col gap-2">
+        <h2 className="text-3xl font-bold tracking-tight dark:text-white sm:text-4xl">
+          {t('loginTitle')}
+        </h2>
+        <p className="text-[#92a4c9]">{t('loginDescription')}</p>
+      </div>
+
+      {/* Error Summary */}
+      {(serverError || oauthError) && (
+        <div
+          ref={errorRef}
+          role="alert"
+          aria-live="assertive"
+          tabIndex={-1}
+          className="mb-8 rounded-xl border border-red-500/30 bg-red-500/10 p-4"
+        >
+          <div className="flex items-start gap-3">
+            <AlertCircle className="mt-0.5 h-5 w-5 text-red-400 shrink-0" aria-hidden="true" />
+            <div className="flex flex-col gap-1">
+              <h3 className="text-sm font-bold dark:text-white">{t('errorSummary')}</h3>
+              <ul className="list-disc ps-5 text-sm text-red-200/80">
                 {serverError && <li>{serverError}</li>}
                 {oauthError && <li>{t('oauthError')}</li>}
               </ul>
             </div>
-          )}
-
-          {/* Google OAuth */}
-          <GoogleOAuthButton />
-
-          {/* Divider */}
-          <div className="relative" role="presentation">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-300 dark:border-gray-600" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
-                {t('orContinueWith')}
-              </span>
-            </div>
           </div>
+        </div>
+      )}
 
-          {/* Login form */}
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-            {/* Email */}
-            <div className="space-y-2">
-              <Label htmlFor="email" className="flex items-center gap-1">
-                {t('email')}
-                <span className="text-red-500" aria-hidden="true">*</span>
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                placeholder="nom@exemple.com"
-                error={!!fieldErrors.email}
-                aria-invalid={!!fieldErrors.email || undefined}
-                aria-describedby={fieldErrors.email ? 'email-error' : undefined}
-                aria-required="true"
-                {...register('email')}
-              />
-              {fieldErrors.email && (
-                <p id="email-error" role="alert" className="text-sm text-red-600 dark:text-red-400">
-                  {fieldErrors.email}
-                </p>
-              )}
+      {/* Form */}
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
+        {/* Email */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium dark:text-white" htmlFor="email">
+            {t('email')}
+          </label>
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
+              <Mail className="h-5 w-5 text-[#92a4c9]" aria-hidden="true" />
             </div>
-
-            {/* Password */}
-            <div className="space-y-2">
-              <Label htmlFor="password" className="flex items-center gap-1">
-                {t('password')}
-                <span className="text-red-500" aria-hidden="true">*</span>
-              </Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  error={!!fieldErrors.password}
-                  aria-invalid={!!fieldErrors.password || undefined}
-                  aria-describedby={fieldErrors.password ? 'password-error' : undefined}
-                  aria-required="true"
-                  className="pe-10"
-                  {...register('password')}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" aria-hidden="true" />
-                  ) : (
-                    <Eye className="h-4 w-4" aria-hidden="true" />
-                  )}
-                </button>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              placeholder="nom@exemple.com"
+              className={`block w-full rounded-lg border bg-[#192233] ps-10 pe-4 py-3 text-white placeholder-[#92a4c9] shadow-sm transition-colors focus:ring-0 sm:text-sm ${
+                fieldErrors.email
+                  ? 'border-red-500 focus:border-red-500'
+                  : 'border-[#324467] focus:border-[#135bec]'
+              }`}
+              aria-invalid={!!fieldErrors.email || undefined}
+              aria-describedby={fieldErrors.email ? 'email-error' : undefined}
+              aria-required="true"
+              {...register('email')}
+            />
+            {fieldErrors.email && (
+              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3">
+                <AlertCircle className="h-5 w-5 text-red-500" aria-hidden="true" />
               </div>
-              {fieldErrors.password && (
-                <p id="password-error" role="alert" className="text-sm text-red-600 dark:text-red-400">
-                  {fieldErrors.password}
-                </p>
-              )}
-            </div>
+            )}
+          </div>
+          {fieldErrors.email && (
+            <p id="email-error" role="alert" className="text-xs text-red-400 mt-1">
+              {fieldErrors.email}
+            </p>
+          )}
+        </div>
 
-            {/* Submit */}
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              <LogIn className="h-4 w-4" aria-hidden="true" />
-              {isSubmitting ? '…' : t('login')}
-            </Button>
-          </form>
-
-          {/* Register link */}
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-            {t('noAccount')}{' '}
-            <Link
-              href="/register"
-              className="font-medium text-sky-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded dark:text-sky-400"
+        {/* Password */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium dark:text-white" htmlFor="password">
+              {t('password')}
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-xs text-[#135bec] hover:text-blue-400 font-medium focus:outline-none focus:underline"
+              aria-label={showPassword ? t('hidePassword') : t('showPassword')}
             >
-              {t('register')}
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+              {showPassword ? t('hidePassword') : t('showPassword')}
+            </button>
+          </div>
+          <input
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="current-password"
+            className={`block w-full rounded-lg border bg-[#192233] px-4 py-3 text-white placeholder-[#92a4c9] shadow-sm transition-colors focus:bg-[#192233] focus:ring-0 sm:text-sm ${
+              fieldErrors.password
+                ? 'border-red-500 focus:border-red-500'
+                : 'border-[#324467] focus:border-[#135bec]'
+            }`}
+            aria-invalid={!!fieldErrors.password || undefined}
+            aria-describedby={fieldErrors.password ? 'password-error' : undefined}
+            aria-required="true"
+            {...register('password')}
+          />
+          {fieldErrors.password && (
+            <p id="password-error" role="alert" className="text-xs text-red-400 mt-1">
+              {fieldErrors.password}
+            </p>
+          )}
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="mt-2 flex w-full items-center justify-center rounded-lg bg-[#135bec] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#135bec]/20 transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-[#135bec] focus:ring-offset-2 focus:ring-offset-[#101622] disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? '…' : t('login')}
+        </button>
+      </form>
+
+      {/* Divider */}
+      <div className="relative my-6" role="presentation">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-[#324467]" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-[#101622] px-3 text-[#92a4c9]">
+            {t('orContinueWith')}
+          </span>
+        </div>
+      </div>
+
+      {/* Google OAuth */}
+      <GoogleOAuthButton className="border-[#324467] bg-[#192233] text-white hover:bg-[#192233]/80 dark:border-[#324467] dark:bg-[#192233] dark:text-white dark:hover:bg-[#192233]/80" />
+
+      {/* Register link */}
+      <div className="mt-8 text-center text-sm text-[#92a4c9]">
+        {t('noAccount')}{' '}
+        <Link
+          href="/register"
+          className="font-medium text-[#135bec] hover:text-blue-400 hover:underline focus:outline-none focus:underline"
+        >
+          {t('register')}
+        </Link>
+      </div>
+    </AuthLayout>
   );
 }

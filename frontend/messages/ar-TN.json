@@ -192,10 +192,22 @@
     "backToHome": "العودة إلى الرئيسية",
     "backToLogin": "العودة إلى تسجيل الدخول",
     "accountPendingValidation": "قد يحتاج حسابك إلى موافقة من المشرف.",
+    "accountPendingNote": "ملاحظة: حسابات المسؤولين تحتاج إلى موافقة يدوية من المشرف. قد يستغرق ذلك حتى 24 ساعة.",
     "errorSummary": "يرجى تصحيح الأخطاء التالية:",
+    "errorCount": "يرجى تصحيح {count} أخطاء",
     "userMenu": "قائمة المستخدم",
     "profile": "الملف الشخصي",
-    "welcomeBack": "مرحبًا، {name}"
+    "welcomeBack": "مرحبًا، {name}",
+    "brandTagline": "إدارة آمنة للفرق الحديثة",
+    "brandSubtitle": "انضم إلى المنصة الشاملة المصممة للوصول والأمان والأداء.",
+    "complianceBadge": "متوافق مع WCAG 2.2 AA",
+    "roleTrainerDesc": "الوصول إلى إنشاء الدورات ومتابعة تقدم الطلاب.",
+    "roleManagerDesc": "وصول إداري مع أدوات التقارير.",
+    "showPassword": "إظهار",
+    "hidePassword": "إخفاء",
+    "secureLogin": "تسجيل دخول آمن",
+    "secureLoginSubtitle": "سجل الدخول للوصول إلى لوحة التحكم.",
+    "welcomeBackBrand": "مرحبًا بعودتك"
   },
   "admin": {
     "title": "الإدارة",

@@ -4,8 +4,7 @@ import { getLocale, getMessages } from 'next-intl/server';
 import { isRtl, type Locale } from '@/i18n';
 import { Providers } from '@/lib/providers';
 import { ToastProvider } from '@/components/ui/toast';
-import { Navbar } from '@/components/layout/navbar';
-import { AutoBreadcrumb } from '@/components/layout/breadcrumb';
+import { AppShell } from '@/components/layout/app-shell';
 import './globals.css';
 
 const geistSans = Geist({
@@ -52,16 +51,7 @@ export default async function RootLayout({
               {rtl ? 'انتقل إلى المحتوى' : 'Aller au contenu'}
             </a>
 
-            <Navbar />
-
-            <main id="main-content" className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8" tabIndex={-1}>
-              <AutoBreadcrumb />
-              {children}
-            </main>
-
-            <footer className="border-t border-gray-200 py-6 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
-              <p>© 2026 ASTBA – Association Sciences and Technology Ben Arous</p>
-            </footer>
+            <AppShell>{children}</AppShell>
           </ToastProvider>
         </Providers>
       </body>

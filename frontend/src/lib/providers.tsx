@@ -4,7 +4,7 @@ import { useState, useCallback, type ReactNode, createContext, useContext } from
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NextIntlClientProvider } from 'next-intl';
 import { AuthProvider } from './auth-provider';
-import type { Locale } from '@/i18n';
+import type { Locale } from '@/i18n-config';
 
 // ──────────────── React Query Provider ────────────────
 function makeQueryClient() {
