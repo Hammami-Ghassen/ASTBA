@@ -15,16 +15,17 @@ const localeLabels: Record<Locale, string> = {
 /**
  * Shared split-screen layout for login / register pages.
  * Left: branding panel (hidden on mobile).  Right: form content.
+ * Pass wide=true for register page to get a wider form area.
  */
-export function AuthLayout({ children, wide = false, fullWidth = false }: { children: React.ReactNode; wide?: boolean; fullWidth?: boolean }) {
+export function AuthLayout({ children, wide }: { children: React.ReactNode; wide?: boolean }) {
   const t = useTranslations('auth');
   const { locale, setLocale } = useLocale();
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-[#101622] p-4 lg:p-8">
-      <div className={`flex w-full overflow-hidden rounded-2xl border border-[#324467] bg-[#192233]/60 shadow-2xl backdrop-blur-sm lg:min-h-[85vh] lg:flex-row flex-col ${fullWidth ? 'max-w-[1600px]' : 'max-w-[1400px]'}`}>
-      {/* ── Left Column: Branding ── */}
-      {!fullWidth && (
+    <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 dark:bg-[#101622] p-4 lg:p-8">
+      <div className={`flex w-full ${wide ? 'max-w-[1600px]' : 'max-w-[1400px]'} overflow-hidden rounded-2xl border border-gray-200 dark:border-[#324467] bg-white/90 dark:bg-[#192233]/60 shadow-2xl backdrop-blur-sm lg:min-h-[85vh] lg:flex-row flex-col`}>
+      {/* ── Left Column: Branding (hidden when wide) ── */}
+      {!wide && (
       <div className="relative hidden w-full lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between overflow-hidden rounded-s-2xl bg-[#192233] p-12">
         {/* Decorative bg */}
         <div
@@ -81,8 +82,8 @@ export function AuthLayout({ children, wide = false, fullWidth = false }: { chil
       </div>
       )}
 
-      {/* ── Right Column: Form ── */}
-      <main className={`flex w-full flex-1 flex-col bg-[#101622] transition-all duration-300 ${fullWidth ? '' : 'lg:w-7/12 xl:w-1/2'}`}>
+      {/* ── Main Column: Form ── */}
+      <main className={`flex w-full flex-1 flex-col bg-white dark:bg-[#101622] transition-all duration-300 ${wide ? '' : 'lg:w-7/12 xl:w-1/2'}`}>
         {/* Mobile header */}
         <div className="flex items-center justify-between p-6 lg:hidden">
           <div className="flex items-center gap-2">
@@ -94,18 +95,18 @@ export function AuthLayout({ children, wide = false, fullWidth = false }: { chil
               className="h-8 w-8 object-contain"
               aria-hidden="true"
             />
-            <span className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">ASTBA</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-blue-700 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">ASTBA</span>
           </div>
         </div>
 
         {/* Scrollable content area */}
         <div className="flex h-full flex-col overflow-y-auto no-scrollbar">
-          <div className={`mx-auto w-full px-6 py-8 lg:px-12 lg:py-12 ${fullWidth ? 'max-w-[1200px]' : wide ? 'max-w-[960px]' : 'max-w-[640px]'}`}>
+          <div className={`mx-auto w-full ${wide ? 'max-w-[1100px]' : 'max-w-[640px]'} px-6 py-8 lg:px-12 lg:py-12`}>
             {/* Back to landing + Language selector */}
             <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
               <Link
                 href="/"
-                className="group flex items-center gap-2 rounded-lg border border-[#324467] px-3 py-2 text-base font-medium text-[#92a4c9] transition-all hover:border-[#135bec] hover:bg-[#135bec]/10 hover:text-white"
+                className="group flex items-center gap-2 rounded-lg border border-gray-200 dark:border-[#324467] px-3 py-2 text-base font-medium text-gray-500 dark:text-[#92a4c9] transition-all hover:border-[#135bec] hover:bg-[#135bec]/10 hover:text-gray-900 dark:hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5 rtl:rotate-180 rtl:group-hover:translate-x-0.5" aria-hidden="true" />
                 {t('backToHome')}
@@ -117,8 +118,8 @@ export function AuthLayout({ children, wide = false, fullWidth = false }: { chil
                   key={l}
                   className={`group relative flex h-9 cursor-pointer items-center justify-center rounded-lg border px-3 text-sm font-medium transition-colors
                     ${locale === l
-                      ? 'border-[#135bec] bg-[#135bec]/10 text-white'
-                      : 'border-[#324467] text-[#92a4c9] hover:bg-[#192233]'
+                      ? 'border-[#135bec] bg-[#135bec]/10 text-gray-900 dark:text-white'
+                      : 'border-gray-200 dark:border-[#324467] text-gray-500 dark:text-[#92a4c9] hover:bg-gray-100 dark:hover:bg-[#192233]'
                     }`}
                 >
                   <span className={l === 'ar-TN' ? 'font-sans' : ''}>

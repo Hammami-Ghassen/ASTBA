@@ -84,11 +84,11 @@ export function Navbar() {
 
   return (
     <header className="nav-cursor sticky top-0 z-40 bg-white/90 backdrop-blur-xl supports-[backdrop-filter]:bg-white/80 dark:bg-gray-900/90 dark:supports-[backdrop-filter]:bg-gray-900/80 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3)] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-gradient-to-r after:from-[var(--color-primary)] after:via-[var(--color-accent)] after:to-[var(--color-primary)] after:opacity-80 transition-shadow duration-300">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
           href="/dashboard"
-          className="flex items-center gap-2.5 text-xl font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 group"
+          className="flex shrink-0 items-center gap-2.5 text-xl font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 group"
           aria-label="ASTBA - Accueil"
         >
           <Image
@@ -104,8 +104,8 @@ export function Navbar() {
 
         {/* Desktop nav */}
         {isAuthenticated && (
-          <nav aria-label="Navigation principale" className="hidden md:block">
-            <ul className="flex items-center gap-1">
+          <nav aria-label="Navigation principale" className="hidden min-w-0 xl:block">
+            <ul className="flex items-center gap-0">
               {allNavItems.map(({ key, href, icon: Icon }) => {
                 const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href));
                 return (
@@ -113,14 +113,14 @@ export function Navbar() {
                     <Link
                       href={href}
                       className={cn(
-                        'relative flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2',
+                        'relative flex items-center gap-1 whitespace-nowrap rounded-lg px-2 py-2 text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2',
                         isActive
                           ? 'bg-gradient-to-r from-blue-50 to-orange-50 text-[var(--color-primary)] dark:from-blue-950/60 dark:to-orange-950/40 dark:text-blue-300 shadow-sm'
                           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800/60 dark:hover:text-gray-100 hover:scale-[1.02] active:scale-[0.98]'
                       )}
                       aria-current={isActive ? 'page' : undefined}
                     >
-                      <Icon className={cn('h-4 w-4 transition-colors', isActive && 'text-[var(--color-accent)]')} aria-hidden="true" />
+                      <Icon className={cn('h-3.5 w-3.5 transition-colors hidden min-[1360px]:block', isActive && 'text-[var(--color-accent)]')} aria-hidden="true" />
                       {t(key)}
                       {isActive && <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-4/5 rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]" />}
                     </Link>
@@ -132,7 +132,7 @@ export function Navbar() {
         )}
 
         {/* Right side */}
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <ThemeToggle />
           <LanguageSwitcher />
 
@@ -141,7 +141,7 @@ export function Navbar() {
 
           {/* User menu (desktop) */}
           {isAuthenticated && user && (
-            <div className="relative hidden md:block" ref={userMenuRef}>
+            <div className="relative hidden xl:block" ref={userMenuRef}>
               <button
                 ref={userButtonRef}
                 type="button"
@@ -205,7 +205,7 @@ export function Navbar() {
 
           {/* Login button (when not authenticated) */}
           {!isAuthenticated && (
-            <Button asChild size="sm" className="hidden md:inline-flex">
+            <Button asChild size="sm" className="hidden xl:inline-flex">
               <Link href="/login">{ta('login')}</Link>
             </Button>
           )}
@@ -214,7 +214,7 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="xl:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
@@ -230,7 +230,7 @@ export function Navbar() {
         <nav
           id="mobile-nav"
           aria-label="Navigation mobile"
-          className="border-t border-gray-200/60 bg-white/95 backdrop-blur-xl px-4 py-3 md:hidden dark:border-gray-700/60 dark:bg-gray-900/95 animate-in slide-in-from-top-2 fade-in-0 duration-200"
+          className="border-t border-gray-200/60 bg-white/95 backdrop-blur-xl px-4 py-3 xl:hidden dark:border-gray-700/60 dark:bg-gray-900/95 animate-in slide-in-from-top-2 fade-in-0 duration-200"
         >
           <ul className="flex flex-col gap-1">
             {isAuthenticated ? (

@@ -161,14 +161,14 @@ export function PlanningCalendar() {
       <Card>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <Button variant="outline" size="sm" onClick={prevMonth}>
+            <Button variant="outline" size="sm" onClick={prevMonth} aria-label={t('previousMonth')}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <div className="flex items-center gap-3">
               <CardTitle className="capitalize">{monthName}</CardTitle>
               <Button variant="outline" size="sm" onClick={goToday}>{t('today')}</Button>
             </div>
-            <Button variant="outline" size="sm" onClick={nextMonth}>
+            <Button variant="outline" size="sm" onClick={nextMonth} aria-label={t('nextMonth')}>
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
@@ -203,7 +203,7 @@ export function PlanningCalendar() {
                       `}
                       onClick={() => handleDayClick(date)}
                     >
-                      <div className={`text-sm font-medium mb-0.5 ${isToday ? 'text-sky-600 dark:text-sky-400 font-bold' : isCurrentMonth ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'}`}>
+                      <div className={`text-sm font-medium mb-0.5 ${isToday ? 'text-sky-600 dark:text-sky-400 font-bold' : isCurrentMonth ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-500'}`}>
                         {day}
                       </div>
                       <div className="space-y-0.5">

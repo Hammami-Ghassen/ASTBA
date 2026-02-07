@@ -52,7 +52,7 @@ export default async function RootLayout({
             {/* Skip link – visible on focus (WCAG) */}
             <a
               href="#main-content"
-              className="fixed start-2 top-2 z-[999] -translate-y-16 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              className="fixed start-2 top-2 z-[999] -translate-y-16 rounded-lg bg-sky-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition-transform focus:translate-y-0 focus-visible:translate-y-0 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2"
             >
               {rtl ? 'انتقل إلى المحتوى' : 'Aller au contenu'}
             </a>

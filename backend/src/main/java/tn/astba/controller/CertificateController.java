@@ -29,8 +29,8 @@ public class CertificateController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_PDF_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Télécharger le certificat PDF", description = "Génère et retourne le certificat au format PDF. Réservé aux administrateurs. Erreur 409 si non éligible.")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @Operation(summary = "Télécharger le certificat PDF", description = "Génère et retourne le certificat au format PDF. Réservé aux managers et administrateurs. Erreur 409 si non éligible.")
     public ResponseEntity<byte[]> downloadCertificate(@PathVariable String enrollmentId) throws IOException {
         byte[] pdf = certificateService.generateCertificatePdf(enrollmentId);
 

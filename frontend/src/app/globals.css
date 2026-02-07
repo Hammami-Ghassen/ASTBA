@@ -41,6 +41,7 @@ html.dark {
 /* Scale everything 125% — like browser zoom */
 html {
   font-size: 125%;
+  overflow-y: scroll; /* prevent content shift from scrollbar */
 }
 
 body {
@@ -317,12 +318,12 @@ input[type="reset"],
 input[type="checkbox"],
 input[type="radio"],
 .cursor-pointer {
-  cursor: url('/cursor-pointer.png') 6 0, pointer;
+  cursor: url('/cursors/main-pointer.svg') 20 4, pointer;
 }
 
 /* Navbar uses a distinct crosshair-dot cursor */
 .nav-cursor {
-  cursor: url('/cursors/nav-cursor.svg') 16 16, crosshair;
+  cursor: url('/cursors/nav-cursor.svg') 22 22, crosshair;
 }
 
 .nav-cursor a,
@@ -331,7 +332,7 @@ input[type="radio"],
 .nav-cursor label,
 .nav-cursor select,
 .nav-cursor .cursor-pointer {
-  cursor: url('/cursor-pointer.png') 6 0, pointer;
+  cursor: url('/cursors/nav-pointer.svg') 22 22, pointer;
 }
 
 /* Text inputs keep the main arrow feel */

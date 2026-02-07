@@ -293,6 +293,7 @@ export default function GroupsPage() {
                           size="sm"
                           onClick={(e) => { e.stopPropagation(); setDeleteId(group.id); }}
                           className="text-red-500 opacity-0 transition-opacity hover:text-red-700 group-hover:opacity-100"
+                          aria-label={t('deleteGroup')}
                         >
                           <Trash2 className="h-4 w-4" aria-hidden="true" />
                         </Button>

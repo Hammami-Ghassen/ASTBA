@@ -50,7 +50,7 @@ public class User {
     /** Years of professional experience */
     private Integer yearsExperience;
 
-    /** Phone number */
+    /** Phone number (8 digits, Tunisia) */
     private String phone;
 
     private Instant lastLoginAt;

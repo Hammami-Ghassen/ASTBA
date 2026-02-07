@@ -196,6 +196,7 @@
     "addStudentToGroup": "Ajouter un élève",
     "removeStudentFromGroup": "Retirer du groupe",
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce groupe ?",
+    "deleteGroup": "Supprimer le groupe",
     "createSuccess": "Groupe créé avec succès",
     "updateSuccess": "Groupe mis à jour avec succès",
     "deleteSuccess": "Groupe supprimé avec succès",
@@ -311,7 +312,7 @@
     "specialityPlaceholder": "Ex: Robotique, Programmation…",
     "yearsExperience": "Années d'expérience",
     "phone": "Téléphone",
-    "phonePlaceholder": "Ex: 50123456"
+    "phonePlaceholder": "Ex: 12345678"
   },
   "admin": {
     "title": "Administration",
@@ -419,6 +420,8 @@
     "addSeance": "Planifier une séance",
     "editSeance": "Modifier la séance",
     "today": "Aujourd'hui",
+    "previousMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
     "training": "Formation",
     "level": "Niveau",
     "sessionNum": "Séance",

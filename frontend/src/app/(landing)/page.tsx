@@ -111,7 +111,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 dark:bg-[#101622] dark:text-white overflow-x-hidden scroll-smooth">
+    <div id="main-content" className="min-h-screen bg-white text-gray-900 dark:bg-[#101622] dark:text-white overflow-x-hidden scroll-smooth">
       {/* ═══ NAVIGATION ═══ */}
       <nav className="nav-cursor fixed top-0 z-50 w-full border-b border-gray-200/60 bg-white/80 backdrop-blur-xl dark:border-white/5 dark:bg-[#101622]/70">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -293,7 +293,7 @@ export default function LandingPage() {
                   type="button"
                   onClick={() => setActiveSlide(i)}
                   aria-label={`Slide ${i + 1}`}
-                  className={`h-2 rounded-full transition-all duration-500 ${i === activeSlide ? 'w-8 bg-[#f5820b]' : 'w-2 bg-gray-300 hover:bg-gray-400 dark:bg-white/30 dark:hover:bg-white/50'}`}
+                  className={`h-3 rounded-full transition-all duration-500 p-0 ${i === activeSlide ? 'w-10 bg-[#f5820b]' : 'w-3 bg-gray-400 hover:bg-gray-500 dark:bg-white/40 dark:hover:bg-white/60'}`}
                 />
               ))}
             </div>
@@ -632,13 +632,13 @@ export default function LandingPage() {
                 <Image src="/astba/logo.png" alt="ASTBA" width={32} height={32} className="rounded-lg" />
                 <span className="font-bold text-lg bg-gradient-to-r from-[#135bec] to-[#f5820b] bg-clip-text text-transparent">ASTBA</span>
               </div>
-              <p className="text-sm text-gray-400 dark:text-[#92a4c9]/70">{t('footerSince')}</p>
+              <p className="text-sm text-gray-500 dark:text-[#92a4c9]">{t('footerSince')}</p>
             </div>
             <div className="flex flex-col items-center gap-1 text-center">
               <p className="text-base text-gray-500 dark:text-[#92a4c9]">
                 © 2026 ASTBA – Association Sciences and Technology Ben Arous
               </p>
-              <p className="text-sm text-gray-400 dark:text-[#92a4c9]/60">{t('footerAddress')}</p>
+              <p className="text-sm text-gray-500 dark:text-[#92a4c9]">{t('footerAddress')}</p>
             </div>
             <div className="flex items-center gap-4">
               {[

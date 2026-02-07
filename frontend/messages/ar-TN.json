@@ -196,6 +196,7 @@
     "addStudentToGroup": "إضافة طالب",
     "removeStudentFromGroup": "إزالة من المجموعة",
     "deleteConfirm": "هل أنت متأكد من حذف هذه المجموعة؟",
+    "deleteGroup": "حذف المجموعة",
     "createSuccess": "تم إنشاء المجموعة بنجاح",
     "updateSuccess": "تم تحديث المجموعة بنجاح",
     "deleteSuccess": "تم حذف المجموعة بنجاح",
@@ -311,8 +312,8 @@
     "speciality": "التخصص",
     "specialityPlaceholder": "مثال: الروبوتيك، البرمجة…",
     "yearsExperience": "سنوات الخبرة",
-    "phone": "رقم الهاتف",
-    "phonePlaceholder": "مثال: 50123456"
+    "phone": "الهاتف",
+    "phonePlaceholder": "مثال: 12345678"
   },
   "admin": {
     "title": "الإدارة",
@@ -420,6 +421,8 @@
     "addSeance": "تخطيط حصة",
     "editSeance": "تعديل الحصة",
     "today": "اليوم",
+    "previousMonth": "الشهر السابق",
+    "nextMonth": "الشهر التالي",
     "training": "التكوين",
     "level": "المستوى",
     "sessionNum": "الحصة",

@@ -112,7 +112,7 @@ export default function LoginPage() {
         <h2 className="text-3xl font-bold tracking-tight dark:text-white sm:text-4xl">
           {t('loginTitle')}
         </h2>
-        <p className="text-base text-[#92a4c9]">{t('loginDescription')}</p>
+        <p className="text-base text-gray-500 dark:text-[#92a4c9]">{t('loginDescription')}</p>
       </div>
 
       {/* Error Summary */}
@@ -128,7 +128,7 @@ export default function LoginPage() {
             <AlertCircle className="mt-0.5 h-5 w-5 text-red-400 shrink-0" aria-hidden="true" />
             <div className="flex flex-col gap-1">
               <h3 className="text-base font-bold dark:text-white">{t('errorSummary')}</h3>
-              <ul className="list-disc ps-5 text-sm text-red-200/80">
+              <ul className="list-disc ps-5 text-sm text-red-600 dark:text-red-200/80">
                 {serverError && <li>{serverError}</li>}
                 {oauthError && <li>{t('oauthError')}</li>}
               </ul>
@@ -146,17 +146,17 @@ export default function LoginPage() {
           </label>
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
-              <Mail className="h-5 w-5 text-[#92a4c9]" aria-hidden="true" />
+              <Mail className="h-5 w-5 text-gray-400 dark:text-[#92a4c9]" aria-hidden="true" />
             </div>
             <input
               id="email"
               type="email"
               autoComplete="email"
               placeholder="nom@exemple.com"
-              className={`block w-full rounded-lg border bg-[#192233] ps-10 pe-4 py-3.5 text-base text-white placeholder-[#92a4c9] shadow-sm transition-colors focus:ring-0 ${
+              className={`block w-full rounded-lg border bg-white dark:bg-[#192233] ps-10 pe-4 py-3.5 text-base text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-[#92a4c9] shadow-sm transition-colors focus:ring-0 ${
                 fieldErrors.email
                   ? 'border-red-500 focus:border-red-500'
-                  : 'border-[#324467] focus:border-[#135bec]'
+                  : 'border-gray-300 dark:border-[#324467] focus:border-[#135bec]'
               }`}
               aria-invalid={!!fieldErrors.email || undefined}
               aria-describedby={fieldErrors.email ? 'email-error' : undefined}
@@ -195,10 +195,10 @@ export default function LoginPage() {
             id="password"
             type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
-            className={`block w-full rounded-lg border bg-[#192233] px-4 py-3.5 text-base text-white placeholder-[#92a4c9] shadow-sm transition-colors focus:bg-[#192233] focus:ring-0 ${
+            className={`block w-full rounded-lg border bg-white dark:bg-[#192233] px-4 py-3.5 text-base text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-[#92a4c9] shadow-sm transition-colors focus:ring-0 ${
               fieldErrors.password
                 ? 'border-red-500 focus:border-red-500'
-                : 'border-[#324467] focus:border-[#135bec]'
+                : 'border-gray-300 dark:border-[#324467] focus:border-[#135bec]'
             }`}
             aria-invalid={!!fieldErrors.password || undefined}
             aria-describedby={fieldErrors.password ? 'password-error' : undefined}
@@ -216,7 +216,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-2 flex w-full items-center justify-center rounded-lg bg-[#135bec] px-4 py-4 text-base font-bold text-white shadow-lg shadow-[#135bec]/20 transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-[#135bec] focus:ring-offset-2 focus:ring-offset-[#101622] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-2 flex w-full items-center justify-center rounded-lg bg-[#135bec] px-4 py-4 text-base font-bold text-white shadow-lg shadow-[#135bec]/20 transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-[#135bec] focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-[#101622] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? '…' : t('login')}
         </button>
@@ -225,20 +225,20 @@ export default function LoginPage() {
       {/* Divider */}
       <div className="relative my-6" role="presentation">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-[#324467]" />
+          <span className="w-full border-t border-gray-200 dark:border-[#324467]" />
         </div>
         <div className="relative flex justify-center text-sm uppercase">
-          <span className="bg-[#101622] px-3 text-[#92a4c9]">
+          <span className="bg-white dark:bg-[#101622] px-3 text-gray-500 dark:text-[#92a4c9]">
             {t('orContinueWith')}
           </span>
         </div>
       </div>
 
       {/* Google OAuth */}
-      <GoogleOAuthButton className="border-[#324467] bg-[#192233] text-white hover:bg-[#192233]/80 dark:border-[#324467] dark:bg-[#192233] dark:text-white dark:hover:bg-[#192233]/80" />
+      <GoogleOAuthButton className="dark:border-[#324467] dark:bg-[#192233] dark:text-white dark:hover:bg-[#192233]/80" />
 
       {/* Register link */}
-      <div className="mt-8 text-center text-base text-[#92a4c9]">
+      <div className="mt-8 text-center text-base text-gray-500 dark:text-[#92a4c9]">
         {t('noAccount')}{' '}
         <Link
           href="/register"

@@ -127,10 +127,9 @@ export const registerSchema = z.object({
     firstName: z.string().min(1, 'validation.required').max(100),
     lastName: z.string().min(1, 'validation.required').max(100),
     email: z.string().min(1, 'validation.required').email('validation.invalidEmail'),
-    phone: z.string().optional().refine(
-        (val) => !val || /^\d{8}$/.test(val),
-        { message: 'validation.invalidPhone' },
-    ),
+    phone: z.string()
+        .min(1, 'validation.required')
+        .regex(PHONE_REGEX, 'validation.invalidPhone'),
     password: z
         .string()
         .min(1, 'validation.required')
