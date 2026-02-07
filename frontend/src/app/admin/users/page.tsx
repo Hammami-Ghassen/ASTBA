@@ -68,7 +68,7 @@ function AdminUsersContent() {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'users', searchQuery, page],
-    queryFn: () => adminApi.listUsers({ query: searchQuery || undefined, page, size: 20 }),
+    queryFn: () => adminApi.listUsers({ query: searchQuery || undefined, page, size: 15 }),
   });
 
   const roleChangeMutation = useMutation({
