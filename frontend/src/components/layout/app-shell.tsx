@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/navbar';
 import { AutoBreadcrumb } from '@/components/layout/breadcrumb';
 
 const AUTH_ROUTES = ['/login', '/register', '/auth/callback', '/access-denied'];
+const CLEAN_LAYOUT_ROUTES = ['/'];
 
 /**
  * Conditionally renders the Navbar, main wrapper, and footer.
@@ -13,8 +14,9 @@ const AUTH_ROUTES = ['/login', '/register', '/auth/callback', '/access-denied'];
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = AUTH_ROUTES.some((r) => pathname.startsWith(r));
+  const isCleanPage = CLEAN_LAYOUT_ROUTES.includes(pathname);
 
-  if (isAuthPage) {
+  if (isAuthPage || isCleanPage) {
     return <>{children}</>;
   }
 

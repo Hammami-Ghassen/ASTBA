@@ -29,7 +29,7 @@ export default function LoginPage() {
   const oauthError = searchParams.get('error');
 
   // Redirect if already authenticated
-  const redirectTo = searchParams.get('redirect') || '/';
+  const redirectTo = searchParams.get('redirect') || '/dashboard';
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
       router.replace(redirectTo);

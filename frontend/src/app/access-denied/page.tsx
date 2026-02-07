@@ -23,7 +23,7 @@ export default function AccessDeniedPage() {
           </p>
           <div className="flex gap-3 mt-4">
             <Button asChild variant="outline">
-              <Link href="/">{t('backToHome')}</Link>
+              <Link href="/dashboard">{t('backToHome')}</Link>
             </Button>
             <Button asChild>
               <Link href="/login">{t('backToLogin')}</Link>

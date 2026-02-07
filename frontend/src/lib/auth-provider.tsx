@@ -90,7 +90,7 @@ export function canAccessAdmin(user: AuthUser | null): boolean {
 // ──────────────────────────────────────────────
 // Public routes (no auth required)
 // ──────────────────────────────────────────────
-const PUBLIC_PATHS = ['/login', '/register', '/auth/callback', '/access-denied'];
+const PUBLIC_PATHS = ['/', '/login', '/register', '/auth/callback', '/access-denied'];
 
 export function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
@@ -135,7 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setError(null);
       const me = await authApi.login({ email, password });
       setUser(me);
-      router.replace('/');
+      router.replace('/dashboard');
     },
     [router],
   );

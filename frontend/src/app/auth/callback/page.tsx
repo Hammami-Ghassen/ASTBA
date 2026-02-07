@@ -34,7 +34,7 @@ export default function AuthCallbackPage() {
         setStatus('success');
         // Redirect to dashboard after short delay
         setTimeout(() => {
-          router.replace('/');
+          router.replace('/dashboard');
         }, 1500);
       } catch {
         setStatus('error');

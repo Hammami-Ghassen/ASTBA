@@ -9,6 +9,7 @@ import type { NextRequest } from 'next/server';
 
 /** Paths that require authentication */
 const PROTECTED_PATH_PREFIXES = [
+    '/dashboard',
     '/students',
     '/trainings',
     '/attendance',
@@ -17,8 +18,6 @@ const PROTECTED_PATH_PREFIXES = [
 ];
 
 function isProtectedPath(pathname: string): boolean {
-    // Root dashboard is protected
-    if (pathname === '/') return true;
     return PROTECTED_PATH_PREFIXES.some(
         (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
     );

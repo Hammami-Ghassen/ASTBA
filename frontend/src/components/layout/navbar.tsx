@@ -24,7 +24,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 
 const navItems = [
-  { key: 'dashboard', href: '/', icon: LayoutDashboard },
+  { key: 'dashboard', href: '/dashboard', icon: LayoutDashboard },
   { key: 'students', href: '/students', icon: GraduationCap },
   { key: 'trainings', href: '/trainings', icon: BookOpen },
   { key: 'groups', href: '/groups', icon: UsersRound },
@@ -84,7 +84,7 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
-          href="/"
+          href="/dashboard"
           className="flex items-center gap-2 text-xl font-bold text-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:text-sky-400"
           aria-label="ASTBA - Accueil"
         >
@@ -97,7 +97,7 @@ export function Navbar() {
           <nav aria-label="Navigation principale" className="hidden md:block">
             <ul className="flex items-center gap-1">
               {allNavItems.map(({ key, href, icon: Icon }) => {
-                const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href);
+                const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href));
                 return (
                   <li key={key}>
                     <Link
@@ -221,7 +221,7 @@ export function Navbar() {
             {isAuthenticated ? (
               <>
                 {allNavItems.map(({ key, href, icon: Icon }) => {
-                  const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href);
+                  const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href));
                   return (
                     <li key={key}>
                       <Link
