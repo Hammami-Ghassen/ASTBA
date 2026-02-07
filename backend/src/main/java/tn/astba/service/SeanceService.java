@@ -12,6 +12,7 @@ import tn.astba.repository.SessionReportRepository;
 import tn.astba.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class SeanceService {
     private final GroupService groupService;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final AttendanceService attendanceService;
 
     // ─── CRUD ─────────────────────────────────────────
 
@@ -177,8 +179,56 @@ public class SeanceService {
 
     public SeanceResponse updateStatus(String id, SeanceStatus status) {
         Seance seance = getSeanceOrThrow(id);
+
+        // ── Cannot start before scheduled date/time ──
+        if (status == SeanceStatus.IN_PROGRESS) {
+            LocalDateTime scheduledStart = LocalDateTime.of(seance.getDate(), seance.getStartTime());
+            if (LocalDateTime.now().isBefore(scheduledStart)) {
+                throw new BadRequestException(
+                        String.format("Impossible de démarrer avant l'heure prévue (%s à %s)",
+                                seance.getDate(), seance.getStartTime()));
+            }
+        }
+
         seance.setStatus(status);
-        return toResponse(seanceRepository.save(seance));
+        Seance saved = seanceRepository.save(seance);
+
+        // ── Auto-mark all group students as ABSENT when starting ──
+        if (status == SeanceStatus.IN_PROGRESS) {
+            autoMarkAbsent(seance);
+        }
+
+        return toResponse(saved);
+    }
+
+    /**
+     * When a seance is started, mark all students of the group as ABSENT.
+     * The trainer can then update individual attendance to PRESENT/EXCUSED.
+     */
+    private void autoMarkAbsent(Seance seance) {
+        try {
+            Group group = groupService.getGroupOrThrow(seance.getGroupId());
+            if (group.getStudentIds() == null || group.getStudentIds().isEmpty()) return;
+
+            List<AttendanceRecord> records = group.getStudentIds().stream()
+                    .map(sid -> AttendanceRecord.builder()
+                            .studentId(sid)
+                            .status(AttendanceStatus.ABSENT)
+                            .build())
+                    .toList();
+
+            AttendanceMarkRequest markRequest = AttendanceMarkRequest.builder()
+                    .trainingId(seance.getTrainingId())
+                    .sessionId(seance.getSessionId())
+                    .date(seance.getDate())
+                    .records(records)
+                    .build();
+
+            attendanceService.markAttendance(markRequest);
+            log.info("Auto-marked {} students as ABSENT for seance {}", records.size(), seance.getId());
+        } catch (Exception e) {
+            log.warn("Failed to auto-mark absent for seance {}: {}", seance.getId(), e.getMessage());
+        }
     }
 
     // ─── Report / Postpone ────────────────────────────

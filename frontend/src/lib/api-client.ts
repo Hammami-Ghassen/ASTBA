@@ -355,8 +355,9 @@ export const notificationsApi = {
         return request<AppNotification[]>('/notifications/unread');
     },
 
-    unreadCount() {
-        return request<number>('/notifications/unread/count');
+    async unreadCount() {
+        const data = await request<{ count: number }>('/notifications/unread/count');
+        return data.count;
     },
 
     markRead(id: string) {

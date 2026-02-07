@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useMySeances, useUpdateSeanceStatus, useReportSeance } from '@/lib/hooks';
 import { useToast } from '@/components/ui/toast';
+import { useRouter } from 'next/navigation';
 import type { Seance, SessionReportInput } from '@/lib/types';
 import {
   Calendar,
@@ -53,6 +54,7 @@ export function TrainerDashboard() {
   const [reportSeanceId, setReportSeanceId] = useState('');
   const [reportReason, setReportReason] = useState('');
   const [reportSuggestedDate, setReportSuggestedDate] = useState('');
+  const router = useRouter();
 
   // Get date ranges
   const today = new Date();
@@ -100,9 +102,17 @@ export function TrainerDashboard() {
   const todayCount = allSeances?.filter((s) => s.date === todayStr).length ?? 0;
 
   const handleStartSeance = async (seance: Seance) => {
+    // Check if we're past the scheduled start time
+    const scheduledStart = new Date(`${seance.date}T${seance.startTime}`);
+    if (new Date() < scheduledStart) {
+      addToast(t('cannotStartBeforeTime', { date: seance.date, time: seance.startTime }), 'error');
+      return;
+    }
     try {
       await updateStatus.mutateAsync({ id: seance.id, status: 'IN_PROGRESS' });
       addToast(t('seanceStarted'), 'success');
+      // Redirect to attendance page so the trainer can mark presence
+      router.push('/attendance');
     } catch {
       addToast(tc('error'), 'error');
     }
