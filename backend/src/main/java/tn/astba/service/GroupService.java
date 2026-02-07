@@ -3,13 +3,16 @@ package tn.astba.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import tn.astba.domain.Group;
+import tn.astba.domain.*;
 import tn.astba.dto.*;
 import tn.astba.exception.ResourceNotFoundException;
+import tn.astba.repository.EnrollmentRepository;
 import tn.astba.repository.GroupRepository;
 import tn.astba.repository.UserRepository;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -20,6 +23,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final TrainingService trainingService;
     private final StudentService studentService;
+    private final EnrollmentRepository enrollmentRepository;
     private final UserRepository userRepository;
 
     public List<GroupResponse> findAll() {
@@ -50,6 +54,14 @@ public class GroupService {
 
         Group saved = groupRepository.save(group);
         log.debug("Groupe créé: id={}, name={}", saved.getId(), saved.getName());
+
+        // Auto-enroll all initial students in the group's training
+        if (saved.getStudentIds() != null) {
+            for (String sid : saved.getStudentIds()) {
+                autoEnroll(sid, saved.getTrainingId(), saved.getId());
+            }
+        }
+
         return toResponse(saved);
     }
 
@@ -60,11 +72,22 @@ public class GroupService {
         if (request.getDayOfWeek() != null) group.setDayOfWeek(request.getDayOfWeek());
         if (request.getStartTime() != null) group.setStartTime(request.getStartTime());
         if (request.getEndTime() != null) group.setEndTime(request.getEndTime());
+        List<String> oldStudentIds = new ArrayList<>(group.getStudentIds() != null ? group.getStudentIds() : List.of());
         if (request.getStudentIds() != null) group.setStudentIds(request.getStudentIds());
         if (request.getTrainerId() != null) group.setTrainerId(request.getTrainerId());
 
         Group saved = groupRepository.save(group);
         log.debug("Groupe mis à jour: id={}", saved.getId());
+
+        // Auto-enroll any newly added students in the group's training
+        if (request.getStudentIds() != null) {
+            for (String sid : request.getStudentIds()) {
+                if (!oldStudentIds.contains(sid)) {
+                    autoEnroll(sid, saved.getTrainingId(), saved.getId());
+                }
+            }
+        }
+
         return toResponse(saved);
     }
 
@@ -76,6 +99,8 @@ public class GroupService {
             group.getStudentIds().add(studentId);
             groupRepository.save(group);
         }
+        // Auto-enroll the student in the group's training
+        autoEnroll(studentId, group.getTrainingId(), group.getId());
         return toResponse(group);
     }
 
@@ -97,6 +122,28 @@ public class GroupService {
     public Group getGroupOrThrow(String id) {
         return groupRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Groupe", "id", id));
+    }
+
+    /**
+     * Auto-enroll a student in a training if not already enrolled.
+     * Creates an Enrollment with the given groupId and computes the initial progress.
+     */
+    private void autoEnroll(String studentId, String trainingId, String groupId) {
+        if (enrollmentRepository.existsByStudentIdAndTrainingId(studentId, trainingId)) {
+            log.debug("Étudiant {} déjà inscrit à la formation {}, auto-inscription ignorée", studentId, trainingId);
+            return;
+        }
+        Training training = trainingService.getTrainingOrThrow(trainingId);
+        Enrollment enrollment = Enrollment.builder()
+                .studentId(studentId)
+                .trainingId(trainingId)
+                .groupId(groupId)
+                .enrolledAt(Instant.now())
+                .attendance(new HashMap<>())
+                .build();
+        enrollment.setProgressSnapshot(ProgressCalculator.compute(enrollment, training));
+        enrollmentRepository.save(enrollment);
+        log.debug("Auto-inscription: étudiant {} → formation {} (groupe {})", studentId, trainingId, groupId);
     }
 
     private GroupResponse toResponse(Group g) {
