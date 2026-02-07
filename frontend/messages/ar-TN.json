@@ -301,7 +301,10 @@
     "hidePassword": "إخفاء",
     "secureLogin": "تسجيل دخول آمن",
     "secureLoginSubtitle": "سجل الدخول للوصول إلى لوحة التحكم.",
-    "welcomeBackBrand": "مرحبًا بعودتك"
+    "welcomeBackBrand": "مرحبًا بعودتك",
+    "speciality": "التخصص",
+    "specialityPlaceholder": "مثال: الروبوتيك، البرمجة…",
+    "yearsExperience": "سنوات الخبرة"
   },
   "admin": {
     "title": "الإدارة",
@@ -446,10 +449,5 @@
     "markAllRead": "تعليم الكل كمقروء",
     "markRead": "تعليم كمقروء",
     "noNotifications": "لا توجد إشعارات"
-  },
-  "register": {
-    "speciality": "التخصص",
-    "specialityPlaceholder": "مثال: الروبوتيك، البرمجة…",
-    "yearsExperience": "سنوات الخبرة"
   }
 }
