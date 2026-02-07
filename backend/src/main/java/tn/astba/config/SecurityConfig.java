@@ -59,6 +59,7 @@ public class SecurityConfig {
                     .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                     // Serve uploaded files publicly (images)
                     .requestMatchers("/uploads/**").permitAll()
+                    .requestMatchers("/api/images/**").permitAll()
                     // Admin endpoints
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     // Everything else requires authentication

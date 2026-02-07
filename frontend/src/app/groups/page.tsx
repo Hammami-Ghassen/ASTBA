@@ -128,8 +128,9 @@ export default function GroupsPage() {
       await createMutation.mutateAsync(data);
       addToast(t('createSuccess'), 'success');
       setShowCreate(false);
-    } catch {
-      addToast(tc('error'), 'error');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : tc('error');
+      addToast(msg, 'error');
     }
   };
 
@@ -140,8 +141,9 @@ export default function GroupsPage() {
       addToast(t('deleteSuccess'), 'success');
       setDeleteId(null);
       if (selectedGroupId === deleteId) setSelectedGroupId(null);
-    } catch {
-      addToast(tc('error'), 'error');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : tc('error');
+      addToast(msg, 'error');
     }
   };
 
@@ -150,8 +152,9 @@ export default function GroupsPage() {
     try {
       await addStudentMutation.mutateAsync({ groupId: selectedGroupId, studentId });
       addToast(t('addStudentSuccess'), 'success');
-    } catch {
-      addToast(tc('error'), 'error');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : tc('error');
+      addToast(msg, 'error');
     }
   };
 
@@ -160,8 +163,9 @@ export default function GroupsPage() {
     try {
       await removeStudentMutation.mutateAsync({ groupId: selectedGroupId, studentId });
       addToast(t('removeStudentSuccess'), 'success');
-    } catch {
-      addToast(tc('error'), 'error');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : tc('error');
+      addToast(msg, 'error');
     }
   };
 
@@ -358,6 +362,7 @@ export default function GroupsPage() {
                                 alt={`${student.firstName} ${student.lastName}`}
                                 width={36}
                                 height={36}
+                                unoptimized
                                 className="h-9 w-9 rounded-full object-cover"
                               />
                             ) : (
@@ -456,6 +461,7 @@ export default function GroupsPage() {
                         alt={`${student.firstName} ${student.lastName}`}
                         width={32}
                         height={32}
+                        unoptimized
                         className="h-8 w-8 rounded-full object-cover"
                       />
                     ) : (

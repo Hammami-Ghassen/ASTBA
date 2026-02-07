@@ -172,8 +172,9 @@ export default function NewTrainingPage() {
       const training = await createMutation.mutateAsync(payload);
       addToast(t('createSuccess'), 'success');
       router.push(`/trainings/${training.id}`);
-    } catch {
-      addToast(tc('error'), 'error');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : tc('error');
+      addToast(msg, 'error');
     }
   };
 

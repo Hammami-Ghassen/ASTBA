@@ -3,10 +3,12 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
-/* Backend URL for API proxy (strip trailing slash) */
+/* Backend URL used ONLY by the server-side rewrite proxy.
+   Use BACKEND_PROXY_URL for local dev (defaults to localhost:8080).
+   NEXT_PUBLIC_BACKEND_URL is a fallback for deployed environments. */
 const BACKEND_URL = (
+  process.env.BACKEND_PROXY_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/api\/?$/, '') ||
   'http://localhost:8080'
 ).replace(/\/$/, '');
 

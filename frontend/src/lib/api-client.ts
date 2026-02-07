@@ -25,7 +25,11 @@ import type {
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api';
 
 class ApiError extends Error {
-    constructor(public status: number, message: string) {
+    constructor(
+        public status: number,
+        message: string,
+        public fieldErrors?: Record<string, string>,
+    ) {
         super(message);
         this.name = 'ApiError';
     }
@@ -43,11 +47,20 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     });
 
     if (!res.ok) {
-        // 401 is handled centrally by AuthProvider – just throw here.
-        // AuthProvider calls /api/auth/me on mount and redirects to /login
-        // if the user is not authenticated.
-        const message = await res.text().catch(() => 'Unknown error');
-        throw new ApiError(res.status, message);
+        let message = 'Unknown error';
+        let fieldErrors: Record<string, string> | undefined;
+
+        try {
+            const body = await res.json();
+            message = body.message || body.error || JSON.stringify(body);
+            if (body.fieldErrors && typeof body.fieldErrors === 'object') {
+                fieldErrors = body.fieldErrors;
+            }
+        } catch {
+            message = await res.text().catch(() => `HTTP ${res.status}`);
+        }
+
+        throw new ApiError(res.status, message, fieldErrors);
     }
 
     // Handle 204 No Content

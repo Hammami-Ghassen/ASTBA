@@ -1,15 +1,44 @@
 import { z } from 'zod';
 
 // ──────────────────────────────────────────────
+// Helpers
+// ──────────────────────────────────────────────
+const PHONE_REGEX = /^\d{8}$/;
+const NAME_REGEX = /^[\p{L}\s'-]+$/u;
+
+function calculateAge(birthDate: string): number {
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+// ──────────────────────────────────────────────
 // Student schemas
 // ──────────────────────────────────────────────
 export const studentCreateSchema = z.object({
-    firstName: z.string().min(1, 'validation.required').max(100),
-    lastName: z.string().min(1, 'validation.required').max(100),
+    firstName: z.string()
+        .min(1, 'validation.required')
+        .max(100)
+        .regex(NAME_REGEX, 'validation.invalidName'),
+    lastName: z.string()
+        .min(1, 'validation.required')
+        .max(100)
+        .regex(NAME_REGEX, 'validation.invalidName'),
     email: z.string().min(1, 'validation.required').email('validation.invalidEmail'),
-    phone: z.string().optional(),
-    birthDate: z.string().optional(),
-    imageUrl: z.string().max(500).optional().or(z.literal('')),
+    phone: z.string()
+        .min(1, 'validation.required')
+        .regex(PHONE_REGEX, 'validation.invalidPhone'),
+    birthDate: z.string()
+        .min(1, 'validation.required')
+        .refine((val) => !isNaN(Date.parse(val)), { message: 'validation.invalidDate' })
+        .refine((val) => calculateAge(val) >= 10, { message: 'validation.ageTooYoung' })
+        .refine((val) => calculateAge(val) <= 29, { message: 'validation.ageTooOld' }),
+    imageUrl: z.string().optional().or(z.literal('')),
     notes: z.string().max(500).optional(),
 });
 

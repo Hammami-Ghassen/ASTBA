@@ -104,6 +104,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
               alt={`${student.firstName} ${student.lastName}`}
               width={64}
               height={64}
+              unoptimized
               className="h-16 w-16 rounded-full object-cover"
             />
           ) : (

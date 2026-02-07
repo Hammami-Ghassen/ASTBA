@@ -30,7 +30,6 @@ public class StudentUpdateRequest {
     @Size(max = 150, message = "L'email ne doit pas dépasser 150 caractères")
     private String email;
 
-    @Size(max = 500, message = "L'URL de l'image ne doit pas dépasser 500 caractères")
     private String imageUrl;
 
     @Size(max = 500, message = "Les notes ne doivent pas dépasser 500 caractères")

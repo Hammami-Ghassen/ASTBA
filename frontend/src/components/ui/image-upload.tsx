@@ -3,12 +3,40 @@
 import { useCallback, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Upload, X, Loader2 } from 'lucide-react';
-import { uploadsApi } from '@/lib/api-client';
 import { useToast } from '@/components/ui/toast';
 
-const BACKEND_ORIGIN =
-  process.env.NEXT_PUBLIC_BACKEND_URL ||
-  (process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api').replace(/\/api$/, '');
+const MAX_DIMENSION = 400;   // px – longest side
+const JPEG_QUALITY = 0.8;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+/** Resize the image on a canvas and return a base64 data-URL (JPEG). */
+function resizeToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new window.Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+          const ratio = Math.min(MAX_DIMENSION / width, MAX_DIMENSION / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { reject(new Error('Canvas not supported')); return; }
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', JPEG_QUALITY));
+      };
+      img.onerror = () => reject(new Error('Invalid image'));
+      img.src = reader.result as string;
+    };
+    reader.onerror = () => reject(new Error('File read error'));
+    reader.readAsDataURL(file);
+  });
+}
 
 interface ImageUploadProps {
   value?: string;
@@ -24,27 +52,21 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const resolveImageSrc = (url: string) => {
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    // relative path like /uploads/xxx.jpg → prepend backend origin
-    return `${BACKEND_ORIGIN}${url}`;
-  };
-
   const handleFile = useCallback(
     async (file: File) => {
       if (!file.type.startsWith('image/')) {
         addToast(t('imageInvalidType'), 'error');
         return;
       }
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > MAX_FILE_SIZE) {
         addToast(t('imageTooLarge'), 'error');
         return;
       }
 
       setUploading(true);
       try {
-        const result = await uploadsApi.uploadImage(file);
-        onChange(result.imageUrl);
+        const dataUrl = await resizeToDataUrl(file);
+        onChange(dataUrl);
         addToast(t('imageUploadSuccess'), 'success');
       } catch {
         addToast(tc('error'), 'error');
@@ -58,7 +80,6 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
-    // Reset so the same file can be re-selected
     e.target.value = '';
   };
 
@@ -79,7 +100,7 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
         <div className="relative inline-block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={resolveImageSrc(value)}
+            src={value}
             alt={t('image')}
             className="h-32 w-32 rounded-lg object-cover border border-gray-200 dark:border-gray-700"
           />

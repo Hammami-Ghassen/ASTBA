@@ -11,8 +11,13 @@ import tn.astba.domain.Student;
 import tn.astba.dto.StudentCreateRequest;
 import tn.astba.dto.StudentResponse;
 import tn.astba.dto.StudentUpdateRequest;
+import tn.astba.exception.BadRequestException;
+import tn.astba.exception.ConflictException;
 import tn.astba.exception.ResourceNotFoundException;
 import tn.astba.repository.StudentRepository;
+
+import java.time.LocalDate;
+import java.time.Period;
 
 @Slf4j
 @Service
@@ -37,6 +42,12 @@ public class StudentService {
     }
 
     public StudentResponse create(StudentCreateRequest request) {
+        validateAge(request.getBirthDate());
+        checkEmailUniqueness(request.getEmail(), null);
+        if (request.getPhone() != null && !request.getPhone().isBlank()) {
+            checkPhoneUniqueness(request.getPhone(), null);
+        }
+
         Student student = Student.builder()
                 .firstName(request.getFirstName().trim())
                 .lastName(request.getLastName().trim())
@@ -56,9 +67,20 @@ public class StudentService {
 
         if (request.getFirstName() != null) student.setFirstName(request.getFirstName().trim());
         if (request.getLastName() != null) student.setLastName(request.getLastName().trim());
-        if (request.getBirthDate() != null) student.setBirthDate(request.getBirthDate());
-        if (request.getPhone() != null) student.setPhone(request.getPhone());
-        if (request.getEmail() != null) student.setEmail(request.getEmail());
+        if (request.getBirthDate() != null) {
+            validateAge(request.getBirthDate());
+            student.setBirthDate(request.getBirthDate());
+        }
+        if (request.getPhone() != null) {
+            if (!request.getPhone().isBlank()) {
+                checkPhoneUniqueness(request.getPhone(), id);
+            }
+            student.setPhone(request.getPhone());
+        }
+        if (request.getEmail() != null) {
+            checkEmailUniqueness(request.getEmail(), id);
+            student.setEmail(request.getEmail());
+        }
         if (request.getImageUrl() != null) student.setImageUrl(request.getImageUrl());
         if (request.getNotes() != null) student.setNotes(request.getNotes());
 
@@ -74,6 +96,36 @@ public class StudentService {
         studentRepository.deleteById(id);
         log.debug("Étudiant supprimé: id={}", id);
     }
+
+    // ── Validation helpers ──────────────────────────────────────
+
+    private void validateAge(LocalDate birthDate) {
+        if (birthDate == null) return;
+        int age = Period.between(birthDate, LocalDate.now()).getYears();
+        if (age < 10 || age > 29) {
+            throw new BadRequestException("L'élève doit avoir entre 10 et 29 ans");
+        }
+    }
+
+    private void checkEmailUniqueness(String email, String excludeId) {
+        if (email == null || email.isBlank()) return;
+        studentRepository.findByEmail(email).ifPresent(existing -> {
+            if (excludeId == null || !existing.getId().equals(excludeId)) {
+                throw new ConflictException("Un élève avec l'email '" + email + "' existe déjà");
+            }
+        });
+    }
+
+    private void checkPhoneUniqueness(String phone, String excludeId) {
+        if (phone == null || phone.isBlank()) return;
+        studentRepository.findByPhone(phone).ifPresent(existing -> {
+            if (excludeId == null || !existing.getId().equals(excludeId)) {
+                throw new ConflictException("Un élève avec le numéro '" + phone + "' existe déjà");
+            }
+        });
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────
 
     public Student getStudentOrThrow(String id) {
         return studentRepository.findById(id)

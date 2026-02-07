@@ -233,9 +233,20 @@
     "required": "Ce champ est requis",
     "invalidEmail": "Adresse e-mail invalide",
     "invalidPhone": "Numéro de téléphone invalide",
-    "minLength": "Minimum {min} caractères",
-    "maxLength": "Maximum {max} caractères",
-    "passwordMin": "Le mot de passe doit contenir au moins 8 caractères"
+    "invalidName": "Le nom ne doit contenir que des lettres, espaces et tirets",
+    "invalidDate": "Date invalide",
+    "invalidTime": "Format d'heure invalide (HH:MM)",
+    "minLength": "Minimum 2 caractères",
+    "maxLength": "Longueur maximale dépassée",
+    "passwordMin": "Le mot de passe doit contenir au moins 8 caractères",
+    "passwordLower": "Le mot de passe doit contenir au moins une lettre minuscule",
+    "passwordUpper": "Le mot de passe doit contenir au moins une lettre majuscule",
+    "passwordNumberOrSymbol": "Le mot de passe doit contenir au moins un chiffre ou symbole",
+    "ageTooYoung": "L'élève doit avoir au moins 10 ans",
+    "ageTooOld": "L'élève doit avoir au maximum 29 ans",
+    "endBeforeStart": "L'heure de fin doit être après l'heure de début",
+    "emailAlreadyUsed": "Cet email est déjà utilisé",
+    "phoneAlreadyUsed": "Ce numéro est déjà utilisé"
   },
   "auth": {
     "login": "Se connecter",

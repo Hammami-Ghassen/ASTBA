@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 import tn.astba.domain.Student;
 
+import java.util.Optional;
+
 @Repository
 public interface StudentRepository extends MongoRepository<Student, String> {
 
@@ -16,4 +18,12 @@ public interface StudentRepository extends MongoRepository<Student, String> {
            "{ 'email': { $regex: ?0, $options: 'i' } } " +
            "] }")
     Page<Student> searchByQuery(String query, Pageable pageable);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByPhone(String phone);
+
+    Optional<Student> findByEmail(String email);
+
+    Optional<Student> findByPhone(String phone);
 }
