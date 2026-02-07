@@ -88,10 +88,10 @@ const PARTNERS = [
 
 /* ─── Specialties data ─── */
 const SPECIALTIES = [
-  { key: 'specRobotics', icon: Cpu, image: '/astba/Robotique_icon.png', color: 'from-blue-500 to-[#135bec]', border: 'border-blue-500/20', bg: 'bg-blue-500/10' },
-  { key: 'specInfoSoft', icon: Monitor, image: '/astba/infosoft_icon.png', color: 'from-orange-500 to-[#f5820b]', border: 'border-orange-500/20', bg: 'bg-orange-500/10' },
-  { key: 'specHealth', icon: Heart, image: '/astba/health_icon.jpg', color: 'from-emerald-500 to-teal-600', border: 'border-emerald-500/20', bg: 'bg-emerald-500/10' },
-  { key: 'specLanguages', icon: Languages, image: '/astba/langauges_icon.webp', color: 'from-purple-500 to-pink-600', border: 'border-purple-500/20', bg: 'bg-purple-500/10' },
+  { key: 'specRobotics', icon: Cpu, image: '/astba/Robotique_icon.png', color: 'from-blue-500 to-[#135bec]', border: 'border-blue-200 dark:border-blue-500/20', bg: 'bg-blue-50 dark:bg-blue-500/10' },
+  { key: 'specInfoSoft', icon: Monitor, image: '/astba/infosoft_icon.png', color: 'from-orange-500 to-[#f5820b]', border: 'border-orange-200 dark:border-orange-500/20', bg: 'bg-orange-50 dark:bg-orange-500/10' },
+  { key: 'specHealth', icon: Heart, image: '/astba/health_icon.jpg', color: 'from-emerald-500 to-teal-600', border: 'border-emerald-200 dark:border-emerald-500/20', bg: 'bg-emerald-50 dark:bg-emerald-500/10' },
+  { key: 'specLanguages', icon: Languages, image: '/astba/langauges_icon.webp', color: 'from-purple-500 to-pink-600', border: 'border-purple-200 dark:border-purple-500/20', bg: 'bg-purple-50 dark:bg-purple-500/10' },
 ];
 
 /* ─── Hero images ─── */
@@ -111,9 +111,9 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#101622] text-white overflow-x-hidden scroll-smooth">
+    <div className="min-h-screen bg-white text-gray-900 dark:bg-[#101622] dark:text-white overflow-x-hidden scroll-smooth">
       {/* ═══ NAVIGATION ═══ */}
-      <nav className="nav-cursor fixed top-0 z-50 w-full border-b border-white/5 bg-[#101622]/70 backdrop-blur-xl">
+      <nav className="nav-cursor fixed top-0 z-50 w-full border-b border-gray-200/60 bg-white/80 backdrop-blur-xl dark:border-white/5 dark:bg-[#101622]/70">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2.5 group">
             <Image
@@ -121,9 +121,9 @@ export default function LandingPage() {
               alt="ASTBA Logo"
               width={36}
               height={36}
-              className="rounded-lg shadow-lg shadow-[#135bec]/25 transition-transform group-hover:scale-110"
+              className="rounded-lg shadow-lg shadow-[#135bec]/20 transition-transform group-hover:scale-110"
             />
-            <span className="text-xl font-bold tracking-tight">ASTBA</span>
+            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-[#135bec] to-[#f5820b] bg-clip-text text-transparent">ASTBA</span>
           </Link>
 
           {/* Desktop nav */}
@@ -138,7 +138,7 @@ export default function LandingPage() {
               <a
                 key={link.href}
                 href={link.href}
-                className="relative text-sm text-[#92a4c9] transition-colors hover:text-white after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-center after:scale-x-0 after:bg-[#f5820b] after:transition-transform hover:after:scale-x-100"
+                className="relative text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-center after:scale-x-0 after:bg-[#f5820b] after:transition-transform hover:after:scale-x-100"
               >
                 {link.label}
               </a>
@@ -153,7 +153,7 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-[#92a4c9] transition-colors hover:text-white lg:hidden"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white lg:hidden"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -163,7 +163,7 @@ export default function LandingPage() {
               isAuthenticated ? (
                 <Link
                   href="/dashboard"
-                  className="hidden rounded-lg bg-gradient-to-r from-[#135bec] to-blue-500 px-5 py-2 text-sm font-semibold shadow-lg shadow-[#135bec]/25 transition-all hover:shadow-[#135bec]/50 hover:scale-[1.03] sm:inline-flex"
+                  className="hidden rounded-lg bg-gradient-to-r from-[#135bec] to-blue-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[#135bec]/25 transition-all hover:shadow-[#135bec]/50 hover:scale-[1.03] sm:inline-flex"
                 >
                   {t('goToDashboard')}
                 </Link>
@@ -171,13 +171,13 @@ export default function LandingPage() {
                 <>
                   <Link
                     href="/login"
-                    className="hidden rounded-lg px-4 py-2 text-sm font-medium text-[#92a4c9] transition-colors hover:text-white sm:inline-flex"
+                    className="hidden rounded-lg px-4 py-2 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white sm:inline-flex"
                   >
                     {ta('login')}
                   </Link>
                   <Link
                     href="/register"
-                    className="hidden rounded-lg bg-gradient-to-r from-[#135bec] to-blue-500 px-5 py-2 text-sm font-semibold shadow-lg shadow-[#135bec]/25 transition-all hover:shadow-[#135bec]/50 hover:scale-[1.03] sm:inline-flex"
+                    className="hidden rounded-lg bg-gradient-to-r from-[#135bec] to-blue-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[#135bec]/25 transition-all hover:shadow-[#135bec]/50 hover:scale-[1.03] sm:inline-flex"
                   >
                     {t('getStarted')}
                   </Link>
@@ -189,7 +189,7 @@ export default function LandingPage() {
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="border-t border-white/5 bg-[#101622]/95 backdrop-blur-xl lg:hidden">
+          <div className="border-t border-gray-200/60 bg-white/95 backdrop-blur-xl dark:border-white/5 dark:bg-[#101622]/95 lg:hidden">
             <div className="flex flex-col gap-1 px-4 py-4">
               {[
                 { href: '#features', label: t('navFeatures') },
@@ -202,15 +202,15 @@ export default function LandingPage() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-sm text-[#92a4c9] transition-colors hover:bg-white/5 hover:text-white"
+                  className="rounded-lg px-3 py-2.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[#92a4c9] dark:hover:bg-white/5 dark:hover:text-white"
                 >
                   {link.label}
                 </a>
               ))}
               {!isLoading && !isAuthenticated && (
-                <div className="mt-2 flex gap-2 border-t border-white/5 pt-3">
-                  <Link href="/login" className="flex-1 rounded-lg border border-[#324467] py-2 text-center text-sm text-[#92a4c9]">{ta('login')}</Link>
-                  <Link href="/register" className="flex-1 rounded-lg bg-[#135bec] py-2 text-center text-sm font-semibold">{t('getStarted')}</Link>
+                <div className="mt-2 flex gap-2 border-t border-gray-200/60 dark:border-white/5 pt-3">
+                  <Link href="/login" className="flex-1 rounded-lg border border-gray-300 dark:border-[#324467] py-2 text-center text-sm text-gray-600 dark:text-[#92a4c9]">{ta('login')}</Link>
+                  <Link href="/register" className="flex-1 rounded-lg bg-[#135bec] py-2 text-center text-sm font-semibold text-white">{t('getStarted')}</Link>
                 </div>
               )}
             </div>
@@ -237,15 +237,15 @@ export default function LandingPage() {
               />
             </div>
           ))}
-          {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#101622]/80 via-[#101622]/70 to-[#101622]" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#101622]/60 to-transparent" />
+          {/* Light mode overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/75 to-white dark:from-[#101622]/80 dark:via-[#101622]/70 dark:to-[#101622]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/70 to-transparent dark:from-[#101622]/60 dark:to-transparent" />
         </div>
 
         {/* Gradient orbs */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-          <div className="absolute -top-40 start-1/4 h-[500px] w-[500px] rounded-full bg-[#135bec]/15 blur-[120px] animate-glow-pulse" />
-          <div className="absolute top-20 end-1/4 h-[400px] w-[400px] rounded-full bg-[#f5820b]/10 blur-[100px] animate-glow-pulse" style={{ animationDelay: '1.5s' }} />
+          <div className="absolute -top-40 start-1/4 h-[500px] w-[500px] rounded-full bg-[#135bec]/10 dark:bg-[#135bec]/15 blur-[120px] animate-glow-pulse" />
+          <div className="absolute top-20 end-1/4 h-[400px] w-[400px] rounded-full bg-[#f5820b]/8 dark:bg-[#f5820b]/10 blur-[100px] animate-glow-pulse" style={{ animationDelay: '1.5s' }} />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
@@ -258,13 +258,13 @@ export default function LandingPage() {
 
             {/* Headline */}
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-7xl leading-tight">
-              <span className="block">{t('heroTitle1')}</span>
+              <span className="block text-gray-900 dark:text-white">{t('heroTitle1')}</span>
               <span className="mt-2 block bg-gradient-to-r from-[#135bec] via-[#f5820b] to-[#135bec] bg-clip-text text-transparent text-shimmer bg-[length:200%_200%]">
                 {t('heroTitle2')}
               </span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#c5d0e6] sm:text-xl">
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-[#c5d0e6] sm:text-xl">
               {t('heroDescription')}
             </p>
 
@@ -272,7 +272,7 @@ export default function LandingPage() {
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link
                 href={isAuthenticated ? '/dashboard' : '/register'}
-                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#135bec] to-blue-500 px-8 py-4 text-sm font-bold shadow-2xl shadow-[#135bec]/30 transition-all hover:shadow-[#135bec]/60 hover:scale-[1.04] active:scale-[0.98]"
+                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#135bec] to-blue-500 px-8 py-4 text-sm font-bold text-white shadow-2xl shadow-[#135bec]/30 transition-all hover:shadow-[#135bec]/60 hover:scale-[1.04] active:scale-[0.98]"
               >
                 {t('heroCtaPrimary')}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" />
@@ -293,7 +293,7 @@ export default function LandingPage() {
                   type="button"
                   onClick={() => setActiveSlide(i)}
                   aria-label={`Slide ${i + 1}`}
-                  className={`h-2 rounded-full transition-all duration-500 ${i === activeSlide ? 'w-8 bg-[#f5820b]' : 'w-2 bg-white/30 hover:bg-white/50'}`}
+                  className={`h-2 rounded-full transition-all duration-500 ${i === activeSlide ? 'w-8 bg-[#f5820b]' : 'w-2 bg-gray-300 hover:bg-gray-400 dark:bg-white/30 dark:hover:bg-white/50'}`}
                 />
               ))}
             </div>
@@ -302,14 +302,14 @@ export default function LandingPage() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce" aria-hidden="true">
-          <div className="flex h-8 w-5 items-start justify-center rounded-full border-2 border-white/30 p-1">
+          <div className="flex h-8 w-5 items-start justify-center rounded-full border-2 border-gray-400 dark:border-white/30 p-1">
             <div className="h-1.5 w-1 rounded-full bg-[#f5820b]" />
           </div>
         </div>
       </section>
 
       {/* ═══ STATS ═══ */}
-      <section id="stats" className="relative border-y border-white/5 bg-[#0c1320] py-16">
+      <section id="stats" className="relative border-y border-gray-200/60 bg-gray-50 dark:border-white/5 dark:bg-[#0c1320] py-16">
         <Reveal>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
@@ -323,7 +323,7 @@ export default function LandingPage() {
                   <p className="text-3xl font-extrabold bg-gradient-to-r from-[#135bec] to-[#f5820b] bg-clip-text text-transparent sm:text-5xl transition-transform group-hover:scale-110">
                     <AnimatedCounter target={stat.value} suffix={stat.suffix} />{stat.suffix}
                   </p>
-                  <p className="mt-2 text-sm text-[#92a4c9]">{stat.label}</p>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-[#92a4c9]">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -336,30 +336,30 @@ export default function LandingPage() {
         <Reveal>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-sm text-emerald-400">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-300 bg-emerald-50 dark:border-emerald-500/30 dark:bg-emerald-500/10 px-4 py-1.5 text-sm text-emerald-600 dark:text-emerald-400">
                 <Zap className="h-4 w-4" />
                 {t('featuresBadge')}
               </div>
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+              <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
                 {t('featuresTitle')}
               </h2>
-              <p className="mt-4 text-lg text-[#92a4c9]">
+              <p className="mt-4 text-lg text-gray-500 dark:text-[#92a4c9]">
                 {t('featuresDescription')}
               </p>
             </div>
 
             <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 stagger-in">
               {[
-                { icon: Users, title: t('featureStudents'), description: t('featureStudentsDesc'), color: 'from-sky-500 to-blue-600', bg: 'bg-sky-500/10', border: 'border-sky-500/20' },
-                { icon: BookOpen, title: t('featureTrainings'), description: t('featureTrainingsDesc'), color: 'from-[#f5820b] to-orange-600', bg: 'bg-orange-500/10', border: 'border-orange-500/20' },
-                { icon: ClipboardCheck, title: t('featureAttendance'), description: t('featureAttendanceDesc'), color: 'from-amber-500 to-yellow-600', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
-                { icon: Award, title: t('featureCertificates'), description: t('featureCertificatesDesc'), color: 'from-purple-500 to-pink-600', bg: 'bg-purple-500/10', border: 'border-purple-500/20' },
-                { icon: BarChart3, title: t('featureAnalytics'), description: t('featureAnalyticsDesc'), color: 'from-cyan-500 to-teal-600', bg: 'bg-cyan-500/10', border: 'border-cyan-500/20' },
-                { icon: Shield, title: t('featureSecurity'), description: t('featureSecurityDesc'), color: 'from-rose-500 to-red-600', bg: 'bg-rose-500/10', border: 'border-rose-500/20' },
+                { icon: Users, title: t('featureStudents'), description: t('featureStudentsDesc'), color: 'from-sky-500 to-blue-600', bg: 'bg-sky-50 dark:bg-sky-500/10', border: 'border-sky-200 dark:border-sky-500/20' },
+                { icon: BookOpen, title: t('featureTrainings'), description: t('featureTrainingsDesc'), color: 'from-[#f5820b] to-orange-600', bg: 'bg-orange-50 dark:bg-orange-500/10', border: 'border-orange-200 dark:border-orange-500/20' },
+                { icon: ClipboardCheck, title: t('featureAttendance'), description: t('featureAttendanceDesc'), color: 'from-amber-500 to-yellow-600', bg: 'bg-amber-50 dark:bg-amber-500/10', border: 'border-amber-200 dark:border-amber-500/20' },
+                { icon: Award, title: t('featureCertificates'), description: t('featureCertificatesDesc'), color: 'from-purple-500 to-pink-600', bg: 'bg-purple-50 dark:bg-purple-500/10', border: 'border-purple-200 dark:border-purple-500/20' },
+                { icon: BarChart3, title: t('featureAnalytics'), description: t('featureAnalyticsDesc'), color: 'from-cyan-500 to-teal-600', bg: 'bg-cyan-50 dark:bg-cyan-500/10', border: 'border-cyan-200 dark:border-cyan-500/20' },
+                { icon: Shield, title: t('featureSecurity'), description: t('featureSecurityDesc'), color: 'from-rose-500 to-red-600', bg: 'bg-rose-50 dark:bg-rose-500/10', border: 'border-rose-200 dark:border-rose-500/20' },
               ].map(({ icon: Icon, title, description, color, bg, border }) => (
                 <div
                   key={title}
-                  className={`group relative overflow-hidden rounded-2xl border ${border} ${bg} p-6 transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:shadow-black/20`}
+                  className={`group relative overflow-hidden rounded-2xl border ${border} ${bg} p-6 transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/20`}
                 >
                   {/* Hover gradient glow */}
                   <div className={`absolute -inset-px rounded-2xl bg-gradient-to-br ${color} opacity-0 transition-opacity duration-300 group-hover:opacity-10`} />
@@ -367,8 +367,8 @@ export default function LandingPage() {
                     <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${color} shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
                       <Icon className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="mb-2 text-lg font-bold">{title}</h3>
-                    <p className="text-sm leading-relaxed text-[#92a4c9]">{description}</p>
+                    <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
+                    <p className="text-sm leading-relaxed text-gray-500 dark:text-[#92a4c9]">{description}</p>
                   </div>
                 </div>
               ))}
@@ -378,7 +378,7 @@ export default function LandingPage() {
       </section>
 
       {/* ═══ SPECIALTIES ═══ */}
-      <section id="specialties" className="relative border-y border-white/5 bg-[#0c1320] py-24 sm:py-32">
+      <section id="specialties" className="relative border-y border-gray-200/60 bg-gray-50 dark:border-white/5 dark:bg-[#0c1320] py-24 sm:py-32">
         <Reveal>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
@@ -386,15 +386,15 @@ export default function LandingPage() {
                 <GraduationCap className="h-4 w-4" />
                 {t('specialtiesBadge')}
               </div>
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t('specialtiesTitle')}</h2>
-              <p className="mt-4 text-lg text-[#92a4c9]">{t('specialtiesDescription')}</p>
+              <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">{t('specialtiesTitle')}</h2>
+              <p className="mt-4 text-lg text-gray-500 dark:text-[#92a4c9]">{t('specialtiesDescription')}</p>
             </div>
 
             <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 stagger-in">
               {SPECIALTIES.map(({ key, icon: Icon, image, color, border, bg }) => (
                 <div
                   key={key}
-                  className={`group relative overflow-hidden rounded-2xl border ${border} ${bg} transition-all duration-500 hover:scale-[1.04] hover:shadow-2xl hover:shadow-black/30`}
+                  className={`group relative overflow-hidden rounded-2xl border ${border} ${bg} transition-all duration-500 hover:scale-[1.04] hover:shadow-2xl hover:shadow-black/10 dark:hover:shadow-black/30`}
                 >
                   {/* Image */}
                   <div className="relative h-48 overflow-hidden">
@@ -405,15 +405,15 @@ export default function LandingPage() {
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                       sizes="(max-width: 768px) 100vw, 25vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c1320] via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent dark:from-[#0c1320]" />
                     <div className={`absolute top-3 end-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${color} shadow-lg`}>
                       <Icon className="h-5 w-5 text-white" />
                     </div>
                   </div>
                   {/* Content */}
                   <div className="p-5">
-                    <h3 className="mb-1.5 text-lg font-bold">{t(key as 'specRobotics')}</h3>
-                    <p className="text-sm leading-relaxed text-[#92a4c9]">{t(`${key}Desc` as 'specRoboticsDesc')}</p>
+                    <h3 className="mb-1.5 text-lg font-bold text-gray-900 dark:text-white">{t(key as 'specRobotics')}</h3>
+                    <p className="text-sm leading-relaxed text-gray-500 dark:text-[#92a4c9]">{t(`${key}Desc` as 'specRoboticsDesc')}</p>
                   </div>
                 </div>
               ))}
@@ -427,17 +427,17 @@ export default function LandingPage() {
         <Reveal>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+              <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
                 {t('howItWorksTitle')}
               </h2>
-              <p className="mt-4 text-lg text-[#92a4c9]">
+              <p className="mt-4 text-lg text-gray-500 dark:text-[#92a4c9]">
                 {t('howItWorksDescription')}
               </p>
             </div>
 
             <div className="relative mt-16">
               {/* Connector line */}
-              <div className="absolute top-8 start-0 end-0 hidden h-0.5 bg-gradient-to-r from-transparent via-[#f5820b]/40 to-transparent lg:block" aria-hidden="true" />
+              <div className="absolute top-8 start-0 end-0 hidden h-0.5 bg-gradient-to-r from-transparent via-[#f5820b]/30 dark:via-[#f5820b]/40 to-transparent lg:block" aria-hidden="true" />
 
               <div className="grid gap-8 lg:grid-cols-4 stagger-in">
                 {[
@@ -447,14 +447,14 @@ export default function LandingPage() {
                   { step: '04', title: t('step4Title'), desc: t('step4Desc'), icon: Award, color: 'text-[#f5820b]' },
                 ].map(({ step, title, desc, icon: Icon, color }) => (
                   <div key={step} className="relative text-center group">
-                    <div className="relative z-10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#324467] bg-[#192233] shadow-xl transition-all duration-300 group-hover:border-[#f5820b]/40 group-hover:shadow-[#f5820b]/20">
+                    <div className="relative z-10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-[#324467] dark:bg-[#192233] transition-all duration-300 group-hover:border-[#f5820b]/40 group-hover:shadow-[#f5820b]/10 dark:group-hover:shadow-[#f5820b]/20">
                       <Icon className={`h-7 w-7 ${color}`} />
-                      <span className="absolute -top-2 -end-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-[#135bec] to-[#f5820b] text-xs font-bold shadow-lg">
+                      <span className="absolute -top-2 -end-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-[#135bec] to-[#f5820b] text-xs font-bold text-white shadow-lg">
                         {step}
                       </span>
                     </div>
-                    <h3 className="mb-2 font-bold">{title}</h3>
-                    <p className="text-sm text-[#92a4c9]">{desc}</p>
+                    <h3 className="mb-2 font-bold text-gray-900 dark:text-white">{title}</h3>
+                    <p className="text-sm text-gray-500 dark:text-[#92a4c9]">{desc}</p>
                   </div>
                 ))}
               </div>
@@ -464,7 +464,7 @@ export default function LandingPage() {
       </section>
 
       {/* ═══ PARTNERS LOGO SLIDER ═══ */}
-      <section id="partners" className="relative border-y border-white/5 bg-[#0c1320] py-24 sm:py-32 overflow-hidden">
+      <section id="partners" className="relative border-y border-gray-200/60 bg-gray-50 dark:border-white/5 dark:bg-[#0c1320] py-24 sm:py-32 overflow-hidden">
         <Reveal>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-12">
@@ -472,30 +472,30 @@ export default function LandingPage() {
                 <Globe className="h-4 w-4" />
                 {t('partnersBadge')}
               </div>
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t('partnersTitle')}</h2>
-              <p className="mt-4 text-lg text-[#92a4c9]">{t('partnersDescription')}</p>
+              <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">{t('partnersTitle')}</h2>
+              <p className="mt-4 text-lg text-gray-500 dark:text-[#92a4c9]">{t('partnersDescription')}</p>
             </div>
           </div>
 
           {/* Infinite scroll slider */}
           <div className="relative">
             {/* Fade edges */}
-            <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-32 bg-gradient-to-r from-[#0c1320] to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-32 bg-gradient-to-l from-[#0c1320] to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-32 bg-gradient-to-r from-gray-50 to-transparent dark:from-[#0c1320]" />
+            <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-32 bg-gradient-to-l from-gray-50 to-transparent dark:from-[#0c1320]" />
 
             <div className="flex overflow-hidden" role="marquee" aria-label="Partner logos">
               <div className="logo-slider flex shrink-0 items-center gap-16 px-8">
                 {[...PARTNERS, ...PARTNERS].map((p, i) => (
                   <div
                     key={`${p.alt}-${i}`}
-                    className="flex h-20 w-40 shrink-0 items-center justify-center rounded-xl border border-[#324467]/50 bg-[#192233]/50 p-4 backdrop-blur-sm transition-all duration-300 hover:border-[#f5820b]/40 hover:bg-[#192233]"
+                    className="flex h-24 w-48 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300 hover:border-[#f5820b]/40 hover:shadow-lg dark:border-[#324467]/50 dark:bg-[#192233]/50 dark:backdrop-blur-sm dark:hover:bg-[#192233]"
                   >
                     <Image
                       src={p.src}
                       alt={p.alt}
-                      width={120}
-                      height={60}
-                      className="max-h-12 w-auto object-contain opacity-70 transition-opacity duration-300 hover:opacity-100 brightness-0 invert"
+                      width={160}
+                      height={80}
+                      className="max-h-16 w-auto object-contain"
                     />
                   </div>
                 ))}
@@ -504,14 +504,14 @@ export default function LandingPage() {
                 {[...PARTNERS, ...PARTNERS].map((p, i) => (
                   <div
                     key={`dup-${p.alt}-${i}`}
-                    className="flex h-20 w-40 shrink-0 items-center justify-center rounded-xl border border-[#324467]/50 bg-[#192233]/50 p-4 backdrop-blur-sm transition-all duration-300 hover:border-[#f5820b]/40 hover:bg-[#192233]"
+                    className="flex h-24 w-48 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300 hover:border-[#f5820b]/40 hover:shadow-lg dark:border-[#324467]/50 dark:bg-[#192233]/50 dark:backdrop-blur-sm dark:hover:bg-[#192233]"
                   >
                     <Image
                       src={p.src}
                       alt=""
-                      width={120}
-                      height={60}
-                      className="max-h-12 w-auto object-contain opacity-70 transition-opacity duration-300 hover:opacity-100 brightness-0 invert"
+                      width={160}
+                      height={80}
+                      className="max-h-16 w-auto object-contain"
                     />
                   </div>
                 ))}
@@ -527,14 +527,14 @@ export default function LandingPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid items-center gap-12 lg:grid-cols-2">
               <div>
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-sm text-purple-400">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-purple-300 bg-purple-50 dark:border-purple-500/30 dark:bg-purple-500/10 px-4 py-1.5 text-sm text-purple-600 dark:text-purple-400">
                   <Star className="h-4 w-4" />
                   {t('highlightsBadge')}
                 </div>
-                <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+                <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
                   {t('highlightsTitle')}
                 </h2>
-                <p className="mt-4 text-lg text-[#92a4c9]">
+                <p className="mt-4 text-lg text-gray-500 dark:text-[#92a4c9]">
                   {t('highlightsDescription')}
                 </p>
 
@@ -542,7 +542,7 @@ export default function LandingPage() {
                   {[t('highlight1'), t('highlight2'), t('highlight3'), t('highlight4'), t('highlight5')].map((item) => (
                     <li key={item} className="group flex items-start gap-3">
                       <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#f5820b] transition-transform group-hover:scale-125" />
-                      <span className="text-[#92a4c9] group-hover:text-white transition-colors">{item}</span>
+                      <span className="text-gray-600 group-hover:text-gray-900 dark:text-[#92a4c9] dark:group-hover:text-white transition-colors">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -550,7 +550,7 @@ export default function LandingPage() {
 
               {/* Feature card visual */}
               <div className="relative">
-                <div className="rounded-2xl border border-[#324467]/50 bg-[#192233] p-8 shadow-2xl">
+                <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-2xl dark:border-[#324467]/50 dark:bg-[#192233]">
                   <div className="space-y-5">
                     {[
                       { label: t('highlightProgress'), pct: 92, color: 'bg-gradient-to-r from-[#135bec] to-blue-400' },
@@ -559,10 +559,10 @@ export default function LandingPage() {
                     ].map(({ label, pct, color }) => (
                       <div key={label}>
                         <div className="mb-1.5 flex justify-between text-sm">
-                          <span className="text-[#92a4c9]">{label}</span>
-                          <span className="font-bold text-white">{pct}%</span>
+                          <span className="text-gray-500 dark:text-[#92a4c9]">{label}</span>
+                          <span className="font-bold text-gray-900 dark:text-white">{pct}%</span>
                         </div>
-                        <div className="h-2.5 overflow-hidden rounded-full bg-[#101622]">
+                        <div className="h-2.5 overflow-hidden rounded-full bg-gray-100 dark:bg-[#101622]">
                           <div className={`h-full rounded-full ${color} transition-all duration-1000`} style={{ width: `${pct}%` }} />
                         </div>
                       </div>
@@ -575,15 +575,15 @@ export default function LandingPage() {
                       { icon: Shield, label: t('highlightRBAC') },
                       { icon: Zap, label: t('highlightRealtime') },
                     ].map(({ icon: Icon, label }) => (
-                      <div key={label} className="group rounded-xl border border-[#324467] bg-[#101622] p-4 text-center transition-all duration-300 hover:border-[#f5820b]/40 hover:shadow-lg hover:shadow-[#f5820b]/10">
+                      <div key={label} className="group rounded-xl border border-gray-200 bg-gray-50 dark:border-[#324467] dark:bg-[#101622] p-4 text-center transition-all duration-300 hover:border-[#f5820b]/40 hover:shadow-lg hover:shadow-[#f5820b]/5 dark:hover:shadow-[#f5820b]/10">
                         <Icon className="mx-auto h-5 w-5 text-[#135bec] group-hover:text-[#f5820b] transition-colors" />
-                        <p className="mt-2 text-xs text-[#92a4c9]">{label}</p>
+                        <p className="mt-2 text-xs text-gray-500 dark:text-[#92a4c9]">{label}</p>
                       </div>
                     ))}
                   </div>
                 </div>
                 {/* Decorative glow */}
-                <div className="absolute -bottom-4 left-1/2 h-8 w-2/3 -translate-x-1/2 rounded-full bg-[#f5820b]/15 blur-2xl animate-glow-pulse" aria-hidden="true" />
+                <div className="absolute -bottom-4 left-1/2 h-8 w-2/3 -translate-x-1/2 rounded-full bg-[#f5820b]/10 dark:bg-[#f5820b]/15 blur-2xl animate-glow-pulse" aria-hidden="true" />
               </div>
             </div>
           </div>
@@ -591,29 +591,29 @@ export default function LandingPage() {
       </section>
 
       {/* ═══ CTA SECTION ═══ */}
-      <section className="relative border-t border-white/5 bg-[#0c1320] py-24 sm:py-32">
+      <section className="relative border-t border-gray-200/60 bg-gray-50 dark:border-white/5 dark:bg-[#0c1320] py-24 sm:py-32">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-          <div className="absolute top-1/2 start-1/4 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-[#135bec]/10 blur-[120px] animate-glow-pulse" />
-          <div className="absolute top-1/2 end-1/4 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-[#f5820b]/10 blur-[120px] animate-glow-pulse" style={{ animationDelay: '1.5s' }} />
+          <div className="absolute top-1/2 start-1/4 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-[#135bec]/5 dark:bg-[#135bec]/10 blur-[120px] animate-glow-pulse" />
+          <div className="absolute top-1/2 end-1/4 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-[#f5820b]/5 dark:bg-[#f5820b]/10 blur-[120px] animate-glow-pulse" style={{ animationDelay: '1.5s' }} />
         </div>
 
         <Reveal>
           <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
             {/* Logo */}
-            <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-2xl border border-[#324467] bg-[#192233] shadow-2xl">
+            <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#324467] dark:bg-[#192233]">
               <Image src="/astba/logo.png" alt="ASTBA" width={56} height={56} className="rounded-lg" />
             </div>
 
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+            <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl lg:text-5xl">
               {t('ctaTitle')}
             </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-[#92a4c9]">
+            <p className="mx-auto mt-6 max-w-xl text-lg text-gray-500 dark:text-[#92a4c9]">
               {t('ctaDescription')}
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link
                 href={isAuthenticated ? '/dashboard' : '/register'}
-                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#135bec] via-blue-500 to-[#135bec] bg-[length:200%_100%] px-8 py-4 text-sm font-bold shadow-2xl shadow-[#135bec]/30 transition-all duration-500 hover:bg-right hover:shadow-[#135bec]/60 hover:scale-[1.04] active:scale-[0.98]"
+                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#135bec] via-blue-500 to-[#135bec] bg-[length:200%_100%] px-8 py-4 text-sm font-bold text-white shadow-2xl shadow-[#135bec]/30 transition-all duration-500 hover:bg-right hover:shadow-[#135bec]/60 hover:scale-[1.04] active:scale-[0.98]"
               >
                 {t('ctaButton')}
                 <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" />
@@ -624,21 +624,21 @@ export default function LandingPage() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="border-t border-white/5 bg-[#101622] py-12">
+      <footer className="border-t border-gray-200/60 bg-white dark:border-white/5 dark:bg-[#101622] py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
             <div className="flex flex-col items-center gap-3 md:items-start">
               <div className="flex items-center gap-2.5">
                 <Image src="/astba/logo.png" alt="ASTBA" width={32} height={32} className="rounded-lg" />
-                <span className="font-bold text-lg">ASTBA</span>
+                <span className="font-bold text-lg bg-gradient-to-r from-[#135bec] to-[#f5820b] bg-clip-text text-transparent">ASTBA</span>
               </div>
-              <p className="text-xs text-[#92a4c9]/70">{t('footerSince')}</p>
+              <p className="text-xs text-gray-400 dark:text-[#92a4c9]/70">{t('footerSince')}</p>
             </div>
             <div className="flex flex-col items-center gap-1 text-center">
-              <p className="text-sm text-[#92a4c9]">
+              <p className="text-sm text-gray-500 dark:text-[#92a4c9]">
                 © 2026 ASTBA – Association Sciences and Technology Ben Arous
               </p>
-              <p className="text-xs text-[#92a4c9]/60">{t('footerAddress')}</p>
+              <p className="text-xs text-gray-400 dark:text-[#92a4c9]/60">{t('footerAddress')}</p>
             </div>
             <div className="flex items-center gap-4">
               {[
@@ -647,7 +647,7 @@ export default function LandingPage() {
                 { href: '#how-it-works', label: t('navHowItWorks') },
                 { href: '#partners', label: t('navPartners') },
               ].map((link) => (
-                <a key={link.href} href={link.href} className="text-sm text-[#92a4c9] hover:text-white transition-colors">{link.label}</a>
+                <a key={link.href} href={link.href} className="text-sm text-gray-500 hover:text-gray-900 dark:text-[#92a4c9] dark:hover:text-white transition-colors">{link.label}</a>
               ))}
             </div>
           </div>
