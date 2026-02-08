@@ -65,7 +65,10 @@ public class TrainingService {
 
         if (request.getTitle() != null) training.setTitle(request.getTitle().trim());
         if (request.getDescription() != null) training.setDescription(request.getDescription());
-        if (request.getDocumentUrl() != null) training.setDocumentUrl(request.getDocumentUrl());
+        // Allow empty string to clear the document URL
+        if (request.getDocumentUrl() != null) {
+            training.setDocumentUrl(request.getDocumentUrl().isBlank() ? null : request.getDocumentUrl());
+        }
         if (request.getLevels() != null) training.setLevels(request.getLevels());
 
         Training saved = trainingRepository.save(training);

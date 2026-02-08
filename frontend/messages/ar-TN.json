@@ -145,7 +145,12 @@
     "pdfUploadSuccess": "تم رفع الوثيقة بنجاح",
     "pdfInvalidType": "فقط ملفات PDF مقبولة",
     "pdfTooLarge": "يجب ألا يتجاوز حجم الملف 10 ميغابايت",
-    "pdfOptionalHint": "هذه الخطوة اختيارية. يمكنك إضافة وثيقة لاحقًا."
+    "pdfOptionalHint": "هذه الخطوة اختيارية. يمكنك إضافة وثيقة لاحقًا.",
+    "docReplace": "استبدال",
+    "docDelete": "حذف",
+    "docDeleteSuccess": "تم حذف الوثيقة بنجاح",
+    "docEmpty": "لا توجد وثيقة مرتبطة بهذا التكوين.",
+    "docUpload": "إضافة وثيقة"
   },
   "attendance": {
     "title": "الحضور",
@@ -474,7 +479,8 @@
     "suggestedDateHint": "اختياري – اقترح تاريخًا جديدًا للحصة.",
     "submitReport": "تقديم طلب التأجيل",
     "reportSubmitted": "تم تقديم طلب التأجيل",
-    "suggestedDatePastError": "لا يمكن أن يكون التاريخ المقترح في الماضي"
+    "suggestedDatePastError": "لا يمكن أن يكون التاريخ المقترح في الماضي",
+    "viewDocument": "عرض الوثيقة"
   },
   "notifications": {
     "title": "الإشعارات",

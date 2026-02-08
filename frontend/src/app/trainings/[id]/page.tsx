@@ -1,8 +1,11 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useTraining, useTrainingEnrollments } from '@/lib/hooks';
+import { useAuth, canManageTrainings } from '@/lib/auth-provider';
+import { trainingsApi, uploadsApi } from '@/lib/api-client';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,8 +19,9 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { ErrorState, LoadingSkeleton } from '@/components/layout/states';
-import { BookOpen, Layers, Calendar, Users } from 'lucide-react';
+import { BookOpen, Layers, Calendar, Users, FileText, Upload, Trash2, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/toast';
 
 export default function TrainingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -25,6 +29,12 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
   const tc = useTranslations('common');
   const { data: training, isLoading, error } = useTraining(id);
   const { data: enrollments } = useTrainingEnrollments(id);
+  const { user } = useAuth();
+  const canManage = canManageTrainings(user);
+  const queryClient = useQueryClient();
+  const { addToast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
 
   if (isLoading) return <LoadingSkeleton rows={6} />;
   if (error || !training) return <ErrorState message={error?.message} />;
@@ -101,6 +111,110 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
           </CardContent>
         </Card>
       </div>
+
+      {/* Document Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5 text-red-500" aria-hidden="true" />
+            {t('pdfDocument')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {training.documentUrl ? (
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <a
+                href={`${process.env.NEXT_PUBLIC_API_BASE_URL}${training.documentUrl}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
+              >
+                <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                {t('pdfView')}
+              </a>
+              {canManage && (
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                  >
+                    <Upload className="h-4 w-4 me-1" aria-hidden="true" />
+                    {uploading ? t('pdfUploading') : t('docReplace')}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-red-600 border-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    onClick={async () => {
+                      try {
+                        await trainingsApi.update(id, { documentUrl: '' });
+                        queryClient.invalidateQueries({ queryKey: ['training', id] });
+                        addToast(t('docDeleteSuccess'), 'success');
+                      } catch {
+                        addToast(tc('error'), 'error');
+                      }
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4 me-1" aria-hidden="true" />
+                    {t('docDelete')}
+                  </Button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <FileText className="mx-auto h-10 w-10 text-gray-300 dark:text-gray-600 mb-2" aria-hidden="true" />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{t('docEmpty')}</p>
+              {canManage && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
+                  <Upload className="h-4 w-4 me-1" aria-hidden="true" />
+                  {uploading ? t('pdfUploading') : t('docUpload')}
+                </Button>
+              )}
+            </div>
+          )}
+          {/* Hidden file input */}
+          {canManage && (
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/pdf"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                if (file.type !== 'application/pdf') {
+                  addToast(t('pdfInvalidType'), 'error');
+                  return;
+                }
+                if (file.size > 10 * 1024 * 1024) {
+                  addToast(t('pdfTooLarge'), 'error');
+                  return;
+                }
+                setUploading(true);
+                try {
+                  const { documentUrl } = await uploadsApi.uploadDocument(file);
+                  await trainingsApi.update(id, { documentUrl });
+                  queryClient.invalidateQueries({ queryKey: ['training', id] });
+                  addToast(t('pdfUploadSuccess'), 'success');
+                } catch {
+                  addToast(tc('error'), 'error');
+                } finally {
+                  setUploading(false);
+                  e.target.value = '';
+                }
+              }}
+            />
+          )}
+        </CardContent>
+      </Card>
 
       {/* Levels accordion */}
       <Card>

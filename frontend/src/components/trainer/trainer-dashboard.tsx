@@ -25,6 +25,7 @@ import {
   ChevronRight,
   FileText,
   ClipboardCheck,
+  ExternalLink,
 } from 'lucide-react';
 
 const STATUS_COLORS: Record<string, string> = {
@@ -213,6 +214,17 @@ export function TrainerDashboard() {
                           <span className="flex items-center gap-1">
                             <Users className="h-3.5 w-3.5" /> {seance.groupName}
                           </span>
+                          {seance.trainingDocumentUrl && (
+                            <a
+                              href={`${process.env.NEXT_PUBLIC_API_BASE_URL}${seance.trainingDocumentUrl}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <FileText className="h-3.5 w-3.5" /> {t('viewDocument')}
+                            </a>
+                          )}
                         </div>
                       </div>
 
@@ -299,6 +311,18 @@ export function TrainerDashboard() {
                   <Users className="h-4 w-4" />
                   <span>{detailSeance.groupName}</span>
                 </div>
+                {detailSeance.trainingDocumentUrl && (
+                  <a
+                    href={`${process.env.NEXT_PUBLIC_API_BASE_URL}${detailSeance.trainingDocumentUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span>{t('viewDocument')}</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
               </div>
 
               <div className="flex flex-wrap gap-2 pt-3 border-t dark:border-gray-700">
