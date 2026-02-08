@@ -49,14 +49,13 @@ public class AuthService {
         }
 
         Role role = Role.TRAINER; // default
-        UserStatus status = UserStatus.ACTIVE;
+        UserStatus status = UserStatus.PENDING; // needs admin approval
 
         if (request.getRequestedRole() != null) {
             try {
                 Role requested = Role.valueOf(request.getRequestedRole().toUpperCase());
                 if (requested == Role.MANAGER) {
                     role = Role.MANAGER;
-                    status = UserStatus.PENDING; // needs admin approval
                 } else if (requested == Role.ADMIN) {
                     throw new BadRequestException("Le rôle ADMIN ne peut pas être demandé lors de l'inscription");
                 } else {
@@ -213,13 +212,13 @@ public class AuthService {
             return userRepository.save(user);
         }
 
-        // New Google user
+        // New Google user — needs admin approval
         User user = User.builder()
                 .email(normalizedEmail)
                 .firstName(firstName)
                 .lastName(lastName)
                 .roles(Set.of(Role.TRAINER))
-                .status(UserStatus.ACTIVE)
+                .status(UserStatus.PENDING)
                 .provider(AuthProvider.GOOGLE)
                 .providerId(googleId)
                 .lastLoginAt(Instant.now())

@@ -291,6 +291,8 @@
     "loginError": "E-mail ou mot de passe incorrect",
     "registerError": "Erreur lors de l'inscription",
     "oauthError": "Erreur de connexion avec Google",
+    "accountPending": "Votre compte est en attente de validation par un administrateur.",
+    "accountDisabled": "Votre compte a été désactivé. Contactez un administrateur.",
     "oauthCallback": "Connexion en cours…",
     "oauthCallbackSuccess": "Connexion réussie, redirection…",
     "oauthCallbackError": "Échec de la connexion. Veuillez réessayer.",

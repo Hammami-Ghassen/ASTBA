@@ -46,6 +46,20 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 googleId, email, firstName, lastName,
                 emailVerified != null && emailVerified);
 
+        // Block PENDING or DISABLED users
+        if (user.getStatus() == tn.astba.domain.UserStatus.PENDING) {
+            log.warn("OAuth2 login rejected – account pending approval: email={}", email);
+            String targetUrl = frontendUrl + "/login?error=pending";
+            getRedirectStrategy().sendRedirect(request, response, targetUrl);
+            return;
+        }
+        if (user.getStatus() == tn.astba.domain.UserStatus.DISABLED) {
+            log.warn("OAuth2 login rejected – account disabled: email={}", email);
+            String targetUrl = frontendUrl + "/login?error=disabled";
+            getRedirectStrategy().sendRedirect(request, response, targetUrl);
+            return;
+        }
+
         String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail(), user.getRoles());
         String refreshToken = jwtService.generateRefreshToken(user.getId());
         refreshTokenService.storeRefreshToken(user.getId(), refreshToken);

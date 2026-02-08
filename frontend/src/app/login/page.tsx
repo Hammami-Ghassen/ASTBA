@@ -130,7 +130,9 @@ export default function LoginPage() {
               <h3 className="text-base font-bold dark:text-white">{t('errorSummary')}</h3>
               <ul className="list-disc ps-5 text-sm text-red-600 dark:text-red-200/80">
                 {serverError && <li>{serverError}</li>}
-                {oauthError && <li>{t('oauthError')}</li>}
+                {oauthError === 'pending' && <li>{t('accountPending')}</li>}
+                {oauthError === 'disabled' && <li>{t('accountDisabled')}</li>}
+                {oauthError && oauthError !== 'pending' && oauthError !== 'disabled' && <li>{t('oauthError')}</li>}
               </ul>
             </div>
           </div>
