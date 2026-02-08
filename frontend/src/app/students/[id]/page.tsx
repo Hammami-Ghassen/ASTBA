@@ -334,11 +334,85 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
 
         {/* History */}
         <TabsContent value="history">
-          <EmptyState
-            title={t('attendanceHistory')}
-            description={t('noEnrollmentsDesc')}
-            icon={<Calendar className="h-12 w-12" />}
-          />
+          {enrollments && enrollments.length > 0 && enrollments.some((e) => e.attendance && Object.keys(e.attendance).length > 0) ? (
+            <div className="space-y-6">
+              {enrollments.map((enrollment) => {
+                const training = enrollment.training;
+                const attendance = enrollment.attendance;
+                if (!training || !attendance || Object.keys(attendance).length === 0) return null;
+
+                // Build a flat list of sessions with their attendance
+                const rows: { levelNumber: number; sessionNumber: number; sessionTitle: string; sessionId: string; status: string; markedAt?: string }[] = [];
+                for (const level of training.levels || []) {
+                  for (const session of level.sessions || []) {
+                    const entry = attendance[session.sessionId];
+                    rows.push({
+                      levelNumber: level.levelNumber,
+                      sessionNumber: session.sessionNumber,
+                      sessionTitle: session.title || `${t('session')} ${session.sessionNumber}`,
+                      sessionId: session.sessionId,
+                      status: entry?.status || 'NOT_MARKED',
+                      markedAt: entry?.markedAt,
+                    });
+                  }
+                }
+
+                return (
+                  <Card key={enrollment.id}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <BookOpen className="h-5 w-5 text-sky-600" aria-hidden="true" />
+                        {training.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <Table>
+                        <TableCaption className="sr-only">{t('attendanceHistory')}</TableCaption>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead scope="col">{tt('level')}</TableHead>
+                            <TableHead scope="col">{t('session')}</TableHead>
+                            <TableHead scope="col">{tc('status')}</TableHead>
+                            <TableHead scope="col">{tc('date')}</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {rows.map((row) => (
+                            <TableRow key={row.sessionId}>
+                              <TableCell className="font-medium">
+                                {tt('level')} {row.levelNumber}
+                              </TableCell>
+                              <TableCell>{row.sessionTitle}</TableCell>
+                              <TableCell>
+                                {row.status === 'PRESENT' ? (
+                                  <Badge variant="success">{tc('present')}</Badge>
+                                ) : row.status === 'ABSENT' ? (
+                                  <Badge variant="danger">{tc('absent')}</Badge>
+                                ) : row.status === 'EXCUSED' ? (
+                                  <Badge variant="warning">{tc('excused')}</Badge>
+                                ) : (
+                                  <Badge variant="outline">{t('notMarkedYet')}</Badge>
+                                )}
+                              </TableCell>
+                              <TableCell className="text-gray-500">
+                                {row.markedAt ? formatDate(row.markedAt) : '—'}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          ) : (
+            <EmptyState
+              title={t('attendanceHistory')}
+              description={t('noAttendanceYet')}
+              icon={<Calendar className="h-12 w-12" />}
+            />
+          )}
         </TabsContent>
       </Tabs>
 

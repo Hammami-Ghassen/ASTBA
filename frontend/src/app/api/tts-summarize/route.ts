@@ -10,37 +10,39 @@ const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
 const PERPLEXITY_URL = 'https://api.perplexity.ai/chat/completions';
 
 export async function POST(request: NextRequest) {
-  if (!PERPLEXITY_API_KEY) {
-    return NextResponse.json({ error: 'AI service not configured' }, { status: 503 });
-  }
-
-  try {
-    const body = await request.json();
-    const { pageContent, locale, pageTitle } = body as {
-      pageContent: string;
-      locale: string;
-      pageTitle?: string;
-    };
-
-    if (!pageContent || typeof pageContent !== 'string') {
-      return NextResponse.json({ error: 'Missing pageContent' }, { status: 400 });
+    if (!PERPLEXITY_API_KEY) {
+        return NextResponse.json({ error: 'AI service not configured' }, { status: 503 });
     }
 
-    const isArabic = locale?.startsWith('ar');
+    try {
+        const body = await request.json();
+        const { pageContent, locale, pageTitle } = body as {
+            pageContent: string;
+            locale: string;
+            pageTitle?: string;
+        };
 
-    const systemPrompt = isArabic
-      ? `أنت مساعد صوتي لمنصة ASTBA لإدارة التكوين. مهمتك تلخّص محتوى الصفحة بش يتقرا بصوت عالي للمستعملين.
+        if (!pageContent || typeof pageContent !== 'string') {
+            return NextResponse.json({ error: 'Missing pageContent' }, { status: 400 });
+        }
+
+        const isArabic = locale?.startsWith('ar');
+
+        const systemPrompt = isArabic
+            ? `أنت مساعد صوتي لمنصة ASTBA لإدارة التكوين والتدريب. مهمتك هي تلخيص محتوى الصفحة ليُقرأ بصوت عالٍ.
+
+تنبيه مهم: محتوى الصفحة مكتوب باللهجة التونسية العامية. يجب عليك فهم المحتوى التونسي وإعادة صياغته بالكامل باللغة العربية الفصحى الواضحة والسليمة. لا تستخدم أي كلمات عامية أو تونسية في الملخص.
 
 القواعد:
-- لخّص المحتوى المهم الكل بالعربي الفصحى الواضح (مش عامية)
-- ابدا بجملة ترحيب قصيرة: "مرحباً بكم في صفحة [اسم الصفحة]"
+- اكتب الملخص بالعربية الفصحى المعيارية الحديثة فقط (Modern Standard Arabic)
+- ابدأ بجملة ترحيب: "مرحباً بكم في صفحة [اسم الصفحة]"
 - اذكر العناصر المهمة: الأرقام، الإحصائيات، الأسماء، الحالات
-- اذكر الإجراءات المتاحة (أزرار، روابط مهمة)
-- لا تذكر تفاصيل تقنية (CSS, HTML, API)
-- اجعل النص طبيعي للقراءة الصوتية (بدون رموز خاصة، نجوم، أو تنسيق ماركداون)
+- اذكر الإجراءات المتاحة للمستخدم (الأزرار والروابط المهمة)
+- لا تذكر أي تفاصيل تقنية
+- اجعل النص طبيعياً للقراءة الصوتية، بدون رموز أو تنسيقات
 - الطول الأقصى: 300 كلمة
-- لا تستعمل نقاط أو تعداد، اكتب فقرات مترابطة`
-      : `Tu es un assistant vocal pour la plateforme ASTBA de gestion des formations. Ta mission : résumer le contenu de la page pour qu'il soit lu à voix haute.
+- اكتب فقرات متصلة وسلسة، لا تستخدم نقاطاً أو تعداداً`
+            : `Tu es un assistant vocal pour la plateforme ASTBA de gestion des formations. Ta mission : résumer le contenu de la page pour qu'il soit lu à voix haute.
 
 Règles :
 - Résume le contenu important en français clair et naturel
@@ -52,49 +54,49 @@ Règles :
 - Longueur max : 300 mots
 - N'utilise pas de puces ou de listes, écris des paragraphes fluides`;
 
-    const userMessage = pageTitle
-      ? `Page : "${pageTitle}"\n\nContenu :\n${pageContent.slice(0, 6000)}`
-      : `Contenu de la page :\n${pageContent.slice(0, 6000)}`;
+        const userMessage = pageTitle
+            ? `Page : "${pageTitle}"\n\nContenu :\n${pageContent.slice(0, 6000)}`
+            : `Contenu de la page :\n${pageContent.slice(0, 6000)}`;
 
-    const res = await fetch(PERPLEXITY_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${PERPLEXITY_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'sonar',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userMessage },
-        ],
-        max_tokens: 800,
-        temperature: 0.2,
-      }),
-    });
+        const res = await fetch(PERPLEXITY_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${PERPLEXITY_API_KEY}`,
+            },
+            body: JSON.stringify({
+                model: 'sonar',
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: userMessage },
+                ],
+                max_tokens: 800,
+                temperature: 0.2,
+            }),
+        });
 
-    if (!res.ok) {
-      const errorBody = await res.text();
-      console.error('Perplexity TTS-summarize error:', res.status, errorBody);
-      return NextResponse.json(
-        { error: 'AI service error' },
-        { status: res.status },
-      );
+        if (!res.ok) {
+            const errorBody = await res.text();
+            console.error('Perplexity TTS-summarize error:', res.status, errorBody);
+            return NextResponse.json(
+                { error: 'AI service error' },
+                { status: res.status },
+            );
+        }
+
+        const data = await res.json();
+        const summary = data.choices?.[0]?.message?.content || '';
+
+        // Clean up any markdown artifacts that might have slipped through
+        const cleaned = summary
+            .replace(/[#*_`~>]/g, '')
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // [text](url) → text
+            .replace(/\n{3,}/g, '\n\n')
+            .trim();
+
+        return NextResponse.json({ summary: cleaned });
+    } catch (error) {
+        console.error('TTS-summarize route error:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
-
-    const data = await res.json();
-    const summary = data.choices?.[0]?.message?.content || '';
-
-    // Clean up any markdown artifacts that might have slipped through
-    const cleaned = summary
-      .replace(/[#*_`~>]/g, '')
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // [text](url) → text
-      .replace(/\n{3,}/g, '\n\n')
-      .trim();
-
-    return NextResponse.json({ summary: cleaned });
-  } catch (error) {
-    console.error('TTS-summarize route error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
 }
