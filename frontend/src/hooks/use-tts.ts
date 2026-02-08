@@ -230,7 +230,7 @@ export function useTTS(): UseTTSReturn {
                 };
 
                 utterance.onerror = (e) => {
-                    if (e.error === 'canceled') return;
+                    if (e.error === 'canceled' || e.error === 'interrupted') return;
                     setError(
                         loc === 'ar' ? 'خطأ في القراءة الصوتية' : 'Erreur de lecture vocale'
                     );

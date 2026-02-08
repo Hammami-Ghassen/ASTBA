@@ -2,25 +2,28 @@
 
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useStudents, useTrainings } from '@/lib/hooks';
+import { useStudents, useTrainings, useGroups, useSeances, useTrainers } from '@/lib/hooks';
 import { useAuth, isAdmin, isManager, isTrainer } from '@/lib/auth-provider';
 import { PlanningCalendar } from '@/components/planning/planning-calendar';
 import { TrainerDashboard } from '@/components/trainer/trainer-dashboard';
 import {
   BookOpen,
   ClipboardCheck,
-  Award,
   Plus,
   ArrowRight,
   Users,
   Calendar,
-  GraduationCap,
+  Layers,
+  UserCheck,
+  TrendingUp,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
 } from 'lucide-react';
 
 export default function DashboardPage() {
-  const t = useTranslations('dashboard');
   const { user } = useAuth();
 
   // Manager/Admin → planning calendar
@@ -41,43 +44,113 @@ function ManagerDashboard() {
   const t = useTranslations('dashboard');
   const { data: studentsData, isLoading: studentsLoading } = useStudents({ page: 0, size: 1 });
   const { data: trainingsData, isLoading: trainingsLoading } = useTrainings();
+  const { data: groupsData, isLoading: groupsLoading } = useGroups();
+  const { data: trainersData, isLoading: trainersLoading } = useTrainers();
+
+  const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const { data: seancesData, isLoading: seancesLoading } = useSeances({ date: todayStr });
 
   const totalStudents = studentsData?.totalElements ?? 0;
   const totalTrainings = trainingsData?.length ?? 0;
-  const isLoading = studentsLoading || trainingsLoading;
+  const totalGroups = groupsData?.length ?? 0;
+  const totalTrainers = trainersData?.length ?? 0;
+  const todaySeances = seancesData ?? [];
+  const completedToday = todaySeances.filter((s) => s.status === 'COMPLETED').length;
+  const inProgressToday = todaySeances.filter((s) => s.status === 'IN_PROGRESS').length;
+  const plannedToday = todaySeances.filter((s) => s.status === 'PLANNED').length;
+  const isLoading = studentsLoading || trainingsLoading || groupsLoading || seancesLoading || trainersLoading;
+
+  const completionPct = todaySeances.length > 0 ? Math.round((completedToday / todaySeances.length) * 100) : 0;
 
   return (
     <div className="space-y-8">
+      {/* ──── Global Overview ──── */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 stagger-in">
+        {/* Main stats card */}
+        <Card className="sm:col-span-2 lg:col-span-2 overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/60 via-transparent to-emerald-50/40 dark:from-blue-950/30 dark:to-emerald-950/20 pointer-events-none" />
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+              {t('overview')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <MiniStat
+                icon={<Users className="h-4 w-4" />}
+                label={t('totalStudents')}
+                value={isLoading ? '…' : String(totalStudents)}
+                color="blue"
+              />
+              <MiniStat
+                icon={<BookOpen className="h-4 w-4" />}
+                label={t('totalTrainings')}
+                value={isLoading ? '…' : String(totalTrainings)}
+                color="emerald"
+              />
+              <MiniStat
+                icon={<Layers className="h-4 w-4" />}
+                label={t('totalGroups')}
+                value={isLoading ? '…' : String(totalGroups)}
+                color="violet"
+              />
+              <MiniStat
+                icon={<UserCheck className="h-4 w-4" />}
+                label={t('activeTrainers')}
+                value={isLoading ? '…' : String(totalTrainers)}
+                color="amber"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Today's progress ring */}
+        <Card className="flex flex-col items-center justify-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 via-transparent to-purple-50/40 dark:from-amber-950/20 dark:to-purple-950/20 pointer-events-none" />
+          <CardHeader className="pb-1 w-full">
+            <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+              <Calendar className="h-4 w-4" aria-hidden="true" />
+              {t('sessionsToday')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center gap-3 pt-0 pb-5">
+            {/* SVG ring */}
+            <div className="relative h-24 w-24">
+              <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" className="text-gray-100 dark:text-gray-800" />
+                <circle
+                  cx="50" cy="50" r="42" fill="none" strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={`${(completionPct / 100) * 264} 264`}
+                  className="text-emerald-500 dark:text-emerald-400 transition-all duration-700"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                  {isLoading ? '…' : todaySeances.length}
+                </span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-400">{t('sessionsToday')}</span>
+              </div>
+            </div>
+            {/* Mini breakdown */}
+            <div className="flex gap-3 text-xs">
+              <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                <CheckCircle2 className="h-3 w-3" /> {completedToday}
+              </span>
+              <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+                <Clock className="h-3 w-3" /> {inProgressToday}
+              </span>
+              <span className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                <AlertCircle className="h-3 w-3" /> {plannedToday}
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Planning Calendar */}
       <PlanningCalendar />
-
-      {/* Stats cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 stagger-in" role="region" aria-label={t('title')}>
-        <StatCard
-          title={t('totalStudents')}
-          value={isLoading ? '…' : String(totalStudents)}
-          icon={<Users className="h-5 w-5" />}
-          color="sky"
-        />
-        <StatCard
-          title={t('totalTrainings')}
-          value={isLoading ? '…' : String(totalTrainings)}
-          icon={<BookOpen className="h-5 w-5" />}
-          color="emerald"
-        />
-        <StatCard
-          title={t('sessionsToday')}
-          value="—"
-          icon={<Calendar className="h-5 w-5" />}
-          color="amber"
-        />
-        <StatCard
-          title={t('eligibleCertificates')}
-          value="—"
-          icon={<Award className="h-5 w-5" />}
-          color="purple"
-        />
-      </div>
 
       {/* Quick actions */}
       <Card>
@@ -134,42 +207,31 @@ function ManagerDashboard() {
   );
 }
 
-function StatCard({
-  title,
-  value,
+function MiniStat({
   icon,
+  label,
+  value,
   color,
 }: {
-  title: string;
-  value: string;
   icon: React.ReactNode;
-  color: 'sky' | 'emerald' | 'amber' | 'purple';
+  label: string;
+  value: string;
+  color: 'blue' | 'emerald' | 'violet' | 'amber';
 }) {
-  const bgMap = {
-    sky: 'bg-gradient-to-br from-blue-100 to-blue-50 text-blue-600 dark:from-blue-900/60 dark:to-blue-800/40 dark:text-blue-400',
-    emerald: 'bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 dark:from-emerald-900/60 dark:to-emerald-800/40 dark:text-emerald-400',
-    amber: 'bg-gradient-to-br from-amber-100 to-amber-50 text-amber-600 dark:from-amber-900/60 dark:to-amber-800/40 dark:text-amber-400',
-    purple: 'bg-gradient-to-br from-purple-100 to-purple-50 text-purple-600 dark:from-purple-900/60 dark:to-purple-800/40 dark:text-purple-400',
-  };
-
-  const borderMap = {
-    sky: 'border-l-[3px] border-l-blue-500',
-    emerald: 'border-l-[3px] border-l-emerald-500',
-    amber: 'border-l-[3px] border-l-amber-500',
-    purple: 'border-l-[3px] border-l-purple-500',
+  const colors = {
+    blue: 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400',
+    emerald: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-400',
+    violet: 'bg-violet-100 text-violet-600 dark:bg-violet-900/50 dark:text-violet-400',
+    amber: 'bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400',
   };
 
   return (
-    <Card className={borderMap[color]}>
-      <CardContent className="flex items-center gap-4 p-6">
-        <div className={`rounded-xl p-3 shadow-sm ${bgMap[color]}`} aria-hidden="true">
-          {icon}
-        </div>
-        <div>
-          <p className="text-base font-medium text-gray-600 dark:text-gray-400">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{value}</p>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col items-center gap-2 rounded-xl border border-gray-100 bg-white/60 p-4 dark:border-gray-800 dark:bg-gray-900/40">
+      <div className={`rounded-lg p-2 ${colors[color]}`} aria-hidden="true">
+        {icon}
+      </div>
+      <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{value}</span>
+      <span className="text-xs text-center text-gray-500 dark:text-gray-400 leading-tight">{label}</span>
+    </div>
   );
 }
