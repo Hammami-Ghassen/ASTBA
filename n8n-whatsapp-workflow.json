@@ -1,0 +1,205 @@
+{
+  "name": "ASTBA – WhatsApp Automations v3",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trainer-assigned",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "wh-trainer",
+      "name": "Webhook Trainer",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 400],
+      "webhookId": "trainer-assigned"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "seance-reported",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "wh-reported",
+      "name": "Webhook Reported",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 740],
+      "webhookId": "seance-reported"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "student-absent",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "wh-absent",
+      "name": "Webhook Absent",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 60],
+      "webhookId": "student-absent"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Grab the raw input and find the data no matter how n8n nests it\nconst raw = $input.first().json;\n\n// Debug: output what we actually received\nconst d = raw.body && typeof raw.body === 'object' && Object.keys(raw.body).length > 0\n  ? raw.body\n  : raw;\n\nconst phone = d.trainerPhone || '';\nconst name = d.trainerName || '';\nconst training = d.trainingTitle || '';\nconst seance = d.seanceTitle || '';\nconst group = d.groupName || '';\nconst date = d.date || '';\nconst start = d.startTime || '';\nconst end = d.endTime || '';\nconst level = d.levelNumber || '';\nconst session = d.sessionNumber || '';\n\nreturn [{\n  json: {\n    messaging_product: 'whatsapp',\n    to: phone,\n    type: 'text',\n    text: {\n      preview_url: false,\n      body: '📋 *ASTBA – Nouvelle Séance Assignée*\\n\\nBonjour ' + name + ',\\n\\nUne nouvelle séance vous a été assignée :\\n\\n📚 *Formation :* ' + training + '\\n📖 *Séance :* ' + seance + '\\n👥 *Groupe :* ' + group + '\\n📅 *Date :* ' + date + '\\n⏰ *Horaire :* ' + start + ' – ' + end + '\\n🔢 *Niveau :* ' + level + ' | *Session :* ' + session + '\\n\\nMerci de confirmer votre disponibilité.\\n\\nCordialement,\\nL\\'équipe ASTBA'\n    },\n    _debug: { rawKeys: Object.keys(raw), bodyKeys: raw.body ? Object.keys(raw.body) : 'no body', phone: phone }\n  }\n}];"
+      },
+      "id": "code-trainer",
+      "name": "Build Trainer Msg",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst d = raw.body && typeof raw.body === 'object' && Object.keys(raw.body).length > 0\n  ? raw.body\n  : raw;\n\nconst phone = d.managerPhone || '';\nconst trainerName = d.trainerName || '';\nconst seance = d.seanceTitle || '';\nconst training = d.trainingTitle || '';\nconst date = d.date || '';\nconst reason = d.reason || '';\nconst suggested = d.suggestedDate || 'Non spécifiée';\n\nreturn [{\n  json: {\n    messaging_product: 'whatsapp',\n    to: phone,\n    type: 'text',\n    text: {\n      preview_url: false,\n      body: '⚠️ *ASTBA – Séance Reportée*\\n\\nLe formateur *' + trainerName + '* a reporté une séance :\\n\\n📖 *Séance :* ' + seance + '\\n📚 *Formation :* ' + training + '\\n📅 *Date initiale :* ' + date + '\\n\\n📝 *Raison :* ' + reason + '\\n📅 *Date suggérée :* ' + suggested + '\\n\\nVeuillez prendre les mesures nécessaires.\\n\\nCordialement,\\nL\\'équipe ASTBA'\n    },\n    _debug: { rawKeys: Object.keys(raw), bodyKeys: raw.body ? Object.keys(raw.body) : 'no body', phone: phone }\n  }\n}];"
+      },
+      "id": "code-reported",
+      "name": "Build Reported Msg",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 740]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst d = raw.body && typeof raw.body === 'object' && Object.keys(raw.body).length > 0\n  ? raw.body\n  : raw;\n\nconst phone = d.studentPhone || '';\nconst name = d.studentName || '';\nconst training = d.trainingTitle || '';\nconst seance = d.seanceTitle || '';\nconst date = d.date || '';\nconst start = d.startTime || '';\nconst end = d.endTime || '';\n\nreturn [{\n  json: {\n    messaging_product: 'whatsapp',\n    to: phone,\n    type: 'text',\n    text: {\n      preview_url: false,\n      body: '🎓 *ASTBA – Plan de rattrapage*\\n\\nBonjour ' + name + ',\\n\\nVous avez été marqué(e) absent(e) à la séance suivante :\\n\\n📚 *Formation :* ' + training + '\\n📖 *Séance :* ' + seance + '\\n📅 *Date :* ' + date + '\\n⏰ *Horaire :* ' + start + ' – ' + end + '\\n\\n📋 *Plan de rattrapage :*\\nVeuillez contacter votre formateur pour planifier une séance de rattrapage.\\n\\n📞 Contact ASTBA : +216 29 040 316\\n\\nCordialement,\\nL\\'équipe ASTBA'\n    },\n    _debug: { rawKeys: Object.keys(raw), bodyKeys: raw.body ? Object.keys(raw.body) : 'no body', phone: phone }\n  }\n}];"
+      },
+      "id": "code-absent",
+      "name": "Build Absent Msg",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 60]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/986079917926325/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ messaging_product: $json.messaging_product, to: $json.to, type: $json.type, text: $json.text }) }}",
+        "options": {}
+      },
+      "id": "http-trainer",
+      "name": "Send WhatsApp Trainer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-auth",
+          "name": "WhatsApp Business API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/986079917926325/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ messaging_product: $json.messaging_product, to: $json.to, type: $json.type, text: $json.text }) }}",
+        "options": {}
+      },
+      "id": "http-reported",
+      "name": "Send WhatsApp Reported",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 740],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-auth",
+          "name": "WhatsApp Business API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/986079917926325/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ messaging_product: $json.messaging_product, to: $json.to, type: $json.type, text: $json.text }) }}",
+        "options": {}
+      },
+      "id": "http-absent",
+      "name": "Send WhatsApp Absent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 60],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-auth",
+          "name": "WhatsApp Business API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trainer": {
+      "main": [[{ "node": "Build Trainer Msg", "type": "main", "index": 0 }]]
+    },
+    "Build Trainer Msg": {
+      "main": [
+        [{ "node": "Send WhatsApp Trainer", "type": "main", "index": 0 }]
+      ]
+    },
+    "Webhook Reported": {
+      "main": [[{ "node": "Build Reported Msg", "type": "main", "index": 0 }]]
+    },
+    "Build Reported Msg": {
+      "main": [
+        [{ "node": "Send WhatsApp Reported", "type": "main", "index": 0 }]
+      ]
+    },
+    "Webhook Absent": {
+      "main": [[{ "node": "Build Absent Msg", "type": "main", "index": 0 }]]
+    },
+    "Build Absent Msg": {
+      "main": [[{ "node": "Send WhatsApp Absent", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 3
+}

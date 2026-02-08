@@ -24,7 +24,8 @@ public class CorsConfig {
                 "http://localhost:3000",
                 "http://localhost:3001",
                 "http://127.0.0.1:3000",
-                "https://esprit-maratech2026-code-slayers.vercel.app"
+                "https://esprit-maratech2026-code-slayers.vercel.app",
+                "https://www.astba.tech"
         ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));

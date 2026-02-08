@@ -32,6 +32,10 @@ astba:
     same-site: ${ASTBA_COOKIE_SAME_SITE:Lax}
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
   public-register: ${ASTBA_PUBLIC_REGISTER:true}
+  n8n:
+    base-url: ${ASTBA_N8N_BASE_URL:https://astba.app.n8n.cloud}
+  whatsapp:
+    enabled: ${ASTBA_WHATSAPP_ENABLED:true}
   seed:
     admin-email: ${ASTBA_SEED_ADMIN_EMAIL:admin@astba.tn}
     admin-password: ${ASTBA_SEED_ADMIN_PASSWORD:Admin123!}

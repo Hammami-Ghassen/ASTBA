@@ -5,6 +5,7 @@ import { isRtl, type Locale } from '@/i18n';
 import { Providers } from '@/lib/providers';
 import { ToastProvider } from '@/components/ui/toast';
 import { AppShell } from '@/components/layout/app-shell';
+import { TTSWrapper } from '@/components/accessibility/tts-wrapper';
 import { themeScript } from '@/components/layout/theme-toggle';
 import './globals.css';
 
@@ -58,6 +59,7 @@ export default async function RootLayout({
             </a>
 
             <AppShell>{children}</AppShell>
+            <TTSWrapper />
           </ToastProvider>
         </Providers>
       </body>

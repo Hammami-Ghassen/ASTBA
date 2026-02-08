@@ -31,6 +31,8 @@ public class SeanceService {
     private final NotificationService notificationService;
     private final AttendanceService attendanceService;
     private final EnrollmentRepository enrollmentRepository;
+    private final WhatsAppWebhookService whatsAppWebhookService;
+    private final StudentService studentService;
 
     // ─── CRUD ─────────────────────────────────────────
 
@@ -69,7 +71,7 @@ public class SeanceService {
         Seance saved = seanceRepository.save(seance);
         log.debug("Séance créée: id={}", saved.getId());
 
-        // Notify trainer
+        // Notify trainer (in-app)
         notificationService.notifyUser(
                 request.getTrainerId(),
                 "Nouvelle séance assignée",
@@ -78,6 +80,26 @@ public class SeanceService {
                 "/dashboard",
                 NotificationType.SEANCE_ASSIGNED
         );
+
+        // Notify trainer (WhatsApp)
+        try {
+            String trainingTitle = trainingService.getTrainingOrThrow(request.getTrainingId()).getTitle();
+            String groupName = groupService.getGroupOrThrow(request.getGroupId()).getName();
+            whatsAppWebhookService.notifyTrainerAssigned(
+                    trainer.getFirstName() + " " + trainer.getLastName(),
+                    trainer.getPhone(),
+                    trainingTitle,
+                    request.getTitle(),
+                    groupName,
+                    request.getDate().toString(),
+                    request.getStartTime().toString(),
+                    request.getEndTime().toString(),
+                    request.getLevelNumber(),
+                    request.getSessionNumber()
+            );
+        } catch (Exception e) {
+            log.warn("Failed to send WhatsApp for trainer assignment: {}", e.getMessage());
+        }
 
         return toResponse(saved);
     }
@@ -298,6 +320,29 @@ public class SeanceService {
 
             attendanceService.markAttendance(markRequest);
             log.info("Auto-marked {} students as ABSENT for seance {}", records.size(), seance.getId());
+
+            // Send WhatsApp notification to each absent student
+            try {
+                String trainingTitle = trainingService.getTrainingOrThrow(seance.getTrainingId()).getTitle();
+                for (String studentId : group.getStudentIds()) {
+                    try {
+                        Student student = studentService.getStudentOrThrow(studentId);
+                        whatsAppWebhookService.notifyStudentAbsent(
+                                student.getFirstName() + " " + student.getLastName(),
+                                student.getPhone(),
+                                trainingTitle,
+                                seance.getTitle(),
+                                seance.getDate().toString(),
+                                seance.getStartTime().toString(),
+                                seance.getEndTime().toString()
+                        );
+                    } catch (Exception e) {
+                        log.warn("Failed to send WhatsApp to student {}: {}", studentId, e.getMessage());
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("Failed to send WhatsApp absent notifications: {}", e.getMessage());
+            }
         } catch (Exception e) {
             log.warn("Failed to auto-mark absent for seance {}: {}", seance.getId(), e.getMessage());
         }
@@ -342,6 +387,27 @@ public class SeanceService {
         notificationService.notifyByRole(Role.MANAGER, "Séance reportée",
                 String.format("%s a reporté la séance \"%s\" : %s", trainerName, seance.getTitle(), request.getReason()),
                 "/dashboard", NotificationType.SEANCE_REPORTED);
+
+        // WhatsApp notification to all managers
+        try {
+            String trainingTitle = trainingService.getTrainingOrThrow(seance.getTrainingId()).getTitle();
+            List<User> managers = userRepository.findAll().stream()
+                    .filter(u -> u.getRoles().contains(Role.MANAGER) && u.getStatus() == UserStatus.ACTIVE)
+                    .toList();
+            for (User manager : managers) {
+                whatsAppWebhookService.notifySeanceReported(
+                        manager.getPhone(),
+                        trainerName,
+                        seance.getTitle(),
+                        trainingTitle,
+                        seance.getDate().toString(),
+                        request.getReason(),
+                        request.getSuggestedDate() != null ? request.getSuggestedDate().toString() : null
+                );
+            }
+        } catch (Exception e) {
+            log.warn("Failed to send WhatsApp for seance report: {}", e.getMessage());
+        }
 
         return toReportResponse(saved);
     }
