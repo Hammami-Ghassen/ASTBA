@@ -378,7 +378,9 @@ public class SeanceService {
 
         // Enrich with names
         try {
-            builder.trainingTitle(trainingService.getTrainingOrThrow(s.getTrainingId()).getTitle());
+            var training = trainingService.getTrainingOrThrow(s.getTrainingId());
+            builder.trainingTitle(training.getTitle());
+            builder.trainingDocumentUrl(training.getDocumentUrl());
         } catch (Exception ignored) {}
         try {
             builder.groupName(groupService.getGroupOrThrow(s.getGroupId()).getName());

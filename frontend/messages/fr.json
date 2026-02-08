@@ -145,7 +145,12 @@
     "pdfUploadSuccess": "Document uploadé avec succès",
     "pdfInvalidType": "Seuls les fichiers PDF sont acceptés",
     "pdfTooLarge": "Le fichier ne doit pas dépasser 10 Mo",
-    "pdfOptionalHint": "Cette étape est optionnelle. Vous pouvez ajouter un document plus tard."
+    "pdfOptionalHint": "Cette étape est optionnelle. Vous pouvez ajouter un document plus tard.",
+    "docReplace": "Remplacer",
+    "docDelete": "Supprimer",
+    "docDeleteSuccess": "Document supprimé avec succès",
+    "docEmpty": "Aucun document associé à cette formation.",
+    "docUpload": "Ajouter un document"
   },
   "attendance": {
     "title": "Présences",
@@ -473,7 +478,8 @@
     "suggestedDateHint": "Optionnel – Proposez une nouvelle date pour la séance.",
     "submitReport": "Soumettre le report",
     "reportSubmitted": "Demande de report soumise",
-    "suggestedDatePastError": "La date suggérée ne peut pas être dans le passé"
+    "suggestedDatePastError": "La date suggérée ne peut pas être dans le passé",
+    "viewDocument": "Voir le document"
   },
   "notifications": {
     "title": "Notifications",

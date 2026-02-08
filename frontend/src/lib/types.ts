@@ -215,6 +215,7 @@ export interface Seance {
     sessionNumber: number;
     title?: string;
     trainingTitle?: string;
+    trainingDocumentUrl?: string;
     groupName?: string;
     trainerName?: string;
     createdAt?: string;

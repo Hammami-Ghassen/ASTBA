@@ -30,6 +30,7 @@ public class SeanceResponse {
 
     // Enriched
     private String trainingTitle;
+    private String trainingDocumentUrl;
     private String groupName;
     private String trainerName;
 
