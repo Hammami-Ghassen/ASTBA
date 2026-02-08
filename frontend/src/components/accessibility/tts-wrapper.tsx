@@ -7,6 +7,16 @@ const TTSAccessibilityButton = dynamic(
   { ssr: false }
 );
 
+const ZoomAccessibilityWidget = dynamic(
+  () => import('./zoom-widget').then((m) => m.ZoomAccessibilityWidget),
+  { ssr: false }
+);
+
 export function TTSWrapper() {
-  return <TTSAccessibilityButton />;
+  return (
+    <>
+      <ZoomAccessibilityWidget />
+      <TTSAccessibilityButton />
+    </>
+  );
 }

@@ -501,3 +501,31 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     max-width: 100% !important;
   }
 }
+
+/* ── Zoom Accessibility Widget ── */
+html {
+  transition: font-size 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Range slider for lens power */
+.zoom-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f5820b;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.zoom-range-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f5820b;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
