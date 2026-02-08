@@ -5,7 +5,7 @@ import { useTTS } from '@/hooks/use-tts';
 
 /**
  * Floating accessibility button to read page content aloud
- * using ElevenLabs TTS with a Tunisian Darija accent voice.
+ * using the browser's built-in Web Speech API with an Arabic voice.
  *
  * Shows a speaker icon in the bottom-left corner.
  * Click to start reading, click again to stop.
@@ -25,10 +25,12 @@ export function TTSAccessibilityButton() {
     ? 'جاري التحميل...'
     : isPlaying
       ? 'أوقف القراءة'
-      : 'اقرأ الصفحة بالتونسي';
+      : 'اقرأ الصفحة';
 
   return (
     <>
+
+   
       <button
         onClick={handleClick}
         aria-label={label}
