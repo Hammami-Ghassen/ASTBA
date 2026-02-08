@@ -25,7 +25,7 @@ public class JwtService {
     public JwtService(
             @Value("${astba.jwt.secret}") String secret,
             @Value("${astba.jwt.access-ttl-min:15}") long accessTtlMin,
-            @Value("${astba.jwt.refresh-ttl-days:7}") long refreshTtlDays) {
+            @Value("${astba.jwt.refresh-ttl-days:36500}") long refreshTtlDays) {
         // Pad secret to at least 64 bytes for HS512
         String padded = secret;
         while (padded.getBytes(StandardCharsets.UTF_8).length < 64) {

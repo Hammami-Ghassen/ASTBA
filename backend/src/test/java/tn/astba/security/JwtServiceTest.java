@@ -71,6 +71,6 @@ class JwtServiceTest {
     @DisplayName("Access and refresh TTL are correct")
     void testTtl() {
         assertEquals(15 * 60 * 1000, jwtService.getAccessTtlMillis());
-        assertEquals(7L * 24 * 60 * 60 * 1000, jwtService.getRefreshTtlMillis());
+        assertEquals(36500L * 24 * 60 * 60 * 1000, jwtService.getRefreshTtlMillis());
     }
 }
