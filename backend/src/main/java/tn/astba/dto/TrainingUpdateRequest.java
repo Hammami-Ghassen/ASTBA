@@ -21,7 +21,5 @@ public class TrainingUpdateRequest {
     @Size(max = 1000, message = "La description ne doit pas dépasser 1000 caractères")
     private String description;
 
-    private String documentUrl;
-
     private List<Level> levels;
 }

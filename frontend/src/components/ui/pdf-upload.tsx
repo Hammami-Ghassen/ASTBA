@@ -3,20 +3,24 @@
 import { useCallback, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Upload, X, Loader2, FileText } from 'lucide-react';
-import { uploadsApi } from '@/lib/api-client';
+import { trainingsApi } from '@/lib/api-client';
 import { useToast } from '@/components/ui/toast';
 
-const BACKEND_ORIGIN =
-  process.env.NEXT_PUBLIC_BACKEND_URL ||
-  (process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api').replace(/\/api$/, '');
-
 interface PdfUploadProps {
+  /** Training ID — when provided, uploads directly to the training */
+  trainingId?: string;
+  /** Current document URL (indicates a document exists) */
   value?: string;
+  /** Called with the documentUrl after upload, or '' on remove */
   onChange: (url: string) => void;
+  /** Called with the File object when trainingId is NOT provided (used in create wizard) */
+  onFileSelect?: (file: File | null) => void;
+  /** Currently selected file name (used in create wizard before upload) */
+  selectedFileName?: string;
   disabled?: boolean;
 }
 
-export function PdfUpload({ value, onChange, disabled }: PdfUploadProps) {
+export function PdfUpload({ trainingId, value, onChange, onFileSelect, selectedFileName, disabled }: PdfUploadProps) {
   const t = useTranslations('trainings');
   const tc = useTranslations('common');
   const { addToast } = useToast();
@@ -24,11 +28,6 @@ export function PdfUpload({ value, onChange, disabled }: PdfUploadProps) {
   const [dragOver, setDragOver] = useState(false);
   const [fileName, setFileName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const resolveDocSrc = (url: string) => {
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    return `${BACKEND_ORIGIN}${url}`;
-  };
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -41,9 +40,18 @@ export function PdfUpload({ value, onChange, disabled }: PdfUploadProps) {
         return;
       }
 
+      // If no trainingId, just store the file for later upload (create wizard mode)
+      if (!trainingId) {
+        setFileName(file.name);
+        onChange(file.name); // set a truthy value to show the file card
+        onFileSelect?.(file);
+        return;
+      }
+
+      // Direct upload to existing training
       setUploading(true);
       try {
-        const result = await uploadsApi.uploadDocument(file);
+        const result = await trainingsApi.uploadDocument(trainingId, file);
         onChange(result.documentUrl);
         setFileName(file.name);
         addToast(t('pdfUploadSuccess'), 'success');
@@ -53,7 +61,7 @@ export function PdfUpload({ value, onChange, disabled }: PdfUploadProps) {
         setUploading(false);
       }
     },
-    [onChange, addToast, t, tc],
+    [trainingId, onChange, onFileSelect, addToast, t, tc],
   );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,25 +80,31 @@ export function PdfUpload({ value, onChange, disabled }: PdfUploadProps) {
   const handleRemove = () => {
     onChange('');
     setFileName('');
+    onFileSelect?.(null);
   };
+
+  const displayName = fileName || selectedFileName || t('pdfDocument');
+  const hasDocument = !!value;
 
   return (
     <div className="space-y-2">
-      {value ? (
+      {hasDocument ? (
         <div className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#192233] p-4">
           <FileText className="h-8 w-8 text-red-500 shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-              {fileName || t('pdfDocument')}
+              {displayName}
             </p>
-            <a
-              href={resolveDocSrc(value)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-[#135bec] hover:underline"
-            >
-              {t('pdfView')}
-            </a>
+            {trainingId && (
+              <a
+                href={trainingsApi.documentUrl(trainingId)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-[#135bec] hover:underline"
+              >
+                {t('pdfView')}
+              </a>
+            )}
           </div>
           {!disabled && (
             <button

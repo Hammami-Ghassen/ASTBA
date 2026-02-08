@@ -28,7 +28,8 @@ public class Training {
 
     private String description;
 
-    private String documentUrl; // PDF document URL
+    private String documentBase64;   // PDF stored as Base64
+    private String documentFilename; // original filename
 
     private List<Level> levels; // 4 levels
 

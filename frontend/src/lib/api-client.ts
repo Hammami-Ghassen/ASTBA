@@ -148,6 +148,42 @@ export const trainingsApi = {
     enrollments(trainingId: string) {
         return request<Enrollment[]>(`/trainings/${trainingId}/enrollments`);
     },
+
+    /** Upload a PDF document directly to a training (stored as Base64 in MongoDB) */
+    uploadDocument(trainingId: string, file: File) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const url = `${BASE_URL}/trainings/${trainingId}/document`;
+        return fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            body: formData,
+        }).then(async (res) => {
+            if (!res.ok) {
+                const message = await res.text().catch(() => 'Upload failed');
+                throw new ApiError(res.status, message);
+            }
+            return res.json() as Promise<{ documentUrl: string; filename: string }>;
+        });
+    },
+
+    /** Get the URL to view/download the training document */
+    documentUrl(trainingId: string) {
+        return `${BASE_URL}/trainings/${trainingId}/document`;
+    },
+
+    /** Delete the training document */
+    deleteDocument(trainingId: string) {
+        return fetch(`${BASE_URL}/trainings/${trainingId}/document`, {
+            method: 'DELETE',
+            credentials: 'include',
+        }).then(async (res) => {
+            if (!res.ok) {
+                const message = await res.text().catch(() => 'Delete failed');
+                throw new ApiError(res.status, message);
+            }
+        });
+    },
 };
 
 // ──────────────── Enrollments ────────────────
@@ -217,23 +253,6 @@ export const uploadsApi = {
                 throw new ApiError(res.status, message);
             }
             return res.json() as Promise<{ filename: string; imageUrl: string }>;
-        });
-    },
-
-    uploadDocument(file: File) {
-        const formData = new FormData();
-        formData.append('file', file);
-        const url = `${BASE_URL}/uploads/document`;
-        return fetch(url, {
-            method: 'POST',
-            credentials: 'include',
-            body: formData,
-        }).then(async (res) => {
-            if (!res.ok) {
-                const message = await res.text().catch(() => 'Upload failed');
-                throw new ApiError(res.status, message);
-            }
-            return res.json() as Promise<{ filename: string; documentUrl: string }>;
         });
     },
 };

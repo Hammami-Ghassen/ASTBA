@@ -4,7 +4,7 @@ import { use, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useTraining, useTrainingEnrollments } from '@/lib/hooks';
 import { useAuth, canManageTrainings } from '@/lib/auth-provider';
-import { trainingsApi, uploadsApi } from '@/lib/api-client';
+import { trainingsApi } from '@/lib/api-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -124,7 +124,7 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
           {training.documentUrl ? (
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <a
-                href={`${process.env.NEXT_PUBLIC_API_BASE_URL}${training.documentUrl}`}
+                href={trainingsApi.documentUrl(id)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
@@ -149,7 +149,7 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
                     className="text-red-600 border-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
                     onClick={async () => {
                       try {
-                        await trainingsApi.update(id, { documentUrl: '' });
+                        await trainingsApi.deleteDocument(id);
                         queryClient.invalidateQueries({ queryKey: ['training', id] });
                         addToast(t('docDeleteSuccess'), 'success');
                       } catch {
@@ -200,8 +200,7 @@ export default function TrainingDetailPage({ params }: { params: Promise<{ id: s
                 }
                 setUploading(true);
                 try {
-                  const { documentUrl } = await uploadsApi.uploadDocument(file);
-                  await trainingsApi.update(id, { documentUrl });
+                  await trainingsApi.uploadDocument(id, file);
                   queryClient.invalidateQueries({ queryKey: ['training', id] });
                   addToast(t('pdfUploadSuccess'), 'success');
                 } catch {

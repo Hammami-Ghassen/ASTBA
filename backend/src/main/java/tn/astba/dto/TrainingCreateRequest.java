@@ -23,8 +23,6 @@ public class TrainingCreateRequest {
     @Size(max = 1000, message = "La description ne doit pas dépasser 1000 caractères")
     private String description;
 
-    private String documentUrl;
-
     /**
      * Optional: if not provided, 4 levels x 6 sessions are auto-generated.
      */

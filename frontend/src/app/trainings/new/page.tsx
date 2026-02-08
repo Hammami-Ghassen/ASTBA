@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trainingCreateSchema, type TrainingCreateFormData } from '@/lib/validators';
 import { useCreateTraining } from '@/lib/hooks';
+import { trainingsApi } from '@/lib/api-client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -116,6 +117,7 @@ export default function NewTrainingPage() {
   const { addToast } = useToast();
   const createMutation = useCreateTraining();
   const [currentStep, setCurrentStep] = useState(1);
+  const pendingFileRef = useRef<File | null>(null);
 
   const {
     register,
@@ -166,10 +168,22 @@ export default function NewTrainingPage() {
   const onSubmit = async (data: TrainingCreateFormData) => {
     try {
       const payload = {
-        ...data,
-        documentUrl: data.documentUrl || undefined,
+        title: data.title,
+        description: data.description,
+        levels: data.levels,
       };
       const training = await createMutation.mutateAsync(payload);
+
+      // Upload document if a file was selected in step 3
+      if (pendingFileRef.current && training.id) {
+        try {
+          await trainingsApi.uploadDocument(training.id, pendingFileRef.current);
+        } catch {
+          // Training created but document upload failed — still navigate
+          addToast(tc('error'), 'error');
+        }
+      }
+
       addToast(t('createSuccess'), 'success');
       router.push(`/trainings/${training.id}`);
     } catch (err: unknown) {
@@ -429,6 +443,8 @@ export default function NewTrainingPage() {
                 <PdfUpload
                   value={documentUrl || ''}
                   onChange={(url) => setValue('documentUrl', url)}
+                  onFileSelect={(file) => { pendingFileRef.current = file; }}
+                  selectedFileName={pendingFileRef.current?.name}
                 />
 
                 <p className="text-sm text-gray-400 dark:text-gray-500">

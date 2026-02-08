@@ -62,6 +62,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/uploads/**").permitAll()
                     .requestMatchers("/api/images/**").permitAll()
                     .requestMatchers("/api/documents/**").permitAll()
+                    .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/trainings/*/document").permitAll()
                     // Admin endpoints
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     // Everything else requires authentication

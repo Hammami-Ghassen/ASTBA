@@ -51,7 +51,6 @@ public class TrainingService {
         Training training = Training.builder()
                 .title(request.getTitle().trim())
                 .description(request.getDescription())
-                .documentUrl(request.getDocumentUrl())
                 .levels(levels)
                 .build();
 
@@ -65,10 +64,6 @@ public class TrainingService {
 
         if (request.getTitle() != null) training.setTitle(request.getTitle().trim());
         if (request.getDescription() != null) training.setDescription(request.getDescription());
-        // Allow empty string to clear the document URL
-        if (request.getDocumentUrl() != null) {
-            training.setDocumentUrl(request.getDocumentUrl().isBlank() ? null : request.getDocumentUrl());
-        }
         if (request.getLevels() != null) training.setLevels(request.getLevels());
 
         Training saved = trainingRepository.save(training);
@@ -108,11 +103,14 @@ public class TrainingService {
     }
 
     public TrainingResponse toResponse(Training t) {
+        String docUrl = (t.getDocumentBase64() != null && !t.getDocumentBase64().isBlank())
+                ? "/trainings/" + t.getId() + "/document"
+                : null;
         return TrainingResponse.builder()
                 .id(t.getId())
                 .title(t.getTitle())
                 .description(t.getDescription())
-                .documentUrl(t.getDocumentUrl())
+                .documentUrl(docUrl)
                 .levels(t.getLevels())
                 .createdAt(t.getCreatedAt())
                 .updatedAt(t.getUpdatedAt())

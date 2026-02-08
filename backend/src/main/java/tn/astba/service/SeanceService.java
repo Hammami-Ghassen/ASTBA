@@ -446,7 +446,10 @@ public class SeanceService {
         try {
             var training = trainingService.getTrainingOrThrow(s.getTrainingId());
             builder.trainingTitle(training.getTitle());
-            builder.trainingDocumentUrl(training.getDocumentUrl());
+            // Compute document URL from base64 presence
+            if (training.getDocumentBase64() != null && !training.getDocumentBase64().isBlank()) {
+                builder.trainingDocumentUrl("/trainings/" + training.getId() + "/document");
+            }
         } catch (Exception ignored) {}
         try {
             builder.groupName(groupService.getGroupOrThrow(s.getGroupId()).getName());

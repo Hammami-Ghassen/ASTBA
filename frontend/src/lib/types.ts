@@ -64,7 +64,6 @@ export interface Training {
 export interface TrainingCreateInput {
     title: string;
     description?: string;
-    documentUrl?: string;
     levels?: {
         levelNumber: number;
         title?: string;
